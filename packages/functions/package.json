@@ -1,0 +1,29 @@
+{
+  "name": "@alavi-hospitals-app/functions",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.966.0",
+    "@aws-sdk/client-s3": "^3.967.0",
+    "@aws-sdk/lib-dynamodb": "^3.966.0",
+    "@alavi-hospitals-app/core": "*",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.22.1",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.13",
+    "serverless-http": "^4.0.0",
+    "sst": "^2.0.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/multer": "^2.0.0",
+    "@types/nodemailer": "^7.0.9",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.21.0"
+  }
+}
