@@ -17,7 +17,8 @@ export default {
           allowMethods: ["ANY"],
           allowHeaders: ["*"],
           allowOrigins: [
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "https://main.d13eiz02k2a5p3.amplifyapp.com"
           ],
         },
         defaults: {
