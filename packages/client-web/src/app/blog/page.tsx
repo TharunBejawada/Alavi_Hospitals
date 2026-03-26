@@ -108,7 +108,7 @@ export default function BlogsPage() {
       <section className="bg-white border-b border-gray-100 relative overflow-hidden">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-red-50 rounded-full blur-3xl opacity-40 -mr-20 -mt-20"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#5B328C]/50 rounded-full blur-3xl opacity-40 -mr-20 -mt-20"></div>
         
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12 md:py-16 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-16">
@@ -118,7 +118,7 @@ export default function BlogsPage() {
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-[#A62B2B] text-xs font-bold uppercase tracking-widest mb-4 border border-red-100"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5B328C]/50 text-[#5B328C] text-xs font-bold uppercase tracking-widest mb-4 border border-[#5B328C]/100"
               >
                 <HeartPulse className="w-3.5 h-3.5" /> Medical Knowledge Hub
               </motion.div>
@@ -129,7 +129,7 @@ export default function BlogsPage() {
                 transition={{ delay: 0.1 }}
                 className="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight"
               >
-                Insights for a <span className="text-[#A62B2B]">Healthier Lifestyle.</span>
+                Insights for a <span className="text-[#5B328C]">Healthier Lifestyle.</span>
               </motion.h1>
               
               <motion.p 
@@ -151,14 +151,14 @@ export default function BlogsPage() {
             >
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#A62B2B] transition-colors" />
+                  <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#5B328C] transition-colors" />
                 </div>
                 <input
                   type="text"
                   placeholder="Search articles..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#A62B2B]/20 focus:border-[#A62B2B] shadow-sm transition-all"
+                  className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B328C]/20 focus:border-[#5B328C] shadow-sm transition-all"
                 />
               </div>
             </motion.div>
@@ -181,7 +181,7 @@ export default function BlogsPage() {
                 className={`
                   px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all border
                   ${activeCategory === cat 
-                    ? "bg-[#A62B2B] text-white border-[#A62B2B] shadow-md" 
+                    ? "bg-[#5B328C] text-white border-[#5B328C] shadow-md" 
                     : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"}
                 `}
               >
@@ -197,7 +197,7 @@ export default function BlogsPage() {
         
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
-            <Loader2 className="w-10 h-10 animate-spin text-[#A62B2B] mb-3" />
+            <Loader2 className="w-10 h-10 animate-spin text-[#5B328C] mb-3" />
             <p className="text-gray-400 text-sm font-medium">Loading articles...</p>
           </div>
         ) : filteredBlogs.length === 0 ? (
@@ -209,7 +209,7 @@ export default function BlogsPage() {
             <p className="text-gray-500 text-sm">We couldn't find any matches for "{searchQuery}".</p>
             <button 
               onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
-              className="mt-4 text-[#A62B2B] font-bold text-sm hover:underline"
+              className="mt-4 text-[#5B328C] font-bold text-sm hover:underline"
             >
               Clear Filters
             </button>
@@ -241,7 +241,7 @@ export default function BlogsPage() {
                     {/* Image */}
                     <Link href={`/blog/${post.url}`} className="relative h-56 bg-gray-100 overflow-hidden block">
                       <div className="absolute top-4 left-4 z-10">
-                        <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[#A62B2B] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm border border-white/20">
+                        <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[#5B328C] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm border border-white/20">
                           {category}
                         </span>
                       </div>
@@ -268,7 +268,7 @@ export default function BlogsPage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-serif text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-[#A62B2B] transition-colors">
+                      <h3 className="font-serif text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-[#5B328C] transition-colors">
                         <Link href={`/blog/${post.url}`}>
                           {post.blogTitle}
                         </Link>
@@ -283,7 +283,7 @@ export default function BlogsPage() {
                       <div className="pt-5 border-t border-gray-50 flex items-center justify-between mt-auto">
                         <Link 
                           href={`/blog/${post.url}`}
-                          className="inline-flex items-center gap-2 text-gray-900 font-bold text-xs uppercase tracking-wide hover:text-[#A62B2B] transition-colors group/link"
+                          className="inline-flex items-center gap-2 text-gray-900 font-bold text-xs uppercase tracking-wide hover:text-[#5B328C] transition-colors group/link"
                         >
                           Read Article 
                           <ArrowRight className="w-3.5 h-3.5 transform group-hover/link:translate-x-1 transition-transform" />

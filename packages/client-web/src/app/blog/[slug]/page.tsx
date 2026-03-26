@@ -90,7 +90,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-4 border-red-100 border-t-[#A62B2B] rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-[#5B328C]/100 border-t-[#5B328C] rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
       
       {/* Scroll Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1.5 bg-[#A62B2B] origin-left z-50"
+        className="fixed top-0 left-0 right-0 h-1.5 bg-[#5B328C] origin-left z-50"
         style={{ scaleX }}
       />
 
@@ -139,11 +139,11 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-lg p-5 md:p-10 border-t-4 border-[#A62B2B] w-full"
+              className="bg-white rounded-xl shadow-lg p-5 md:p-10 border-t-4 border-[#5B328C] w-full"
             >
               <div className="flex flex-wrap gap-2 mb-4">
                 {blog.categories.map((cat, i) => (
-                  <span key={i} className="px-3 py-1 bg-red-50 text-[#A62B2B] rounded-full text-xs font-bold uppercase tracking-wide">
+                  <span key={i} className="px-3 py-1 bg-[#5B328C]/50 text-[#5B328C] rounded-full text-xs font-bold uppercase tracking-wide">
                     {cat}
                   </span>
                 ))}
@@ -155,15 +155,15 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
 
               <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-gray-500 pt-6 border-t border-gray-100">
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#A62B2B]" /> {dateStr}
+                  <Calendar className="w-4 h-4 text-[#5B328C]" /> {dateStr}
                 </div>
                 <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
                 <div className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-[#A62B2B]" /> {readTime}
+                  <Clock className="w-4 h-4 text-[#5B328C]" /> {readTime}
                 </div>
                 <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
                 <div className="flex items-center gap-1.5">
-                  <User className="w-4 h-4 text-[#A62B2B]" /> {blog.author || "Alavi Hospitals"}
+                  <User className="w-4 h-4 text-[#5B328C]" /> {blog.author || "Alavi Hospitals"}
                 </div>
               </div>
             </motion.div>
@@ -183,7 +183,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                     className="bg-white rounded-xl shadow-sm p-5 md:p-10 w-full overflow-hidden"
                   >
                     {field.heading && (
-                      <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#A62B2B] pl-4 break-words">
+                      <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5B328C] pl-4 break-words">
                         {field.heading}
                       </h2>
                     )}
@@ -212,7 +212,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                 <p className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Related Topics</p>
                 <div className="flex flex-wrap gap-2">
                   {blog.tags.map((tag, i) => (
-                    <Link href={`/blogs?tag=${tag.name}`} key={i} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-[#A62B2B] hover:text-white transition duration-300">
+                    <Link href={`/blogs?tag=${tag.name}`} key={i} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-[#5B328C] hover:text-white transition duration-300">
                       #{tag.name}
                     </Link>
                   ))}
@@ -257,7 +257,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                 transition={{ delay: 0.2 }}
                 className="bg-[#1e293b] rounded-xl p-8 text-white shadow-xl relative overflow-hidden w-full"
               >
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#A62B2B] rounded-full blur-3xl opacity-30"></div>
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#5B328C] rounded-full blur-3xl opacity-30"></div>
                 
                 <h3 className="font-serif text-2xl font-bold mb-3 relative z-10">Need Expert Advice?</h3>
                 <p className="text-gray-300 text-sm mb-8 relative z-10 leading-relaxed">
@@ -266,7 +266,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                 
                 <Link 
                   href="/contact"
-                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#A62B2B] text-white font-bold rounded-lg hover:bg-[#8E2424] transition shadow-lg relative z-10"
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#5B328C] text-white font-bold rounded-lg hover:bg-[#8E2424] transition shadow-lg relative z-10"
                 >
                   <CalendarCheck className="w-5 h-5" /> 
                   Book Appointment
@@ -274,7 +274,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
 
                 <div className="mt-6 pt-6 border-t border-gray-700/50 relative z-10">
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">For Emergencies</p>
-                  <a href="tel:+919160606108" className="flex items-center gap-2 font-bold text-lg hover:text-[#A62B2B] transition">
+                  <a href="tel:+919160606108" className="flex items-center gap-2 font-bold text-lg hover:text-[#5B328C] transition">
                     <Phone className="w-5 h-5" /> +91 91606 06108
                   </a>
                 </div>
