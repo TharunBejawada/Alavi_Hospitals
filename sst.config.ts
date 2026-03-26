@@ -38,12 +38,12 @@ export default {
       });
 
       // 2. DISABLE THE FRONTEND (Deployment moved to Amplify)
-      const site = new NextjsSite(stack, "Site", {
-        path: "packages/client-web",
-        environment: {
-          NEXT_PUBLIC_API_URL: api.url,
-        },
-      });
+      // const site = new NextjsSite(stack, "Site", {
+      //   path: "packages/client-web",
+      //   environment: {
+      //     NEXT_PUBLIC_API_URL: api.url,
+      //   },
+      // });
 
       // 3. OUTPUT THE API URL
       stack.addOutputs({
