@@ -16,6 +16,7 @@ packages/*/node_modules
 
 # next.js
 /.next/
+/packages/*/.next/
 /out/
 
 # production
@@ -46,3 +47,4 @@ next-env.d.ts
 
 # open-next
 .open-next
+**/.open-next/
