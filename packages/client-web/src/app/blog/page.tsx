@@ -129,7 +129,7 @@ export default function BlogsPage() {
                 transition={{ delay: 0.1 }}
                 className="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight"
               >
-                Insights for a <span className="text-[#A62B2B]">Healthier Heart.</span>
+                Insights for a <span className="text-[#A62B2B]">Healthier Lifestyle.</span>
               </motion.h1>
               
               <motion.p 
@@ -138,7 +138,7 @@ export default function BlogsPage() {
                 transition={{ delay: 0.2 }}
                 className="text-gray-500 text-base md:text-lg leading-relaxed max-w-xl"
               >
-                Explore expert articles on preventive cardiology, treatments, and lifestyle tips curated by Alavi Hospitals.
+                Explore expert articles on preventive health care, treatments, and lifestyle tips curated by Alavi Hospitals.
               </motion.p>
             </div>
 
