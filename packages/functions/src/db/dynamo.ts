@@ -12,6 +12,8 @@ export const db = DynamoDBDocumentClient.from(client);
 
 export const TABLE_NAME = "Users";
 export const TABLE_NAME_BLOGS = "Blogs";
+export const TABLE_NAME_DOCTORS = "Doctors";
+export const TABLE_NAME_AVAILABILITY = "DoctorAvailability";
 
 // S3 Configuration
 export const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || "alavi-hospitals-assets"; 

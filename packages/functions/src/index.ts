@@ -7,6 +7,10 @@ import { login } from "./controllers/authController.js";
 import { 
   addBlog, getAllBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage 
 } from "./controllers/blogController.js";
+import { 
+  addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors
+} from "./controllers/doctorController.js";
+import { setDoctorAvailability, getDoctorAvailability } from "./controllers/availabilityController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -41,8 +45,21 @@ app.put("/api/blogs/updateBlog/:id", updateBlog);
 app.put("/api/blogs/:id/toggle", toggleBlogStatus);
 app.post("/api/blogs/uploadblogImage", upload.single("image"), uploadBlogImage);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// ---> ADD DOCTOR ROUTES <---
+app.get("/api/doctors/getAllDoctors", getAllDoctors);
+app.get("/api/doctors/getAllEnabledDoctors", getAllEnabledDoctors);
+app.post("/api/doctors/addDoctor", addDoctor);
+app.get("/api/doctors/getDoctorbyId/:id", getDoctorById);
+app.get("/api/doctors/getDoctorByUrl/:url", getDoctorByURL);
+app.put("/api/doctors/updateDoctor/:id", updateDoctor);
+app.put("/api/doctors/:id/toggle", toggleDoctorStatus);
+app.post("/api/doctors/uploadDoctorImage", upload.single("image"), uploadDoctorImage);
 
-// export const handler = serverless(app);
+app.post("/api/availability/setDoctorAvailability", setDoctorAvailability);
+app.get("/api/availability/getDoctorAvailability/:doctorId", getDoctorAvailability);
+
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+export const handler = serverless(app);

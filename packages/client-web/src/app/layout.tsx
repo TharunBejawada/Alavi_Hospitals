@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -47,6 +49,11 @@ export default function RootLayout({
         <main className="flex-grow">{children}</main>
         <Footer /> 
         <FloatingContact />
+        <ToastContainer 
+          position="bottom-right" 
+          autoClose={3000} 
+          hideProgressBar={false} 
+        />
       </body>
     </html>
   );

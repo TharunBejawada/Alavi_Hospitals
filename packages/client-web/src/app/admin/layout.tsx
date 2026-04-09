@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { 
   LayoutDashboard, 
   FileText, 
+  HeartPulse,
   Users, 
   Settings, 
   LogOut, 
@@ -51,6 +52,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const menu = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Blog Posts", href: "/admin/blogs", icon: FileText },
+    { name: "Manage Doctors", href: "/admin/doctors", icon: HeartPulse },
+    { name: "Doctors Availability", href: "/admin/availability", icon: Activity },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
