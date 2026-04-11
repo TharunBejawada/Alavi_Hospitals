@@ -42,7 +42,7 @@ const Header = () => {
             alt="Alavi Hospitals" 
             width={220} 
             height={65} 
-            className="h-auto w-auto"
+            // className="h-auto w-auto"
             priority 
           />
         </Link>
