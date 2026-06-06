@@ -17,6 +17,7 @@ const navLinks = [
   { name: "SECOND OPINION", href: "/second-opinion" },
   { name: "HEALTH PACKAGES", href: "/health-packages" },
   { name: "BLOG", href: "/blog" },
+  { name: "FOR PATIENTS", href: "/patients" },
   { name: "CONTACT US", href: "/contact" },
 ];
 

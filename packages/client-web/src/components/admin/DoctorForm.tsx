@@ -13,7 +13,6 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
   const router = useRouter();
   const isEditing = !!editId;
 
-  // REMOVED 'designation' from here
   const [doctor, setDoctor] = useState({
     name: "", qualification: "", experience: "",
     location: "", department: "", priorityOrder: "", 
@@ -24,7 +23,6 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
   const [extraFields, setExtraFields] = useState([{ heading: "", description: "" }]);
   const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
   
-  // NEW: Designations is now an array
   const [designations, setDesignations] = useState<string[]>([""]);
   
   const [keyExpertise, setKeyExpertise] = useState<string[]>([""]);
@@ -32,7 +30,9 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
   const [qualificationsList, setQualificationsList] = useState<string[]>([""]);
   const [experienceAchievements, setExperienceAchievements] = useState<string[]>([""]);
   const [memberships, setMemberships] = useState<string[]>([""]);
-  const [closingDescription, setClosingDescription] = useState("");
+  
+  // Conditions Treated Description State
+  const [conditionsTreatedDescription, setConditionsTreatedDescription] = useState("");
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +63,6 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
           setExtraFields(data.extraFields?.length ? data.extraFields : [{ heading: "", description: "" }]);
           setFaqs(data.faqs?.length ? data.faqs : [{ question: "", answer: "" }]);
           
-          // Fallback logic: If they have the new array use it, otherwise wrap the old string in an array
           setDesignations(data.designations?.length ? data.designations : (data.designation ? [data.designation] : [""]));
           
           setKeyExpertise(data.keyExpertise?.length ? data.keyExpertise : [""]);
@@ -71,7 +70,8 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
           setQualificationsList(data.qualificationsList?.length ? data.qualificationsList : [""]);
           setExperienceAchievements(data.experienceAchievements?.length ? data.experienceAchievements : [""]);
           setMemberships(data.memberships?.length ? data.memberships : [""]);
-          setClosingDescription(data.closingDescription || "");
+          
+          setConditionsTreatedDescription(data.conditionsTreatedDescription || "");
           
           if (data.image) setImagePreview(data.image);
         } catch (error) {
@@ -130,13 +130,13 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
         ...doctor, 
         priorityOrder: doctor.priorityOrder ? Math.abs(Number(doctor.priorityOrder)) : 99,
         extraFields, 
-        designations: cleanList(designations), // Saved as an array
+        designations: cleanList(designations),
         keyExpertise: cleanList(keyExpertise),
         conditionsTreated: cleanList(conditionsTreated),
         qualificationsList: cleanList(qualificationsList),
         experienceAchievements: cleanList(experienceAchievements),
         memberships: cleanList(memberships),
-        closingDescription,
+        conditionsTreatedDescription,
         faqs 
       };
 
@@ -267,25 +267,61 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
           <div>
             <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Professional Details (Lists)</h2>
             <div className="space-y-4">
-              {/* Added Designations to the top of the list fields */}
               {renderListSection("Designations", designations, setDesignations, "Enter a designation (e.g. Managing Director)")}
-              
               {renderListSection("Key Expertise", keyExpertise, setKeyExpertise, "Enter a key expertise (e.g. Advanced Laparoscopy)")}
-              {renderListSection("Conditions Treated", conditionsTreated, setConditionsTreated, "Enter a condition treated (e.g. Type 2 Diabetes)")}
+              
+              {/* --- UNIFIED CONDITIONS TREATED BLOCK --- */}
+              <div className="mb-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                
+                {/* 1. The Description RTE */}
+                <div className="mb-8 border-b border-gray-200 pb-6">
+                  <label className="block text-sm font-bold text-gray-700 mb-3">Conditions Treated Description</label>
+                  <div className="bg-white rounded-xl overflow-hidden border-2 border-transparent focus-within:border-[#5B328C]/30 transition-all duration-300">
+                    <DoctorsRTE 
+                      value={conditionsTreatedDescription} 
+                      onChange={(val: string) => setConditionsTreatedDescription(val)} 
+                    />
+                  </div>
+                </div>
+
+                {/* 2. The List of Conditions */}
+                <div className="flex justify-between items-center mb-4">
+                  <label className="block text-sm font-bold text-gray-700">Conditions Treated List</label>
+                  <button type="button" onClick={() => setConditionsTreated([...conditionsTreated, ""])} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
+                    <FaPlus /> Add Line
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {conditionsTreated.map((item, index) => (
+                    <div key={index} className="flex items-center gap-3 relative group">
+                      <input 
+                        type="text" 
+                        value={item} 
+                        onChange={(e) => {
+                          const newItems = [...conditionsTreated];
+                          newItems[index] = e.target.value;
+                          setConditionsTreated(newItems);
+                        }} 
+                        placeholder="Enter a condition treated (e.g. Type 2 Diabetes)" 
+                        className={inputClass} 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setConditionsTreated(conditionsTreated.filter((_, i) => i !== index))} 
+                        className="text-red-400 hover:text-red-600 p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shrink-0"
+                        title="Remove Line"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* --- END UNIFIED BLOCK --- */}
+
               {renderListSection("Detailed Qualifications", qualificationsList, setQualificationsList, "Enter a qualification (e.g. MBBS from Osmania University, 2010)")}
               {renderListSection("Experience & Achievements", experienceAchievements, setExperienceAchievements, "Enter an achievement (e.g. Awarded Best Physician 2021)")}
               {renderListSection("Memberships", memberships, setMemberships, "Enter a membership (e.g. Member of Indian Medical Association)")}
-              
-              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                <label className="block text-sm font-bold text-gray-700 mb-4">Bottom Closing Description</label>
-                <textarea 
-                  value={closingDescription} 
-                  onChange={(e) => setClosingDescription(e.target.value)} 
-                  placeholder="Enter a small closing statement or philosophy..." 
-                  rows={3} 
-                  className={inputClass}
-                />
-              </div>
             </div>
           </div>
 

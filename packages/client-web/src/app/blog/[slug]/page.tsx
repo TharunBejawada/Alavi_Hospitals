@@ -2,19 +2,14 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { 
-  Calendar, 
-  Clock, 
-  User, 
-  Share2, 
-  Facebook, 
-  Twitter, 
-  Linkedin, 
-  Phone,
-  CalendarCheck,
-  Link as LinkIcon
-} from "lucide-react";
+  FaFacebookF, 
+  FaInstagram, 
+  FaWhatsapp, 
+  FaXTwitter 
+} from "react-icons/fa6";
 import { API_URL } from "../../../config";
 
 // --- TYPES ---
@@ -43,6 +38,11 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Dynamic Sidebar States
+  const [sidebarCategories, setSidebarCategories] = useState<string[]>([]);
+  const [recentBlogs, setRecentBlogs] = useState<BlogPost[]>([]);
+  const [categorySearch, setCategorySearch] = useState("");
+
   // --- SCROLL PROGRESS ---
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -51,20 +51,11 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
     restDelta: 0.001
   });
 
-  // --- HELPER: Read Time ---
-  const calculateReadTime = (fields: ExtraField[]) => {
-    if (!fields) return "3 min read";
-    const text = fields.map(f => f.description).join(" ");
-    const wordsPerMinute = 200;
-    const noOfWords = text.split(/\s/g).length;
-    const minutes = Math.ceil(noOfWords / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
   // --- FETCH DATA ---
   useEffect(() => {
-    async function fetchBlog() {
+    async function fetchBlogData() {
       try {
+        // 1. Fetch Current Blog
         const res = await fetch(`${API_URL}/api/blogs/getBlogByUrl/${slug}`);
         if (!res.ok) throw new Error("Blog not found");
         const data = await res.json();
@@ -78,33 +69,53 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
           }
         }
         setBlog(item);
+
+        // 2. Fetch All Blogs for Sidebar (Dynamic Categories & Recent Blogs)
+        try {
+          // Adjust endpoint if needed based on your backend routes (e.g., /getAllBlogs)
+          const allRes = await fetch(`${API_URL}/api/blogs/getAllBlogs`);
+          if (allRes.ok) {
+            const allData = await allRes.json();
+            const allBlogs: BlogPost[] = allData.Items || allData || [];
+
+            // Extract unique categories
+            const uniqueCategories = Array.from(
+              new Set(allBlogs.flatMap((b) => b.categories || []))
+            ).filter(Boolean).sort();
+            setSidebarCategories(uniqueCategories as string[]);
+
+            // Extract recent blogs (exclude current one, sort by date, take top 4)
+            const recent = allBlogs
+              .filter((b) => b.url !== slug && b.blogId !== slug)
+              .sort((a, b) => new Date(b.timeline).getTime() - new Date(a.timeline).getTime())
+              .slice(0, 4);
+            setRecentBlogs(recent);
+          }
+        } catch (sidebarError) {
+          console.error("Failed to fetch sidebar data:", sidebarError);
+        }
+
       } catch (error) {
         console.error("Failed to fetch blog:", error);
       } finally {
         setLoading(false);
       }
     }
-    if (slug) fetchBlog();
+    if (slug) fetchBlogData();
   }, [slug]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#5B328C]/100 border-t-[#5B328C] rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center">
+        <div className="w-16 h-16 border-4 border-[#5B328C]/20 border-t-[#5B328C] rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!blog) return null;
 
-  const dateStr = new Date(blog.timeline).toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric'
-  });
-  const readTime = calculateReadTime(blog.extraFields);
-
   return (
-    // FIX 1: Strict containment on the article wrapper
-    <article className="w-full max-w-[100vw] overflow-x-hidden bg-gray-50 font-sans text-gray-800 pb-20">
+    <article className="w-full max-w-[100vw] overflow-x-hidden bg-[#FAFAFA] font-sans text-gray-800 pb-24">
       
       {/* Scroll Progress Bar */}
       <motion.div
@@ -112,63 +123,53 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
         style={{ scaleX }}
       />
 
-      {/* --- 1. HERO IMAGE --- */}
-      {/* FIX: Removed scale animation, changed to simple fade-in to prevent zoomed effect */}
-      <div className="relative w-full h-[40vh] md:h-[50vh] lg:h-[60vh] overflow-hidden bg-gray-900">
-        <motion.img 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          src={blog.blogImage || "https://placehold.co/1200x600?text=Medical+Article"} 
-          alt={blog.blogTitle}
-          // object-cover is necessary to fill the space, but without the scale animation it won't feel excessively zoomed.
-          className="w-full h-full object-cover opacity-90" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-      </div>
-
-      {/* --- MAIN CONTENT CONTAINER --- */}
-      {/* FIX 2: Removed negative margin on mobile (mt-0) to stop layout breaking. Only applies on desktop (-mt-24). */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 md:-mt-24 relative z-10 box-border">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div className="w-full max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 mt-12 relative z-10 box-border">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           
-          {/* --- LEFT COLUMN: Content --- */}
-          <div className="lg:col-span-2 space-y-6 md:space-y-8 w-full min-w-0">
+          {/* ========================================= */}
+          {/* LEFT COLUMN: Main Blog Content            */}
+          {/* ========================================= */}
+          <div className="lg:w-[65%] w-full min-w-0 flex flex-col">
             
-            {/* 2. TITLE CARD */}
+            {/* 1. Header & Socials */}
+            <div className="mb-6">
+              <h1 className="text-2xl md:text-3xl lg:text-[32px] font-bold text-gray-900 leading-snug mb-4 break-words">
+                {blog.blogTitle}
+              </h1>
+              
+              {/* Social Share Icons */}
+              <div className="flex items-center gap-3">
+                <button className="w-8 h-8 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:opacity-90 transition">
+                  <FaFacebookF className="text-sm" />
+                </button>
+                <button className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white flex items-center justify-center hover:opacity-90 transition">
+                  <FaInstagram className="text-sm" />
+                </button>
+                <button className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:opacity-90 transition">
+                  <FaWhatsapp className="text-sm" />
+                </button>
+                <button className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center hover:opacity-90 transition">
+                  <FaXTwitter className="text-sm" />
+                </button>
+              </div>
+            </div>
+
+            {/* 2. Hero Image */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-lg p-5 md:p-10 border-t-4 border-[#5B328C] w-full"
+              className="w-full aspect-[16/9] md:aspect-[21/9] relative rounded-[20px] overflow-hidden mb-10 shadow-sm"
             >
-              <div className="flex flex-wrap gap-2 mb-4">
-                {blog.categories.map((cat, i) => (
-                  <span key={i} className="px-3 py-1 bg-[#5B328C]/50 text-[#5B328C] rounded-full text-xs font-bold uppercase tracking-wide">
-                    {cat}
-                  </span>
-                ))}
-              </div>
-
-              <h1 className="font-serif text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6 break-words hyphens-auto">
-                {blog.blogTitle}
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-gray-500 pt-6 border-t border-gray-100">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#5B328C]" /> {dateStr}
-                </div>
-                <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-[#5B328C]" /> {readTime}
-                </div>
-                <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
-                <div className="flex items-center gap-1.5">
-                  <User className="w-4 h-4 text-[#5B328C]" /> {blog.author || "Alavi Hospitals"}
-                </div>
-              </div>
+              <Image 
+                src={blog.blogImage || "https://placehold.co/1200x600?text=Medical+Article"} 
+                alt={blog.blogTitle}
+                fill
+                className="object-cover" 
+                priority
+              />
             </motion.div>
 
-            {/* 4. DYNAMIC CONTENT BLOCKS */}
+            {/* 3. Dynamic Content Blocks */}
             <div className="space-y-6">
               {blog.extraFields?.map((field, idx) => {
                 if (!field.heading && !field.description) return null;
@@ -180,20 +181,24 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ delay: idx * 0.1 }}
-                    className="bg-white rounded-xl shadow-sm p-5 md:p-10 w-full overflow-hidden"
+                    className="bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 p-6 md:p-8 w-full"
                   >
                     {field.heading && (
-                      <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5B328C] pl-4 break-words">
-                        {field.heading}
-                      </h2>
+                      <div className="flex items-center gap-3 mb-5">
+                        {/* Purple Vertical Pill Accent */}
+                        <div className="w-1.5 h-6 bg-[#5B328C] rounded-full shrink-0"></div>
+                        <h2 className="text-xl md:text-2xl font-bold text-[#5B328C] break-words">
+                          {field.heading}
+                        </h2>
+                      </div>
                     )}
                     
-                    {/* FIX 3: Strict prose containment for images/videos */}
+                    {/* Rich Text Editor Content */}
                     <div 
-                      className="prose prose-lg prose-red max-w-none w-full
-                        text-gray-600 leading-relaxed break-words
+                      className="prose prose-lg max-w-none w-full
+                        text-gray-700 leading-relaxed break-words text-[15px] md:text-[16px]
                         prose-headings:text-gray-900 prose-headings:font-bold
-                        prose-p:mb-6 
+                        prose-p:mb-5 
                         prose-img:max-w-full prose-img:w-full prose-img:h-auto prose-img:rounded-xl
                         prose-iframe:max-w-full prose-iframe:w-full
                         [&_img]:!max-w-full [&_img]:!h-auto
@@ -206,13 +211,12 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
               })}
             </div>
 
-            {/* Related Tags */}
+            {/* 4. Related Tags */}
             {blog.tags && blog.tags.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 w-full">
-                <p className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Related Topics</p>
+              <div className="mt-8">
                 <div className="flex flex-wrap gap-2">
                   {blog.tags.map((tag, i) => (
-                    <Link href={`/blogs?tag=${tag.name}`} key={i} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-[#5B328C] hover:text-white transition duration-300">
+                    <Link href={`/blogs?tag=${tag.name}`} key={i} className="px-4 py-2 bg-gray-200/60 text-gray-700 rounded text-[13px] font-medium hover:bg-[#5B328C] hover:text-white transition duration-300">
                       #{tag.name}
                     </Link>
                   ))}
@@ -221,70 +225,120 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
             )}
           </div>
 
-          {/* --- RIGHT COLUMN: Sidebar (Stack on Mobile) --- */}
-          <div className="lg:col-span-1 w-full">
-            <div className="sticky top-8 space-y-6">
+          {/* ========================================= */}
+          {/* RIGHT COLUMN: Sidebar                     */}
+          {/* ========================================= */}
+          <aside className="lg:w-[35%] w-full">
+            <div className="sticky top-24 space-y-8">
               
-              {/* SHARE */}
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center text-center w-full"
-              >
-                <span className="text-gray-900 font-bold mb-4 flex items-center gap-2">
-                  <Share2 className="w-4 h-4" /> Share Article
-                </span>
-                <div className="flex gap-3 justify-center w-full flex-wrap">
-                   <button className="p-3 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
-                     <Facebook className="w-5 h-5"/>
-                   </button>
-                   <button className="p-3 rounded-full bg-sky-50 text-sky-500 hover:bg-sky-500 hover:text-white transition-all">
-                     <Twitter className="w-5 h-5"/>
-                   </button>
-                   <button className="p-3 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all">
-                     <Linkedin className="w-5 h-5"/>
-                   </button>
-                   <button className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-800 hover:text-white transition-all">
-                     <LinkIcon className="w-5 h-5"/>
-                   </button>
-                </div>
-              </motion.div>
+              {/* --- QUERY FORM CARD --- */}
+              <div className="bg-white rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8">
+                <h3 className="text-xl font-bold text-[#5B328C] mb-6">Query Form</h3>
+                <form className="space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Name <span className="text-red-500">*</span></label>
+                    <input type="text" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Mobile number <span className="text-red-500">*</span></label>
+                    <input type="tel" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Email <span className="text-red-500">*</span></label>
+                    <input type="email" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Message</label>
+                    <textarea rows={3} className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all resize-none"></textarea>
+                  </div>
+                  <div className="pt-2 flex justify-center">
+                    <button type="submit" className="bg-[#5B328C] text-white font-bold py-3 px-10 rounded-full text-sm hover:bg-[#4a2873] transition-colors shadow-md">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
 
-              {/* APPOINTMENT CARD */}
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-[#1e293b] rounded-xl p-8 text-white shadow-xl relative overflow-hidden w-full"
-              >
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#5B328C] rounded-full blur-3xl opacity-30"></div>
-                
-                <h3 className="font-serif text-2xl font-bold mb-3 relative z-10">Need Expert Advice?</h3>
-                <p className="text-gray-300 text-sm mb-8 relative z-10 leading-relaxed">
-                  Schedule a consultation.
-                </p>
-                
-                <Link 
-                  href="/contact"
-                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#5B328C] text-white font-bold rounded-lg hover:bg-[#8E2424] transition shadow-lg relative z-10"
-                >
-                  <CalendarCheck className="w-5 h-5" /> 
-                  Book Appointment
-                </Link>
-
-                <div className="mt-6 pt-6 border-t border-gray-700/50 relative z-10">
-                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">For Emergencies</p>
-                  <a href="tel:+919160606108" className="flex items-center gap-2 font-bold text-lg hover:text-[#5B328C] transition">
-                    <Phone className="w-5 h-5" /> +91 91606 06108
-                  </a>
+              {/* --- DYNAMIC CATEGORIES CARD --- */}
+              {sidebarCategories.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8">
+                  <h3 className="text-xl font-bold text-[#5B328C] mb-5">Categories</h3>
+                  <input 
+                    type="text" 
+                    placeholder="Search Categories" 
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    className="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-5 outline-none focus:border-[#5B328C] transition-colors"
+                  />
+                  <ul className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                    {sidebarCategories
+                      .filter(cat => cat.toLowerCase().includes(categorySearch.toLowerCase()))
+                      .map((cat, idx) => (
+                      <li key={idx}>
+                        <Link 
+                          href={`/blogs?category=${encodeURIComponent(cat)}`} 
+                          className="text-[14px] font-semibold text-gray-600 hover:text-[#5B328C] transition-colors block leading-snug"
+                        >
+                          {cat}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </motion.div>
+              )}
+
+              {/* --- DYNAMIC RECENT BLOGS LIST --- */}
+              {recentBlogs.length > 0 && (
+                <div className="bg-transparent flex flex-col gap-5">
+                  {recentBlogs.map((rBlog, idx) => (
+                    <Link href={`/blogs/${rBlog.url || rBlog.blogId}`} key={rBlog.blogId || idx}>
+                      <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_15px_rgba(0,0,0,0.05)] border border-gray-100 cursor-pointer group h-full transition-shadow hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+                        <div className="relative w-full aspect-[21/9] bg-gray-100 overflow-hidden">
+                          <Image 
+                            src={rBlog.blogImage || "https://placehold.co/600x300?text=Blog"} 
+                            alt={rBlog.blogTitle} 
+                            fill 
+                            className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                          />
+                          {idx === 0 && (
+                            <div className="absolute bottom-2 left-4 bg-white/90 px-3 py-1 rounded shadow-sm">
+                              <span className="text-[#5B328C] font-bold text-[11px] uppercase tracking-wide">Recent Blogs</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-4">
+                          <h4 className="text-[13px] font-bold text-gray-900 group-hover:text-[#5B328C] transition-colors line-clamp-2 leading-snug">
+                            {rBlog.blogTitle}
+                          </h4>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
 
             </div>
-          </div>
+          </aside>
 
         </div>
       </div>
+
+      {/* Global Style for Custom Scrollbar in Categories */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #d1d5db; 
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #5B328C; 
+        }
+      `}} />
     </article>
   );
 }

@@ -62,7 +62,7 @@ const HospitalsAndFAQ = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight">
+            <h2 className="text-3xl font-bold text-[#5B328C] mb-8 tracking-tight">
               Our Hospitals
             </h2>
             

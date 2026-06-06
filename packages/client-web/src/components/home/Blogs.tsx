@@ -42,7 +42,18 @@ const Blogs = () => {
           <h2 className="text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">
             Blogs
           </h2>
+        <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="justify-center max-w-3xl mx-auto text-gray-900 text-base md:text-[20px] font-medium leading-relaxed"
+                  >
+                    Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
+                  </motion.p>
         </motion.div>
+
+        
 
         {/* Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">

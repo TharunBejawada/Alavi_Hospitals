@@ -6,14 +6,17 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   FaPhone, 
-  FaArrowRight, 
   FaChevronDown, 
   FaHandPointRight,
-  FaCircle
+  FaCircle,
+  FaPhoneVolume
 } from "react-icons/fa6";
+import DoctorTalks from "./DoctorTalks"; 
+import PatientSuccessStories from "./PatientSuccessStories"; 
 
 export default function DoctorProfileClient({ doctor }: { doctor: any }) {
   const [activeTab, setActiveTab] = useState("qualifications");
+  const [activeNav, setActiveNav] = useState("about");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const tabs = [
@@ -22,64 +25,99 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
     { id: "memberships", label: "Memberships", data: doctor?.memberships || [] },
   ];
 
+  const navLinks = [
+    { id: "about", label: "About Doctor" },
+    { id: "expertise", label: "Key Expertise" },
+    { id: "conditions", label: "Conditions Treated" },
+    { id: "qualifications", label: "Qualifications" },
+    { id: "experience", label: "Experience & Achievements" },
+    { id: "memberships", label: "Memberships" },
+  ];
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
   };
 
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  // Smooth scroll handler for the navigation pills with Fixed Header offset
+  const scrollToSection = (id: string) => {
+    setActiveNav(id);
+    
+    // Determine the actual target container ID
+    const targetId = ["qualifications", "experience", "memberships"].includes(id) 
+      ? "details-section" 
+      : id;
+
+    // Set the active tab if it is one of the detail tabs
+    if (["qualifications", "experience", "memberships"].includes(id)) {
+      setActiveTab(id);
+    }
+
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      // Set this to the height of your fixed header in pixels (plus a little extra padding if you like)
+      const headerOffset = 200; 
+      
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
   };
 
   return (
-    // FIX 1: Added overflow-x-hidden to prevent the entire page from scrolling horizontally
     <div className="bg-white min-h-screen pb-20 overflow-x-hidden">
       
-      {/* 1. HERO SECTION */}
-      <section className="bg-[#FAFAFA] py-12 lg:py-20 border-b border-gray-100">
-        <div className="container mx-auto max-w-5xl px-4">
+      {/* HERO SECTION (Purple Gradient) */}
+      <section className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] py-12 lg:py-20">
+        <div className="container mx-auto max-w-[1200px] px-4">
           <motion.div 
             initial="hidden" animate="visible" variants={fadeInUp}
             className="flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-12 w-full"
           >
             {/* Doctor Image */}
             <div className="shrink-0">
-              <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-[24px] overflow-hidden border-2 border-[#5B328C] shadow-lg bg-white">
-                <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gray-100">
-                  {doctor?.image ? (
-                    <Image src={doctor.image} alt={doctor?.name} fill className="object-cover object-top" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
-                  )}
-                </div>
+              <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-[#5B328C] shadow-2xl bg-gray-100">
+                {doctor?.image ? (
+                  <Image src={doctor.image} alt={doctor?.name} fill className="object-cover object-top" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">Alavi Hospitals</div>
+                )}
               </div>
             </div>
 
             {/* Doctor Info */}
-            {/* FIX 2: Added flex-1 and min-w-0 so this container shrinks and wraps text properly */}
-            <div className="flex flex-col text-center md:text-left mt-4 md:mt-0 flex-1 min-w-0 w-full">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#5B328C] mb-2 break-words">{doctor?.name}</h1>
-              <p className="text-sm font-semibold text-gray-800 mb-1 break-words">{doctor?.qualification}</p>
+            <div className="flex flex-col text-center md:text-left mt-4 md:mt-0 flex-1 min-w-0 w-full text-white">
+              <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-3 break-words">
+                {doctor?.name}
+              </h1>
               
-              <div className="text-sm text-gray-700 mb-1 space-y-1">
-                {doctor?.designations?.map((desig: string, idx: number) => (
-                  <p key={idx} className="font-medium break-words">{desig}</p>
-                ))}
-              </div>
+              <p className="text-base md:text-lg font-bold text-white/90 mb-2 break-words">
+                {doctor?.designations?.join(" | ")}
+              </p>
+              
+              <p className="text-sm md:text-base font-medium text-white/80 mb-5 break-words">
+                {doctor?.qualification}
+              </p>
               
               {doctor?.experience && (
-                <p className="text-sm font-bold text-[#5B328C] mt-2 mb-6 break-words">
-                  Experience : <span className="text-gray-800">{doctor.experience}</span>
-                </p>
+                <div className="bg-[#8D61BA] border border-white/30 backdrop-blur-sm px-5 py-2 rounded-md inline-flex justify-center md:justify-start w-fit mb-8 mx-auto md:mx-0 shadow-sm">
+                  <p className="text-sm font-bold break-words">
+                    Experience : {doctor.experience}
+                  </p>
+                </div>
               )}
 
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-auto">
-                <a href="tel:+919160606108" className="flex items-center gap-2 border-2 border-[#5B328C] text-[#5B328C] px-8 py-2.5 rounded-lg font-bold hover:bg-[#F3E8FF] transition-colors whitespace-nowrap">
-                  <FaPhone className="text-sm" /> Call Now
+                <a href="tel:+919160606108" className="flex items-center gap-2 border-2 border-white text-white px-8 py-2.5 rounded hover:bg-white/10 transition-colors whitespace-nowrap font-bold text-sm shadow-sm">
+                  Call Now
                 </a>
                 <Link href={`/contact?doctor=${encodeURIComponent(doctor?.name || '')}`}>
-                  <button className="bg-[#5B328C] text-white px-8 py-3 rounded-lg font-bold shadow-md hover:bg-[#4a2873] transition-colors whitespace-nowrap">
+                  <button className="bg-white text-[#5B328C] px-8 py-3 rounded font-bold shadow-md hover:bg-gray-100 transition-colors whitespace-nowrap text-sm">
                     Book an Appointment
                   </button>
                 </Link>
@@ -89,147 +127,186 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         </div>
       </section>
 
-      <div className="container mx-auto max-w-5xl px-4 py-12 space-y-16">
-        
-        {/* 2. ABOUT DOCTOR (Rendered via extraFields Rich Text) */}
-        {doctor?.extraFields?.map((field: any, index: number) => (
-          <motion.section 
-            key={index}
-            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
-            className="w-full"
-          >
-            <h3 className="text-xl font-bold text-gray-900 mb-4 break-words">{field.heading}</h3>
-            {/* FIX 3: Added break-words and w-full to the Rich Text container */}
-            <div 
-              className="text-sm leading-relaxed text-gray-700 prose prose-purple max-w-none break-words w-full"
-              dangerouslySetInnerHTML={{ __html: field.description }} 
-            />
-          </motion.section>
-        ))}
+      {/* FLOATING CTA BANNER */}
+      <div className="container mx-auto max-w-[1200px] px-4 mt-8 relative z-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] rounded-xl py-4 px-6 md:px-10 flex flex-col md:flex-row items-center justify-between text-white shadow-xl border border-white/10 gap-4"
+        >
+          <span className="font-bold text-lg tracking-wide">To Book An Appointment</span>
+          <a href="tel:+919603911911" className="flex items-center gap-3 bg-[#0066B3] border border-white/20 px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-[#004a85] transition-colors whitespace-nowrap">
+            <div className="bg-white text-[#0066B3] rounded-full p-1.5 flex items-center justify-center">
+              <FaPhoneVolume className="text-xs" />
+            </div>
+            Call Us +91 9603 911 911
+          </a>
+        </motion.div>
+      </div>
 
-        {/* 3. KEY EXPERTISE */}
+      <div className="container mx-auto max-w-[1200px] px-4 py-12 space-y-10">
+        
+        {/* NAVIGATION PILLS */}
+        <div className="flex flex-wrap justify-center gap-3 pb-4">
+          {navLinks.map((nav) => (
+            <button
+              key={nav.id}
+              onClick={() => scrollToSection(nav.id)}
+              className={`px-5 py-2 rounded-full text-[13px] font-bold border transition-colors ${
+                activeNav === nav.id 
+                  ? "bg-[#5B328C] border-[#5B328C] text-white shadow-sm" 
+                  : "bg-transparent border-[#5B328C] text-[#5B328C] hover:bg-[#F3E8FF]"
+              }`}
+            >
+              {nav.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ABOUT DOCTOR */}
+        <section id="about" className="border-2 border-[#5B328C]/20 rounded-2xl p-6 md:p-10 bg-[#FBF7FF] shadow-sm scroll-mt-24">
+          <h3 className="text-[#5B328C] font-bold text-xl mb-6">About Doctor</h3>
+          {doctor?.extraFields?.map((field: any, index: number) => (
+            <div key={index} className="w-full mb-4 last:mb-0">
+              {field.heading && field.heading.toLowerCase() !== 'about doctor' && (
+                <h4 className="text-lg font-bold text-gray-900 mb-3 break-words">{field.heading}</h4>
+              )}
+              <div 
+                className="text-[14px] leading-relaxed text-gray-700 prose prose-purple max-w-none break-words w-full"
+                dangerouslySetInnerHTML={{ __html: field.description }} 
+              />
+            </div>
+          ))}
+        </section>
+
+        {/* KEY EXPERTISE */}
         {doctor?.keyExpertise?.length > 0 && (
-          <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="w-full">
-            <motion.h3 variants={fadeInUp} className="text-xl font-bold text-gray-900 mb-6">Key expertise</motion.h3>
+          <section id="expertise" className="bg-[#F4F9FF] border border-blue-100 rounded-2xl p-6 md:p-10 shadow-sm scroll-mt-24">
+            <h3 className="text-gray-900 font-bold text-xl mb-6">Key expertise</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               {doctor.keyExpertise.map((item: string, idx: number) => (
-                <motion.div 
-                  key={idx} variants={fadeInUp}
-                  className="flex items-start gap-3 border border-gray-200 rounded-lg p-4 bg-white hover:bg-[#F9F7FD] hover:border-[#5B328C]/30 transition-all duration-300 shadow-sm w-full min-w-0"
+                <div 
+                  key={idx} 
+                  className="group flex items-start gap-4 border border-[#5B328C]/20 rounded p-4 bg-[#FBF7FF] hover:bg-[#3D2C7A] transition-all duration-300 shadow-sm w-full min-w-0"
                 >
-                  <FaHandPointRight className="text-[#5B328C] text-lg shrink-0 mt-0.5" />
-                  {/* FIX 4: Added break-words to span items */}
-                  <span className="text-sm font-medium text-gray-800 break-words flex-1 min-w-0">{item}</span>
-                </motion.div>
+                  <FaHandPointRight className="text-[#5B328C] group-hover:text-white text-lg shrink-0 mt-0.5 transition-colors" />
+                  <span className="text-sm font-semibold text-gray-800 group-hover:text-white break-words flex-1 min-w-0 transition-colors">
+                    {item}
+                  </span>
+                </div>
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
-        {/* 4. CONDITIONS TREATED */}
+        {/* CONDITIONS TREATED */}
         {doctor?.conditionsTreated?.length > 0 && (
-          <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="w-full">
-            <motion.h3 variants={fadeInUp} className="text-xl font-bold text-gray-900 mb-6">Conditions treated</motion.h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <section id="conditions" className="bg-gradient-to-br from-[#54338A] to-[#2E376E] rounded-2xl p-6 md:p-10 shadow-lg scroll-mt-24">
+            <h3 className="text-white font-bold text-xl mb-2">Advanced Care for Multiple Health Conditions</h3>
+            {/* Dynamic RTE Description with Static Fallback */}
+            {doctor?.conditionsTreatedDescription ? (
+              <div 
+                className="text-white/80 text-sm mb-8 prose prose-invert prose-p:leading-relaxed max-w-none [&_p]:text-white/80 [&_ul]:text-white/80 [&_ol]:text-white/80 [&_strong]:text-white"
+                dangerouslySetInnerHTML={{ __html: doctor.conditionsTreatedDescription }}
+              />
+            ) : (
+              <p className="text-white/80 text-sm mb-8">
+                From initial diagnosis to critical care support, offering trusted medical expertise across a wide spectrum of conditions.
+              </p>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
               {doctor.conditionsTreated.map((item: string, idx: number) => (
-                <motion.div 
-                  key={idx} variants={fadeInUp}
-                  className="bg-[#5B328C] text-white rounded-lg p-4 shadow-md hover:-translate-y-1 transition-transform duration-300 w-full min-w-0"
+                <div 
+                  key={idx} 
+                  className="bg-white text-[#5B328C] border-none rounded p-3.5 shadow-sm hover:scale-[1.02] transition-transform duration-300 w-full min-w-0"
                 >
-                  <span className="text-sm font-medium break-words block">{item}</span>
-                </motion.div>
+                  <span className="text-[13px] font-semibold break-words block">
+                    {item}
+                  </span>
+                </div>
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
-        {/* 5. TABS (Qualifications, Experience, Memberships) */}
-        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="w-full">
-          <div className="rounded-2xl border border-[#5B328C]/20 overflow-hidden shadow-sm w-full">
-            <div className="flex flex-col sm:flex-row border-b border-[#5B328C]/20 w-full">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 py-4 px-6 text-sm font-bold transition-colors duration-300 break-words ${
-                    activeTab === tab.id 
-                      ? "bg-[#5B328C] text-white" 
-                      : "bg-white text-[#5B328C] hover:bg-[#F9F7FD]"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            
-            <div className="bg-[#FAFAFA] p-6 md:p-10 min-h-[200px] w-full">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full"
-                >
-                  {tabs.find(t => t.id === activeTab)?.data.length ? (
-                    <ul className="space-y-4 w-full">
-                      {tabs.find(t => t.id === activeTab)?.data.map((item: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-3 w-full min-w-0">
-                          <FaCircle className="text-[#5B328C] text-[8px] mt-1.5 shrink-0" />
-                          <span className="text-sm font-medium text-gray-800 leading-relaxed break-words flex-1 min-w-0">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 text-sm italic">No details available.</p>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
+        {/* DETAILS TABS (Qualifications, Experience, Memberships) */}
+        {/* 2. FIXED: Assigned parent container the ID 'details-section' for smooth scrolling */}
+        <section id="details-section" className="border-2 border-[#5B328C]/20 rounded-2xl p-6 md:p-10 bg-[#FBF7FF] shadow-sm scroll-mt-24">
+          <div className="flex flex-col sm:flex-row gap-3 mb-8 border-b-0">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setActiveNav(tab.id);
+                }}
+                className={`cursor-pointer flex-1 py-3 px-4 text-[13px] font-bold border transition-colors duration-300 break-words rounded-sm ${
+                  activeTab === tab.id 
+                    ? "bg-[#5B328C] border-[#5B328C] text-white" 
+                    : "bg-white border-[#5B328C]/30 text-[#5B328C] hover:bg-[#F3E8FF]"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-        </motion.section>
+          
+          <div className="w-full min-h-[150px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+                {tabs.find(t => t.id === activeTab)?.data.length ? (
+                  <ul className="space-y-4 w-full">
+                    {tabs.find(t => t.id === activeTab)?.data.map((item: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-4 w-full min-w-0">
+                        <FaCircle className="text-[#5B328C] text-[8px] mt-1.5 shrink-0" />
+                        <span className="text-[14px] font-bold text-gray-800 leading-relaxed break-words flex-1 min-w-0">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500 text-sm italic">No details available.</p>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </section>
 
-        {/* 6. BOTTOM CTA & CLOSING DESCRIPTION */}
-        <motion.section 
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-          className="text-center max-w-2xl mx-auto flex flex-col items-center pt-8 w-full"
-        >
-          <Link href={`/contact?doctor=${encodeURIComponent(doctor?.name || '')}`}>
-            <button className="bg-[#5B328C] text-white px-8 py-3.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:bg-[#4a2873] transition-all flex items-center gap-2 group whitespace-nowrap">
-              Book an Appointment 
-              <FaArrowRight className="bg-white text-[#5B328C] rounded-full p-1 text-xl group-hover:translate-x-1 transition-transform shrink-0" />
-            </button>
-          </Link>
-          {doctor?.closingDescription && (
-            <p className="text-xs md:text-sm text-gray-600 mt-6 leading-relaxed font-medium break-words w-full">
-              {doctor.closingDescription}
-            </p>
-          )}
-        </motion.section>
+        <DoctorTalks />
+        <PatientSuccessStories />
 
-        {/* 7. FAQs */}
+        {/* FAQs */}
         {doctor?.faqs?.length > 0 && (
-          <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="pt-8 w-full">
+          <section className="pt-4 w-full">
             <h3 className="text-xl font-bold text-gray-900 mb-6 text-center md:text-left break-words">Frequently asked questions</h3>
             <div className="space-y-3 w-full">
               {doctor.faqs.map((faq: any, idx: number) => {
                 const isOpen = openFaq === idx;
                 return (
+                  // 3. FIXED: Custom gradient, border color #663399, and text color handling
                   <div 
                     key={idx} 
-                    className={`border rounded-xl overflow-hidden transition-colors duration-300 w-full ${
-                      isOpen ? "border-[#5B328C]/30 bg-[#F9F7FD]" : "border-gray-200 bg-white"
+                    className={`border border-[#663399] rounded-xl overflow-hidden transition-all duration-300 w-full ${
+                      isOpen 
+                        ? "bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] text-white shadow-md" 
+                        : "bg-white text-gray-800 hover:bg-[#F9F7FD]"
                     }`}
                   >
                     <button 
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
                       className="w-full text-left px-6 py-4 flex justify-between items-center gap-4"
                     >
-                      <span className={`text-sm font-bold break-words flex-1 min-w-0 ${isOpen ? "text-[#5B328C]" : "text-gray-800"}`}>
+                      <span className={`text-sm font-bold break-words flex-1 min-w-0 ${isOpen ? "text-white" : "text-gray-800"}`}>
                         {idx + 1}. {faq.question}
                       </span>
-                      <FaChevronDown className={`text-gray-400 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-[#5B328C]" : ""}`} />
+                      <FaChevronDown className={`shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-white" : "text-[#663399]"}`} />
                     </button>
                     
                     <AnimatePresence>
@@ -241,8 +318,9 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                           transition={{ duration: 0.3 }}
                           className="w-full"
                         >
+                          {/* Enforced white text on all children elements (p, span, etc) when open */}
                           <div 
-                            className="px-6 pb-4 text-sm text-gray-700 leading-relaxed prose prose-purple max-w-none break-words w-full"
+                            className="px-6 pb-4 text-sm leading-relaxed max-w-none break-words w-full text-white/95 [&_p]:text-white [&_a]:text-blue-200 [&_a]:underline"
                             dangerouslySetInnerHTML={{ __html: faq.answer }}
                           />
                         </motion.div>
@@ -252,7 +330,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                 );
               })}
             </div>
-          </motion.section>
+          </section>
         )}
 
       </div>

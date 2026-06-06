@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaUserDoctor } from "react-icons/fa6";
 import { API_URL } from "../../config";
 
 export default function DoctorListUser() {
@@ -12,8 +13,9 @@ export default function DoctorListUser() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Filtering States
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  
   const [specialtySearch, setSpecialtySearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
 
@@ -49,14 +51,33 @@ export default function DoctorListUser() {
     return { specialties: uniqueSpecialties as string[], locations: uniqueLocations as string[] };
   }, [doctors]);
 
-  // Apply Filters
+  // Apply Multi-Checkbox Filters
   const filteredDoctors = useMemo(() => {
     return doctors.filter((doc) => {
-      const matchSpecialty = selectedSpecialty ? doc.department === selectedSpecialty : true;
-      const matchLocation = selectedLocation ? doc.location?.includes(selectedLocation) : true;
+      const matchSpecialty = 
+        selectedSpecialties.length === 0 || 
+        selectedSpecialties.includes(doc.department);
+        
+      const matchLocation = 
+        selectedLocations.length === 0 || 
+        selectedLocations.some(loc => doc.location?.includes(loc));
+        
       return matchSpecialty && matchLocation;
     });
-  }, [doctors, selectedSpecialty, selectedLocation]);
+  }, [doctors, selectedSpecialties, selectedLocations]);
+
+  // Checkbox Handlers
+  const handleSpecialtyChange = (spec: string) => {
+    setSelectedSpecialties(prev => 
+      prev.includes(spec) ? prev.filter(s => s !== spec) : [...prev, spec]
+    );
+  };
+
+  const handleLocationChange = (loc: string) => {
+    setSelectedLocations(prev => 
+      prev.includes(loc) ? prev.filter(l => l !== loc) : [...prev, loc]
+    );
+  };
 
   // --- Framer Motion Animations ---
   const staggerContainer = {
@@ -68,9 +89,9 @@ export default function DoctorListUser() {
   };
 
   const itemFadeUp = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.2 } }
   };
 
   if (isLoading) {
@@ -87,55 +108,56 @@ export default function DoctorListUser() {
   return (
     <div className="bg-white min-h-screen pb-20 overflow-x-hidden">
       
-      {/* 1. HERO SECTION (Solid Background with Image on Top) */}
-      <section className="relative w-full bg-[#5B328C] mb-12 pt-10 lg:pt-0 overflow-hidden">
-        <div className="container max-w-[1800px] flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-8">
-          
-          {/* Left Image sitting freely on top of background */}
-          <motion.div 
-            initial={{ x: -30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-[45%] lg:w-[40%] h-[350px] lg:h-[450px] relative shrink-0 self-end"
-          >
-            <Image 
-              src="/hero-doctors.png" // <-- Using your transparent PNG
-              alt="Medical Experts" 
-              fill 
-              className="object-contain object-bottom md:object-left-bottom"
-              priority
-            />
-          </motion.div>
-
-          {/* Right Text Content */}
-          <div className="w-full md:w-[50%] text-center md:text-left z-10 py-10 lg:py-20">
+      {/* 1. HERO SECTION (Full background, Text Left, Image strictly on Right edge) */}
+      <section className="relative w-full bg-[#5B328C] mb-12 flex flex-col md:flex-row overflow-hidden min-h-[350px] md:min-h-[450px]">
+        
+        {/* Left Text Content (Constrained inside container) */}
+        <div className="container mx-auto max-w-[1400px] px-4 lg:px-12 flex z-10 relative">
+          <div className="w-full flex flex-col justify-center py-12 md:py-20 lg:py-24">
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white mb-6 leading-tight"
+              initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white mb-4 leading-tight"
             >
               Meet the Medical Experts Behind Your Care
             </motion.h1>
             <motion.p 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-              className="text-white/90 text-base lg:text-lg leading-relaxed max-w-xl mx-auto md:mx-0"
+              initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-white/90 text-sm md:text-base lg:text-lg leading-relaxed max-w-xl"
             >
               Our experienced specialists provide compassionate and advanced medical care across multiple specialties.
             </motion.p>
           </div>
-
         </div>
+
+        {/* Right Image (Bleeding to the right edge with top-left curve) */}
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full md:absolute md:right-0 md:top-0 md:bottom-0 md:w-[45%] h-[300px] md:h-auto z-0"
+        >
+          {/* The rounded-tl-[120px] recreates the moon-like cutout curve on the top left */}
+          <div className="w-full h-full relative overflow-hidden">
+            <Image 
+              src="/hero-doctors.png" // <-- Replace with your actual hero image
+              alt="Medical Experts" 
+              fill 
+              className="object-contain object-right rounded-tl-[120px] md:rounded-tl-[150px] lg:rounded-tl-[200px]"
+              priority
+            />
+          </div>
+        </motion.div>
+
       </section>
 
-      {/* 2. MAIN LAYOUT (Sidebar + Grid) */}
+      {/* 2. MAIN LAYOUT (Sidebar + List View Grid) */}
       <section className="px-4 lg:px-12">
-        <div className="container mx-auto max-w-[1400px] flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="container mx-auto max-w-[1400px] flex flex-col lg:flex-row gap-8 lg:gap-10">
           
-          {/* SIDEBAR */}
+          {/* SIDEBAR (With Checkboxes) */}
           <motion.aside 
             initial={{ opacity: 0, x: -30 }} 
             animate={{ opacity: 1, x: 0 }} 
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[300px] shrink-0 bg-[#F6FBFF] p-6 lg:p-8 h-fit border border-gray-100 rounded-lg"
+            className="w-full lg:w-[320px] shrink-0 bg-[#F8FAFC] p-6 lg:p-8 h-fit border border-gray-100 rounded-xl"
           >
             {/* Specialties Filter */}
             <div className="mb-10">
@@ -145,25 +167,26 @@ export default function DoctorListUser() {
                 placeholder="Search Specialties" 
                 value={specialtySearch}
                 onChange={(e) => setSpecialtySearch(e.target.value)}
-                // Fixed text color and placeholder visibility
                 className="w-full p-2.5 bg-white border border-gray-200 rounded text-sm mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
               />
               <ul className="space-y-3.5 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                <li 
-                  onClick={() => setSelectedSpecialty(null)}
-                  className={`text-[13px] cursor-pointer transition-colors ${!selectedSpecialty ? "text-[#5B328C] font-bold" : "text-gray-800 hover:text-[#5B328C]"}`}
-                >
-                  All Specialties
-                </li>
                 {specialties
                   .filter(s => s.toLowerCase().includes(specialtySearch.toLowerCase()))
                   .map((spec, idx) => (
-                  <li 
-                    key={idx} 
-                    onClick={() => setSelectedSpecialty(spec)}
-                    className={`text-[13px] cursor-pointer transition-colors leading-snug ${selectedSpecialty === spec ? "text-[#5B328C] font-bold" : "text-gray-800 hover:text-[#5B328C]"}`}
-                  >
-                    {spec}
+                  <li key={idx}>
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input 
+                        type="checkbox"
+                        checked={selectedSpecialties.includes(spec)}
+                        onChange={() => handleSpecialtyChange(spec)}
+                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
+                      />
+                      <span className={`text-[13px] leading-snug transition-colors ${
+                        selectedSpecialties.includes(spec) ? "text-[#5B328C] font-bold" : "text-gray-800 group-hover:text-[#5B328C]"
+                      }`}>
+                        {spec}
+                      </span>
+                    </label>
                   </li>
                 ))}
               </ul>
@@ -177,38 +200,39 @@ export default function DoctorListUser() {
                 placeholder="Search Location" 
                 value={locationSearch}
                 onChange={(e) => setLocationSearch(e.target.value)}
-                // Fixed text color and placeholder visibility
                 className="w-full p-2.5 bg-white border border-gray-200 rounded text-sm mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
               />
               <ul className="space-y-3.5 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                <li 
-                  onClick={() => setSelectedLocation(null)}
-                  className={`text-[13px] cursor-pointer transition-colors ${!selectedLocation ? "text-[#5B328C] font-bold" : "text-gray-800 hover:text-[#5B328C]"}`}
-                >
-                  All Locations
-                </li>
                 {locations
                   .filter(l => l.toLowerCase().includes(locationSearch.toLowerCase()))
                   .map((loc, idx) => (
-                  <li 
-                    key={idx} 
-                    onClick={() => setSelectedLocation(loc)}
-                    className={`text-[13px] cursor-pointer transition-colors flex items-center gap-2 ${selectedLocation === loc ? "text-[#5B328C] font-bold" : "text-gray-800 hover:text-[#5B328C]"}`}
-                  >
-                    <span className="font-bold text-lg leading-none mb-1">•</span> {loc}
+                  <li key={idx}>
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input 
+                        type="checkbox"
+                        checked={selectedLocations.includes(loc)}
+                        onChange={() => handleLocationChange(loc)}
+                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
+                      />
+                      <span className={`text-[13px] leading-snug transition-colors ${
+                        selectedLocations.includes(loc) ? "text-[#5B328C] font-bold" : "text-gray-800 group-hover:text-[#5B328C]"
+                      }`}>
+                        {loc}
+                      </span>
+                    </label>
                   </li>
                 ))}
               </ul>
             </div>
           </motion.aside>
 
-          {/* DOCTORS GRID */}
+          {/* DOCTORS LIST (Single Column Layout) */}
           <div className="flex-1 min-w-0">
             {filteredDoctors.length === 0 ? (
-              <div className="text-center py-20 bg-gray-50 border border-gray-100 rounded-lg">
+              <div className="text-center py-20 bg-gray-50 border border-gray-100 rounded-xl">
                 <p className="text-gray-500 font-medium">No doctors found matching your criteria.</p>
                 <button 
-                  onClick={() => { setSelectedSpecialty(null); setSelectedLocation(null); }}
+                  onClick={() => { setSelectedSpecialties([]); setSelectedLocations([]); }}
                   className="mt-4 text-[#5B328C] font-bold underline"
                 >
                   Clear Filters
@@ -219,12 +243,10 @@ export default function DoctorListUser() {
                 variants={staggerContainer} 
                 initial="hidden" 
                 animate="show" 
-                // Changed from 3 columns to 2 columns on large screens
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 lg:gap-8"
+                className="flex flex-col gap-6"
               >
                 <AnimatePresence>
                   {filteredDoctors.map((doctor: any) => {
-                    
                     const designationText = doctor.designations && doctor.designations.length > 0 
                       ? doctor.designations.join(" | ") 
                       : doctor.designation;
@@ -234,66 +256,86 @@ export default function DoctorListUser() {
                         variants={itemFadeUp}
                         key={doctor.doctorId} 
                         layout
-                        // Changed background to light blue (#F4F9FF)
-                        className="bg-[#FCF9FF] rounded-xl overflow-hidden p-6 flex flex-col group border border-blue-50/50 hover:border-blue-100 hover:shadow-lg transition-all duration-300"
+                        // Group Hover handles the transition from the light card to the dark gradient card
+                        className="group bg-[#F4F9FF] hover:bg-gradient-to-r hover:from-[#5B328C] hover:to-[#005B9F] rounded-[24px] overflow-hidden p-5 flex flex-col md:flex-row gap-6 border border-blue-100 hover:border-transparent hover:shadow-xl transition-all duration-500"
                       >
-                        {/* Custom Rounded Image Box */}
-                        <div className="w-full bg-[#EAF1FA] rounded-[24px] border-[1.5px] border-[#5B328C] overflow-hidden aspect-square relative mb-5">
+                        
+                        {/* Doctor Image Container (Added Border) */}
+                        <div className="w-full md:w-[220px] shrink-0 bg-white rounded-[20px] border-[2px] border-[#5B328C] group-hover:border-white/40 overflow-hidden aspect-[4/5] relative transition-colors duration-500">
                           {doctor.image ? (
                             <Image 
                               src={doctor.image} 
                               alt={doctor.name} 
                               fill 
-                              className="object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                              sizes="(max-width: 768px) 100vw, 50vw"
+                              className="object-cover object-top"
+                              sizes="(max-width: 768px) 100vw, 300px"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
-                              No Image
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
+                              Alavi Hospitals
                             </div>
                           )}
                         </div>
 
                         {/* Doctor Details */}
-                        <div className="flex flex-col flex-1 text-left">
-                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`}>
-                            <h2 className="text-[19px] font-bold text-[#5B328C] mb-1.5 hover:underline decoration-2 underline-offset-2 break-words">
+                        <div className="flex flex-col flex-1 py-2 text-left">
+                          
+                          {/* Department with Icon & Divider Line */}
+                          <div className="flex flex-col mb-4">
+                            <div className="flex items-center gap-2.5 pb-3">
+                              <div className="bg-white p-1.5 rounded-full shrink-0 group-hover:bg-white/20 transition-colors shadow-sm group-hover:shadow-none">
+                                <FaUserDoctor className="text-[#005B9F] group-hover:text-white transition-colors" />
+                              </div>
+                              <span className="text-[14px] font-bold text-[#005B9F] group-hover:text-white transition-colors">
+                                {doctor.department}
+                              </span>
+                            </div>
+                            {/* Horizontal Line separating Department and Name */}
+                            <hr className="border-t-[1.5px] border-blue-200 group-hover:border-white/30 transition-colors w-full" />
+                          </div>
+
+                          {/* Name */}
+                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="w-fit">
+                            <h2 className="text-[22px] font-bold text-[#5B328C] group-hover:text-white transition-colors mb-1.5 hover:underline decoration-2 underline-offset-4 break-words">
                               {doctor.name}
                             </h2>
                           </Link>
                           
                           {/* Designations */}
-                          <p className="text-[13px] font-medium text-gray-800 leading-snug mb-1.5 break-words line-clamp-2">
+                          <p className="text-[13px] font-medium text-gray-800 group-hover:text-white/90 transition-colors leading-snug mb-3 break-words line-clamp-2">
                             {designationText}
                           </p>
                           
-                          {/* Qualifications */}
+                          {/* Qualifications Badge */}
                           {doctor.qualification && (
-                            <p className="text-[13px] text-gray-800 leading-snug mb-5 break-words line-clamp-2">
-                              {doctor.qualification}
-                            </p>
+                            <div className="mb-4">
+                              <span className="inline-block bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#5B328C] transition-colors text-[12px] font-semibold py-1.5 px-3 rounded shadow-sm break-words line-clamp-2">
+                                {doctor.qualification}
+                              </span>
+                            </div>
                           )}
                           
                           {/* Experience */}
                           {doctor.experience && (
-                            <p className="text-[13px] text-gray-800 mb-6 font-medium mt-auto">
-                              <span className="text-[#5B328C]">Experience :</span> {doctor.experience}
+                            <p className="text-[13px] font-semibold text-[#5B328C] group-hover:text-white transition-colors mb-6 mt-auto">
+                              Experience : {doctor.experience}
                             </p>
                           )}
 
-                          {/* Side-by-Side Action Buttons */}
-                          <div className="flex flex-col sm:flex-row gap-3 mt-auto pt-2">
-                            <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="flex-1">
-                              <button className="w-full bg-white text-[#5B328C] border border-[#5B328C] hover:bg-[#F3E8FF] font-semibold text-[13px] py-3 px-2 rounded-lg transition-colors whitespace-nowrap shadow-sm">
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+                            <Link href={`/doctors/${doctor.url || doctor.doctorId}`}>
+                              <button className="cursor-pointer w-full sm:w-auto bg-transparent text-[#5B328C] border-[1.5px] border-[#5B328C] group-hover:text-white group-hover:border-white hover:bg-[#5B328C]/10 font-bold text-[12px] py-2.5 px-6 rounded transition-colors whitespace-nowrap">
                                 View Profile
                               </button>
                             </Link>
-                            <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`} className="flex-1">
-                              <button className="w-full bg-[#5B328C] text-white hover:bg-[#4a2873] font-semibold text-[13px] py-3 px-2 rounded-lg transition-colors whitespace-nowrap shadow-sm">
-                                Book Appointment
+                            <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`}>
+                              <button className="cursor-pointer w-full sm:w-auto bg-[#5B328C] text-white group-hover:bg-white group-hover:text-[#5B328C] hover:opacity-90 font-bold text-[12px] py-2.5 px-6 rounded transition-colors whitespace-nowrap shadow-sm">
+                                Book an Appointment
                               </button>
                             </Link>
                           </div>
+
                         </div>
                       </motion.div>
                     );

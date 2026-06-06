@@ -2,18 +2,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Calendar, 
-  Clock, 
-  ArrowRight, 
-  Loader2, 
-  Search, 
-  BookOpen, 
-  HeartPulse,
-  Filter 
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { API_URL } from "../../config";
+import CallToAction from "../../components/home/CallToAction";
 
 // --- TYPES ---
 interface ExtraField {
@@ -34,7 +27,6 @@ interface BlogPost {
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
   // --- HELPER: Strip HTML & Decode Entities ---
@@ -49,15 +41,7 @@ export default function BlogsPage() {
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'");
     text = text.replace(/\s+/g, ' ').trim();
-    return text.length > 100 ? text.substring(0, 100) + "..." : text;
-  };
-
-  // --- HELPER: Calculate Read Time ---
-  const calculateReadTime = (text: string) => {
-    const wordsPerMinute = 200;
-    const noOfWords = text.split(/\s/g).length;
-    const minutes = Math.ceil(noOfWords / wordsPerMinute);
-    return `${minutes} min read`;
+    return text.length > 120 ? text.substring(0, 120) + "..." : text;
   };
 
   // --- FETCH DATA ---
@@ -90,213 +74,182 @@ export default function BlogsPage() {
   }, [blogs]);
 
   const filteredBlogs = useMemo(() => {
-    const query = searchQuery.toLowerCase();
     return blogs.filter(post => {
-      const matchQuery = post.blogTitle.toLowerCase().includes(query) ||
-                         post.categories.some(cat => cat.toLowerCase().includes(query));
-      
-      const matchCategory = activeCategory === "All" || post.categories.includes(activeCategory);
-      
-      return matchQuery && matchCategory;
+      if (activeCategory === "All") return true;
+      return post.categories?.includes(activeCategory);
     });
-  }, [searchQuery, activeCategory, blogs]);
+  }, [activeCategory, blogs]);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 font-sans">
+    <div className="min-h-screen bg-[#FAFAFA] pb-24 font-sans">
       
       {/* --- HERO SECTION --- */}
-      <section className="bg-white border-b border-gray-100 relative overflow-hidden">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#5B328C]/50 rounded-full blur-3xl opacity-40 -mr-20 -mt-20"></div>
-        
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12 md:py-16 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-16">
-            
-            {/* Left: Text Content */}
-            <div className="max-w-2xl">
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5B328C]/50 text-[#5B328C] text-xs font-bold uppercase tracking-widest mb-4 border border-[#5B328C]/100"
-              >
-                <HeartPulse className="w-3.5 h-3.5" /> Medical Knowledge Hub
-              </motion.div>
-              
+      {/* Applied Exact Linear Gradient Requested */}
+      <section 
+        className="relative w-full overflow-hidden flex min-h-[300px] md:min-h-[350px]"
+        style={{ background: 'linear-gradient(90deg, #663399 48.69%, #0066A9 111.15%)' }}
+      >
+        <div className="container mx-auto max-w-[1400px] px-6 lg:px-12 relative z-10 flex flex-col md:flex-row items-center justify-between">
+           
+           {/* Left Text */}
+           <div className="w-full md:w-1/2 py-12 text-center md:text-left">
               <motion.h1 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight"
               >
-                Insights for a <span className="text-[#5B328C]">Healthier Lifestyle.</span>
+                Expert care begins <br className="hidden md:block" /> with knowing more
               </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-gray-500 text-base md:text-lg leading-relaxed max-w-xl"
-              >
-                Explore expert articles on preventive health care, treatments, and lifestyle tips curated by Alavi Hospitals.
-              </motion.p>
-            </div>
+           </div>
 
-            {/* Right: Search Box */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="w-full md:max-w-md"
-            >
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#5B328C] transition-colors" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B328C]/20 focus:border-[#5B328C] shadow-sm transition-all"
-                />
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Category Filter Pills (New Addition) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-10 flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide"
-          >
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-400 mr-2">
-              <Filter className="w-4 h-4" /> Filters:
-            </div>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`
-                  px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all border
-                  ${activeCategory === cat 
-                    ? "bg-[#5B328C] text-white border-[#5B328C] shadow-md" 
-                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"}
-                `}
+           {/* Right PNG Image Container */}
+           {/* Applied absolute positioning to the wrapper itself so it perfectly anchors to the bottom right */}
+           <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0 md:absolute md:bottom-0 md:right-6 lg:right-12 z-0 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative w-80 h-80 md:w-[400px] md:h-[400px] lg:w-[1200px] lg:h-[500px] shrink-0 pointer-events-auto"
               >
-                {cat}
-              </button>
-            ))}
-          </motion.div>
+                 <Image 
+                   src="/blog-hero-hands.png" // Update to your exact PNG path
+                   alt="Expert Care" 
+                   fill 
+                   // object-bottom forces the image pixels to perfectly touch the bottom boundary
+                   className="object-contain object-bottom"
+                   priority 
+                 />
+              </motion.div>
+           </div>
         </div>
       </section>
 
+      {/* --- CATEGORY PILLS --- */}
+      <div className="max-w-[1400px] mx-auto mt-10 px-4 sm:px-6 lg:px-12">
+         <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-nowrap md:flex-wrap items-center justify-start md:justify-center gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide"
+          >
+           {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-6 py-2.5 rounded-full text-[13px] md:text-sm font-bold whitespace-nowrap transition-all duration-300 ${
+                   activeCategory === cat 
+                     ? "bg-[#5B328C] text-white border border-[#5B328C] shadow-md" 
+                     : "bg-white border border-[#0066A9] text-[#0066A9] hover:bg-[#F3E8FF]"
+                }`}
+              >
+                {cat === "All" ? "All Topics" : cat}
+              </button>
+           ))}
+         </motion.div>
+      </div>
+
+      {/* --- LATEST ARTICLES HEADING --- */}
+      <div className="max-w-[1400px] mx-auto px-4 text-center mt-12 mb-10">
+        <h2 className="text-[22px] md:text-2xl font-bold text-[#5B328C]">Latest Articles</h2>
+      </div>
+
       {/* --- BLOG GRID --- */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12">
+      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
         
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
+          <div className="flex flex-col items-center justify-center py-20 min-h-[300px]">
             <Loader2 className="w-10 h-10 animate-spin text-[#5B328C] mb-3" />
-            <p className="text-gray-400 text-sm font-medium">Loading articles...</p>
+            <p className="text-[#5B328C] font-semibold animate-pulse">Loading articles...</p>
           </div>
         ) : filteredBlogs.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
-            <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">No articles found</h3>
-            <p className="text-gray-500 text-sm">We couldn't find any matches for "{searchQuery}".</p>
+          <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No articles found</h3>
+            <p className="text-gray-500 text-sm">We couldn't find any articles in this category.</p>
             <button 
-              onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
-              className="mt-4 text-[#5B328C] font-bold text-sm hover:underline"
+              onClick={() => setActiveCategory("All")}
+              className="mt-6 bg-[#5B328C] text-white px-6 py-2 rounded-full font-bold text-sm shadow-md hover:bg-[#4a2873] transition-colors"
             >
-              Clear Filters
+              View All Topics
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             <AnimatePresence mode="popLayout">
               {filteredBlogs.map((post, i) => {
                 
                 // Process Data
-                const category = post.categories?.[0] || "Medical";
-                const dateStr = new Date(post.timeline).toLocaleDateString('en-US', {
-                  month: 'short', day: 'numeric', year: 'numeric'
-                });
+                const primaryCategory = post.categories?.[0] || "Medical";
                 const rawDesc = post.extraFields?.[0]?.description || "";
                 const excerpt = getExcerpt(rawDesc);
-                const readTime = calculateReadTime(rawDesc);
 
                 return (
                   <motion.article
                     layout
                     key={post.blogId}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                    className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/40 hover:-translate-y-1 transition-all duration-300"
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
                   >
-                    {/* Image */}
-                    <Link href={`/blog/${post.url}`} className="relative h-56 bg-gray-100 overflow-hidden block">
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[#5B328C] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm border border-white/20">
-                          {category}
-                        </span>
-                      </div>
-                      <img 
-                        src={post.blogImage || "https://placehold.co/600x400?text=Medical+Blog"} 
-                        alt={post.blogTitle}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                    </Link>
-
-                    {/* Content */}
-                    <div className="flex flex-col flex-grow p-6">
-                      {/* Meta */}
-                      <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-3 font-semibold uppercase tracking-wider">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{dateStr}</span>
-                        </div>
-                        <span className="text-gray-300">•</span>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{readTime}</span>
+                    <Link 
+                      href={`/blog/${post.url || post.blogId}`} 
+                      className="group flex flex-col h-full bg-white rounded-[24px] border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                    >
+                      {/* Image Area with Floating Category Pill */}
+                      <div className="relative w-full aspect-[16/10] bg-[#C4AED9] overflow-hidden">
+                        {post.blogImage && (
+                          <Image 
+                            src={post.blogImage} 
+                            alt={post.blogTitle}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                        )}
+                        {/* Floating Pill */}
+                        <div className="absolute top-5 left-5 bg-[#5B328C] text-white text-[12px] font-bold px-4 py-1.5 rounded-full shadow-sm z-10">
+                          {primaryCategory}
                         </div>
                       </div>
 
-                      {/* Title */}
-                      <h3 className="font-serif text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-[#5B328C] transition-colors">
-                        <Link href={`/blog/${post.url}`}>
+                      {/* Content Area */}
+                      <div className="p-6 md:p-8 flex flex-col flex-1 bg-white">
+                        
+                        {/* Category Subhead */}
+                        <h4 className="text-[#5B328C] font-bold text-lg mb-2">
+                          {primaryCategory}
+                        </h4>
+                        
+                        {/* Blog Title */}
+                        <h3 className="text-gray-900 font-bold text-xl md:text-[22px] mb-3 leading-snug group-hover:text-[#5B328C] transition-colors">
                           {post.blogTitle}
-                        </Link>
-                      </h3>
-
-                      {/* Excerpt */}
-                      <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
-                        {excerpt}
-                      </p>
-
-                      {/* Footer */}
-                      <div className="pt-5 border-t border-gray-50 flex items-center justify-between mt-auto">
-                        <Link 
-                          href={`/blog/${post.url}`}
-                          className="inline-flex items-center gap-2 text-gray-900 font-bold text-xs uppercase tracking-wide hover:text-[#5B328C] transition-colors group/link"
-                        >
-                          Read Article 
-                          <ArrowRight className="w-3.5 h-3.5 transform group-hover/link:translate-x-1 transition-transform" />
-                        </Link>
+                        </h3>
+                        
+                        {/* Excerpt */}
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                          {excerpt}
+                        </p>
                       </div>
-                    </div>
+                    </Link>
                   </motion.article>
                 );
               })}
             </AnimatePresence>
           </div>
         )}
+        <CallToAction />
       </section>
+      
+
+      {/* Global Style to hide horizontal scrollbar for pills */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      `}} />
     </div>
   );
 }

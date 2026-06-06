@@ -1,135 +1,234 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaChevronLeft, FaChevronRight, FaCirclePlay } from "react-icons/fa6";
 
-const specialties = [
+// --- STATIC DATA STRUCTURE (Ready for Dynamic Replacement) ---
+const specialtiesData = [
   {
-    title: "General Medicine\n& Diabetology",
-    description: "Comprehensive care for acute and chronic illnesses with expert diabetes management and preventive health guidance.",
-    image: "/gen-med.jpg",
+    id: "general-medicine",
+    name: "General Medicine",
+    description: "Comprehensive care for adults with a focus on early diagnosis, prevention, and effective treatment of everyday and long-term health conditions.",
+    mainImage: "/specialties/general-medicine-main.png",
+    features: [
+      { title: "Diabetes &\nHypertension", image: "/specialties/diabetes-feat.png" },
+      { title: "Thyroid & Chronic\nConditions", image: "/specialties/thyroid-feat.png" },
+      { title: "Fever &\nInfections", image: "/specialties/fever-feat.png" },
+    ],
+    topProcedures: [
+      "Liver & pancreatic disease care",
+      "Stomach & gut related treatments",
+      "Kidney & bladder disease management",
+      "Diabetic foot care (non-healing ulcers)"
+    ]
   },
   {
-    title: "Obstetrics, Gynecology\n& Fertility",
-    description: "Complete women's health care including pregnancy, advanced gynecology treatments and fertility solutions.",
-    image: "/obgyn.jpg",
+    id: "gynecology",
+    name: "Gynecology",
+    description: "Expert women's healthcare providing comprehensive services from routine checkups and prenatal care to advanced gynecological surgeries.",
+    mainImage: "/specialties/gynecology-main.jpg",
+    features: [
+      { title: "Maternity\nCare", image: "/specialties/maternity-feat.jpg" },
+      { title: "Women's\nWellness", image: "/specialties/wellness-feat.jpg" },
+      { title: "Fertility\nSolutions", image: "/specialties/fertility-feat.jpg" },
+    ],
+    topProcedures: [
+      "High-risk pregnancy management",
+      "Minimally invasive gynecologic surgery",
+      "PCOS and hormonal imbalance treatment",
+      "Preventive screenings (Pap smears, Mammograms)"
+    ]
   },
-  {
-    title: "Pediatrics &\nNeonatology",
-    description: "Specialized medical care for infants, newborns and children with advanced neonatal support.",
-    image: "/pediatrics.jpg",
-  },
-  {
-    title: "Cardiology",
-    description: "Advanced heart care with modern diagnostics, interventional procedures and preventive cardiology.",
-    image: "/cardiology.jpg",
-  },
-  {
-    title: "Neurology &\nNeurosurgery",
-    description: "Expert care for brain, spine and nervous system disorders with medical and surgical excellence.",
-    image: "/neurology.jpg",
-  },
-  {
-    title: "Orthopedics, Joint\nReplacement & Sports\nInjury",
-    description: "Comprehensive bone and joint care including joint replacement and sports injury rehabilitation.",
-    image: "/orthopedics.jpg",
-  },
-  {
-    title: "General & Laparoscopic\nSurgery",
-    description: "Minimally invasive and advanced surgical procedures for faster recovery and better outcomes.",
-    image: "/surgery.jpg",
-  },
-  {
-    title: "Physiotherapy &\nRehabilitation",
-    description: "Structured rehabilitation programs designed to enhance mobility, strength and quality of life.",
-    image: "/physio.jpg",
-  },
-  {
-    title: "Oncology",
-    description: "Integrated cancer care with chemotherapy, surgical expertise and individualized treatment planning.",
-    image: "/oncology.jpg",
-  },
+  // Add placeholder empty objects for the rest to make the tabs functional
+  { id: "paediatrics", name: "Paediatrics", description: "Coming soon...", mainImage: "", features: [], topProcedures: [] },
+  { id: "neurology", name: "Neurology", description: "Coming soon...", mainImage: "", features: [], topProcedures: [] },
+  { id: "orthopaedics", name: "Orthopaedics", description: "Coming soon...", mainImage: "", features: [], topProcedures: [] },
 ];
 
-const Specialties = () => {
-  return (
-    // The soft background color matching the design
-    <section className="py-20 bg-[#F8FAFC] px-4 lg:px-12">
-      <div className="container mx-auto max-w-7xl">
-        
-        {/* Section Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl lg:text-4xl font-bold text-[#5B328C]">
-            Specialties
-          </h2>
-        </motion.div>
+export default function Specialties() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  
+  const currentSpecialty = specialtiesData[activeIndex];
 
-        {/* 3x3 Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {specialties.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              // Staggered delay so they appear one after another
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
-              <Link href="/specialties" className="block h-full outline-none">
-                <div className="bg-white rounded-2xl p-5 flex items-center gap-5 h-full border-2 border-transparent hover:border-[#5B328C] transition-all duration-300 shadow-sm hover:shadow-lg group">
+  // Navigation Handlers
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === 0 ? specialtiesData.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === specialtiesData.length - 1 ? 0 : prev + 1));
+  };
+
+  return (
+    <section className="py-16 lg:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto max-w-8xl px-4 lg:px-12">
+        
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#5B328C] mb-3">
+            Our Specialties
+          </h2>
+          <p className="text-gray-900 font-medium text-lg">
+            Comprehensive Care for Every Need
+          </p>
+        </div>
+
+        {/* Top Pill Navigation */}
+        <div className="flex items-center gap-3 md:justify-center overflow-x-auto pb-6 hide-scrollbar">
+          {specialtiesData.map((spec, idx) => {
+            const isActive = activeIndex === idx;
+            return (
+              <button
+                key={spec.id}
+                onClick={() => setActiveIndex(idx)}
+                className={`cursor-pointer whitespace-nowrap px-6 py-2.5 rounded-full border-2 font-semibold text-sm transition-all duration-300 ${
+                  isActive 
+                    ? "bg-[#0066B3] border-[#0066B3] text-white shadow-md" 
+                    : "bg-white border-[#0066B3] text-[#0066B3] hover:bg-blue-50"
+                }`}
+              >
+                {spec.name}
+              </button>
+            );
+          })}
+          
+          <Link href="/specialties">
+            <button className="cursor-pointer whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-[#0066B3] bg-white text-[#0066B3] font-semibold text-sm flex items-center gap-2 hover:bg-blue-50 transition-colors">
+              View all <FaCirclePlay className="text-lg" />
+            </button>
+          </Link>
+        </div>
+
+        {/* Main Content Card Container */}
+        <div className="relative mt-4">
+          
+          {/* Outer Navigation Arrows (Positioned over the card edges) */}
+          <button 
+            onClick={handlePrev}
+            className="absolute left-0 md:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-[#5B328C] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#4a2873] hover:scale-105 transition-all"
+          >
+            <FaChevronLeft className="text-sm md:text-lg mr-1" />
+          </button>
+
+          <button 
+            onClick={handleNext}
+            className="absolute right-0 md:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-[#5B328C] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#4a2873] hover:scale-105 transition-all"
+          >
+            <FaChevronRight className="text-sm md:text-lg ml-1" />
+          </button>
+
+          {/* Gradient Card */}
+          <div className="bg-gradient-to-br from-[#6A329F] via-[#4842A1] to-[#1660A9] rounded-[32px] md:rounded-[40px] shadow-2xl p-6 lg:p-10 min-h-[450px] flex items-center relative overflow-hidden">
+            
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="w-full flex flex-col lg:flex-row gap-8 lg:gap-12 w-full"
+              >
+                
+                {/* Left Side: Main Image */}
+                <div className="w-full lg:w-[35%] shrink-0">
+                  <div className="relative w-full aspect-[4/3] lg:aspect-square bg-white/20 rounded-[24px] overflow-hidden">
+                    {currentSpecialty.mainImage ? (
+                      <Image 
+                        src={currentSpecialty.mainImage} 
+                        alt={currentSpecialty.name} 
+                        fill 
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white/50 font-medium">Image Not Available</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Side: Content */}
+                <div className="w-full lg:w-[65%] flex flex-col justify-center">
                   
-                  {/* Image Container */}
-                  <div className="relative w-24 h-24 lg:w-28 lg:h-28 flex-shrink-0 rounded-xl overflow-hidden shadow-inner">
-                    <Image
-                      src={item.image}
-                      alt={item.title.replace('\n', ' ')}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    {currentSpecialty.name}
+                  </h3>
+                  
+                  <p className="text-white/90 text-sm md:text-base leading-relaxed max-w-2xl mb-2">
+                    {currentSpecialty.description}
+                  </p>
+                  <Link href={`/specialties/${currentSpecialty.id}`} className="text-white font-semibold text-sm underline underline-offset-4 mb-8 inline-block hover:text-white/80">
+                    Read More...
+                  </Link>
+
+                  {/* Features & Procedures Grid */}
+                  <div className="flex flex-col md:flex-row gap-8 lg:gap-12 mb-10">
+                    
+                    {/* Small Feature Cards */}
+                    <div className="flex gap-4 lg:gap-6">
+                      {currentSpecialty.features.map((feat, idx) => (
+                        <div key={idx} className="flex flex-col items-center text-center gap-3 w-20 md:w-24">
+                          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white/20 shrink-0 shadow-sm border border-white/10">
+                            {feat.image && (
+                              <Image src={feat.image} alt={feat.title} fill className="object-cover" />
+                            )}
+                          </div>
+                          <p className="text-white text-[11px] md:text-xs font-medium leading-snug whitespace-pre-line">
+                            {feat.title}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Top Procedures List */}
+                    <div className="flex-1">
+                      <h4 className="text-white font-bold text-lg mb-4">Top Procedures</h4>
+                      <ul className="space-y-3">
+                        {currentSpecialty.topProcedures.map((proc, idx) => (
+                          <li key={idx} className="text-white/90 text-sm flex items-start gap-2">
+                            <span className="text-white text-[10px] mt-1.5 shrink-0">●</span>
+                            <span className="leading-snug">{proc}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
                   </div>
 
-                  {/* Text Content */}
-                  <div className="flex flex-col justify-center">
-                    <h3 className="text-[#5B328C] text-[15px] lg:text-[16px] font-bold leading-snug mb-2 whitespace-pre-line">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-700 text-[12px] lg:text-[13px] leading-relaxed">
-                      {item.description}
-                    </p>
+                  {/* Call to Action Buttons */}
+                  <div className="flex gap-4">
+                    <Link href={`/doctors?specialty=${currentSpecialty.id}`}>
+                      <button className="cursor-pointer bg-white text-[#5B328C] hover:bg-gray-50 px-8 py-3 rounded-full font-bold text-sm shadow-md transition-colors">
+                        Find a doctor
+                      </button>
+                    </Link>
+                    <Link href={`/specialties/${currentSpecialty.id}`}>
+                      <button className="cursor-pointer bg-white text-[#5B328C] hover:bg-gray-50 px-8 py-3 rounded-full font-bold text-sm shadow-md transition-colors">
+                        Explore more
+                      </button>
+                    </Link>
                   </div>
 
                 </div>
-              </Link>
-            </motion.div>
-          ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* View More Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <Link href="/all-specialties">
-            <button className="bg-[#5B328C] text-white px-10 py-3 rounded-full text-[16px] font-medium hover:bg-[#4a2873] hover:shadow-lg transition-all duration-300 active:scale-95">
-              View More
-            </button>
-          </Link>
-        </motion.div>
-
       </div>
+
+      {/* Hide Scrollbar Style for the Tabs */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}} />
     </section>
   );
-};
-
-export default Specialties;
+}
