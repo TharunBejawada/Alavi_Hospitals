@@ -4,13 +4,15 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, hover } from "framer-motion";
 import { FaUserDoctor } from "react-icons/fa6";
 import { API_URL } from "../../config";
+import AppointmentPopup from "../../components/AppointmentPopup";
 
 export default function DoctorListUser() {
   const [doctors, setDoctors] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Filtering States
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
@@ -106,23 +108,23 @@ export default function DoctorListUser() {
   }
 
   return (
-    <div className="bg-white min-h-screen pb-20 overflow-x-hidden">
+    <div className="font-[Poppins] bg-white min-h-screen pb-20 overflow-x-hidden">
       
       {/* 1. HERO SECTION (Full background, Text Left, Image strictly on Right edge) */}
-      <section className="relative w-full bg-[#5B328C] mb-12 flex flex-col md:flex-row overflow-hidden min-h-[350px] md:min-h-[450px]">
+      <section style={{ background: 'linear-gradient(90deg, #663399 48.69%, #0066A9 111.15%)' }} className="relative w-full mb-12 flex flex-col md:flex-row overflow-hidden min-h-[350px] md:min-h-[450px]">
         
         {/* Left Text Content (Constrained inside container) */}
         <div className="container mx-auto max-w-[1400px] px-4 lg:px-12 flex z-10 relative">
           <div className="w-full flex flex-col justify-center py-12 md:py-20 lg:py-24">
             <motion.h1 
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white mb-4 leading-tight"
+              className="max-w-3xl text-3xl md:text-4xl lg:text-[42px] font-semibold text-white mb-4 leading-tight"
             >
               Meet the Medical Experts Behind Your Care
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-white/90 text-sm md:text-base lg:text-lg leading-relaxed max-w-xl"
+              className="text-white/90 text-xl leading-relaxed max-w-xl"
             >
               Our experienced specialists provide compassionate and advanced medical care across multiple specialties.
             </motion.p>
@@ -157,17 +159,17 @@ export default function DoctorListUser() {
             initial={{ opacity: 0, x: -30 }} 
             animate={{ opacity: 1, x: 0 }} 
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[320px] shrink-0 bg-[#F8FAFC] p-6 lg:p-8 h-fit border border-gray-100 rounded-xl"
+            className="w-full lg:w-[434px] shrink-0 bg-[#F8FAFC] p-6 lg:p-8 h-fit border border-gray-100 rounded-xl"
           >
             {/* Specialties Filter */}
             <div className="mb-10">
-              <h3 className="text-lg font-bold text-[#5B328C] mb-4">Specialties</h3>
+              <h3 className="text-2xl font-semibold text-[#663399] mb-4">Specialties</h3>
               <input 
                 type="text" 
                 placeholder="Search Specialties" 
                 value={specialtySearch}
                 onChange={(e) => setSpecialtySearch(e.target.value)}
-                className="w-full p-2.5 bg-white border border-gray-200 rounded text-sm mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
+                className="w-full p-2.5 bg-white border border-gray-200 rounded text-xl font-medium mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
               />
               <ul className="space-y-3.5 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {specialties
@@ -179,10 +181,10 @@ export default function DoctorListUser() {
                         type="checkbox"
                         checked={selectedSpecialties.includes(spec)}
                         onChange={() => handleSpecialtyChange(spec)}
-                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
+                        className="mt-0.5 w-5 h-5 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
                       />
-                      <span className={`text-[13px] leading-snug transition-colors ${
-                        selectedSpecialties.includes(spec) ? "text-[#5B328C] font-bold" : "text-gray-800 group-hover:text-[#5B328C]"
+                      <span className={`text-[18px] leading-snug transition-colors ${
+                        selectedSpecialties.includes(spec) ? "text-[#5B328C] font-medium" : "text-gray-800 group-hover:text-[#663399]"
                       }`}>
                         {spec}
                       </span>
@@ -194,13 +196,13 @@ export default function DoctorListUser() {
 
             {/* Location Filter */}
             <div>
-              <h3 className="text-lg font-bold text-[#5B328C] mb-4">Location</h3>
+              <h3 className="text-2xl font-semibold text-[#663399] mb-4">Location</h3>
               <input 
                 type="text" 
                 placeholder="Search Location" 
                 value={locationSearch}
                 onChange={(e) => setLocationSearch(e.target.value)}
-                className="w-full p-2.5 bg-white border border-gray-200 rounded text-sm mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
+                className="w-full p-2.5 bg-white border border-gray-200 rounded text-xl font-medium mb-5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#5B328C]/50 transition-colors"
               />
               <ul className="space-y-3.5 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {locations
@@ -212,10 +214,10 @@ export default function DoctorListUser() {
                         type="checkbox"
                         checked={selectedLocations.includes(loc)}
                         onChange={() => handleLocationChange(loc)}
-                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
+                        className="mt-0.5 w-5 h-5 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
                       />
-                      <span className={`text-[13px] leading-snug transition-colors ${
-                        selectedLocations.includes(loc) ? "text-[#5B328C] font-bold" : "text-gray-800 group-hover:text-[#5B328C]"
+                      <span className={`text-[18px] leading-snug transition-colors ${
+                        selectedLocations.includes(loc) ? "text-[#5B328C] font-bold" : "text-gray-800 group-hover:text-[#663399]"
                       }`}>
                         {loc}
                       </span>
@@ -257,11 +259,11 @@ export default function DoctorListUser() {
                         key={doctor.doctorId} 
                         layout
                         // Group Hover handles the transition from the light card to the dark gradient card
-                        className="group bg-[#F4F9FF] hover:bg-gradient-to-r hover:from-[#5B328C] hover:to-[#005B9F] rounded-[24px] overflow-hidden p-5 flex flex-col md:flex-row gap-6 border border-blue-100 hover:border-transparent hover:shadow-xl transition-all duration-500"
+                        className="hover:bg-[linear-gradient(270.11deg,#0066A9_0.09%,#663399_99.91%)] group bg-[#F4F9FF] rounded-[24px] overflow-hidden p-6 flex flex-col md:flex-row gap-12 border border-blue-100 hover:border-transparent hover:shadow-xl transition-all duration-500"
                       >
                         
                         {/* Doctor Image Container (Added Border) */}
-                        <div className="w-full md:w-[220px] shrink-0 bg-white rounded-[20px] border-[2px] border-[#5B328C] group-hover:border-white/40 overflow-hidden aspect-[4/5] relative transition-colors duration-500">
+                        <div className="w-full md:w-[257px] shrink-0 bg-white rounded-[20px] border-[2px] border-[#5B328C] group-hover:border-white/40 overflow-hidden aspect-[4/5] relative transition-colors duration-500">
                           {doctor.image ? (
                             <Image 
                               src={doctor.image} 
@@ -283,10 +285,10 @@ export default function DoctorListUser() {
                           {/* Department with Icon & Divider Line */}
                           <div className="flex flex-col mb-4">
                             <div className="flex items-center gap-2.5 pb-3">
-                              <div className="bg-white p-1.5 rounded-full shrink-0 group-hover:bg-white/20 transition-colors shadow-sm group-hover:shadow-none">
-                                <FaUserDoctor className="text-[#005B9F] group-hover:text-white transition-colors" />
-                              </div>
-                              <span className="text-[14px] font-bold text-[#005B9F] group-hover:text-white transition-colors">
+                              {/* <div className="bg-white p-1.5 rounded-full shrink-0 group-hover:bg-white/20 transition-colors shadow-sm group-hover:shadow-none">
+                                <FaUserDoctor className="text-[#0066A9] group-hover:text-white transition-colors" />
+                              </div> */}
+                              <span className="text-[21px] font-semibold text-[#0066A9] group-hover:text-white transition-colors">
                                 {doctor.department}
                               </span>
                             </div>
@@ -296,20 +298,20 @@ export default function DoctorListUser() {
 
                           {/* Name */}
                           <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="w-fit">
-                            <h2 className="text-[22px] font-bold text-[#5B328C] group-hover:text-white transition-colors mb-1.5 hover:underline decoration-2 underline-offset-4 break-words">
+                            <h2 className="text-[21px] font-bold text-[#663399] group-hover:text-white transition-colors mb-1.5 hover:underline decoration-2 underline-offset-4 break-words">
                               {doctor.name}
                             </h2>
                           </Link>
                           
                           {/* Designations */}
-                          <p className="text-[13px] font-medium text-gray-800 group-hover:text-white/90 transition-colors leading-snug mb-3 break-words line-clamp-2">
+                          <p className="text-[18px] font-normal text-[#000000] group-hover:text-white/90 transition-colors leading-snug mb-3 break-words line-clamp-2">
                             {designationText}
                           </p>
                           
                           {/* Qualifications Badge */}
                           {doctor.qualification && (
                             <div className="mb-4">
-                              <span className="inline-block bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#5B328C] transition-colors text-[12px] font-semibold py-1.5 px-3 rounded shadow-sm break-words line-clamp-2">
+                              <span className="inline-block bg-[#0066A9] group-hover:bg-white text-white group-hover:text-[#5B328C] transition-colors text-[18px] font-normal py-1.5 px-3 rounded shadow-sm break-words line-clamp-2">
                                 {doctor.qualification}
                               </span>
                             </div>
@@ -317,23 +319,23 @@ export default function DoctorListUser() {
                           
                           {/* Experience */}
                           {doctor.experience && (
-                            <p className="text-[13px] font-semibold text-[#5B328C] group-hover:text-white transition-colors mb-6 mt-auto">
+                            <p className="text-[18px] font-medium text-[#663399] group-hover:text-white transition-colors mb-6 mt-auto">
                               Experience : {doctor.experience}
                             </p>
                           )}
 
                           {/* Action Buttons */}
-                          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+                          <div className="flex flex-col sm:flex-row gap-8 mt-auto">
                             <Link href={`/doctors/${doctor.url || doctor.doctorId}`}>
-                              <button className="cursor-pointer w-full sm:w-auto bg-transparent text-[#5B328C] border-[1.5px] border-[#5B328C] group-hover:text-white group-hover:border-white hover:bg-[#5B328C]/10 font-bold text-[12px] py-2.5 px-6 rounded transition-colors whitespace-nowrap">
+                              <button className="cursor-pointer w-full sm:w-auto bg-transparent text-[#663399] border-[1.5px] border-[#663399] group-hover:text-white group-hover:border-white hover:bg-[#663399]/10 font-medium text-[14px] py-2.5 px-6 rounded transition-colors whitespace-nowrap">
                                 View Profile
                               </button>
                             </Link>
-                            <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`}>
-                              <button className="cursor-pointer w-full sm:w-auto bg-[#5B328C] text-white group-hover:bg-white group-hover:text-[#5B328C] hover:opacity-90 font-bold text-[12px] py-2.5 px-6 rounded transition-colors whitespace-nowrap shadow-sm">
+                            {/* <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`}> */}
+                              <button onClick={() => setIsPopupOpen(true)} className="cursor-pointer w-full sm:w-auto bg-[#5B328C] text-white group-hover:bg-white group-hover:text-[#663399] hover:opacity-90 font-medium text-[14px] py-2.5 px-6 rounded transition-colors whitespace-nowrap shadow-sm">
                                 Book an Appointment
                               </button>
-                            </Link>
+                            {/* </Link> */}
                           </div>
 
                         </div>
@@ -364,6 +366,10 @@ export default function DoctorListUser() {
           background: #5B328C; 
         }
       `}} />
+      <AppointmentPopup 
+        isOpen={isPopupOpen} 
+        onClose={() => setIsPopupOpen(false)} 
+      />
     </div>
   );
 }

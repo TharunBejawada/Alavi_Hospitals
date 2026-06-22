@@ -83,9 +83,9 @@ export default function OurLocations() {
               <div className="flex flex-col lg:flex-row gap-8 items-stretch">
                 
                 {/* LEFT: Location Card */}
-                <motion.div layout className="w-full lg:w-1/3 flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-[#5B328C] shrink-0">
+                <motion.div layout className="w-full lg:w-1/3 flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-[#4A419D] shrink-0">
                   {/* Building Image */}
-                  <div className="relative w-full aspect-[4/3] bg-gray-200">
+                  <div className="relative w-full aspect-[4/3] bg-[#4A419D]">
                     <Image
                       src={loc.image}
                       alt={loc.name}
@@ -149,7 +149,7 @@ export default function OurLocations() {
                         key={testi.id} 
                         className={`p-6 md:p-8 rounded-2xl flex flex-col justify-between shadow-sm transition-shadow hover:shadow-md ${
                           testi.isPurple 
-                            ? "bg-[#5B328C] text-white" 
+                            ? "bg-gradient-to-b from-[#4A419D] to-[#663399] text-white" 
                             : "bg-white text-gray-800 border border-gray-100"
                         }`}
                       >

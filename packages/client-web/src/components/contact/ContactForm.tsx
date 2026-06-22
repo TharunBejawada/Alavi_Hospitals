@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const ContactForm = () => {
   return (
-    <section className="py-8 lg:py-16 bg-[#FAFAFA] px-4 lg:px-12 flex justify-center">
+    <section className="py-4 lg:py-8 bg-[#FAFAFA] px-4 lg:px-12 flex justify-center">
       <div className="container mx-auto max-w-7xl">
         
         {/* Main Card Container */}

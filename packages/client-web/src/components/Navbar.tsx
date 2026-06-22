@@ -12,7 +12,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 const navLinks = [
   { name: "HOME", href: "/" },
   { name: "ABOUT US", href: "/about" },
-  { name: "SPECIALTIES", href: "/specialties" },
+  { name: "SPECIALITIES", href: "/specialities" },
   { name: "DOCTORS", href: "/doctors" },
   { name: "SECOND OPINION", href: "/second-opinion" },
   { name: "HEALTH PACKAGES", href: "/health-packages" },

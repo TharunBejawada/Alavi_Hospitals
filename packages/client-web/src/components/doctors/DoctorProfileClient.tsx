@@ -70,18 +70,18 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
   };
 
   return (
-    <div className="bg-white min-h-screen pb-20 overflow-x-hidden">
+    <div className="font-[Poppins] bg-white min-h-screen pb-20 overflow-x-hidden">
       
       {/* HERO SECTION (Purple Gradient) */}
-      <section className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] py-12 lg:py-20">
+      <section className="bg-[linear-gradient(90.69deg,#0066A9_-139.87%,#663399_81.46%)] py-12 lg:py-20">
         <div className="container mx-auto max-w-[1200px] px-4">
           <motion.div 
             initial="hidden" animate="visible" variants={fadeInUp}
-            className="flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-12 w-full"
+            className="flex flex-col md:flex-row items-center gap-8 lg:gap-12 w-full"
           >
             {/* Doctor Image */}
             <div className="shrink-0">
-              <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-[#5B328C] shadow-2xl bg-gray-100">
+              <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-2xl overflow-hidden border-2 border-[#5B328C] shadow-2xl bg-gray-100">
                 {doctor?.image ? (
                   <Image src={doctor.image} alt={doctor?.name} fill className="object-cover object-top" />
                 ) : (
@@ -92,32 +92,32 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
 
             {/* Doctor Info */}
             <div className="flex flex-col text-center md:text-left mt-4 md:mt-0 flex-1 min-w-0 w-full text-white">
-              <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold mb-3 break-words">
+              <h1 className="text-3xl md:text-4xl lg:text-[40px] font-bold mb-3 break-words">
                 {doctor?.name}
               </h1>
               
-              <p className="text-base md:text-lg font-bold text-white/90 mb-2 break-words">
+              <p className="text-xl font-bold text-white/90 mb-2 break-words">
                 {doctor?.designations?.join(" | ")}
               </p>
               
-              <p className="text-sm md:text-base font-medium text-white/80 mb-5 break-words">
+              <p className="text-xl font-normal text-white/80 mb-5 break-words">
                 {doctor?.qualification}
               </p>
               
               {doctor?.experience && (
                 <div className="bg-[#8D61BA] border border-white/30 backdrop-blur-sm px-5 py-2 rounded-md inline-flex justify-center md:justify-start w-fit mb-8 mx-auto md:mx-0 shadow-sm">
-                  <p className="text-sm font-bold break-words">
+                  <p className="text-2xl font-semibold break-words">
                     Experience : {doctor.experience}
                   </p>
                 </div>
               )}
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-auto">
-                <a href="tel:+919160606108" className="flex items-center gap-2 border-2 border-white text-white px-8 py-2.5 rounded hover:bg-white/10 transition-colors whitespace-nowrap font-bold text-sm shadow-sm">
+              <div className="flex flex-wrap justify-center md:justify-start gap-8">
+                <a href="tel:+919160606108" className="flex items-center gap-2 border-[2px] border-white text-white px-8 py-2.5 rounded-[3px] hover:bg-white/10 transition-colors whitespace-nowrap font-semibold text-xl shadow-sm">
                   Call Now
                 </a>
                 <Link href={`/contact?doctor=${encodeURIComponent(doctor?.name || '')}`}>
-                  <button className="bg-white text-[#5B328C] px-8 py-3 rounded font-bold shadow-md hover:bg-gray-100 transition-colors whitespace-nowrap text-sm">
+                  <button className="bg-white text-[#5B328C] px-8 py-3 rounded-[3px] font-semibold shadow-md hover:bg-gray-100 transition-colors whitespace-nowrap text-xl">
                     Book an Appointment
                   </button>
                 </Link>
@@ -131,12 +131,12 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
       <div className="container mx-auto max-w-[1200px] px-4 mt-8 relative z-20">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] rounded-xl py-4 px-6 md:px-10 flex flex-col md:flex-row items-center justify-between text-white shadow-xl border border-white/10 gap-4"
+          className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] rounded-xl py-4 px-6 md:px-10 flex flex-col md:flex-row items-center justify-center text-white shadow-xl border border-white/10 gap-24"
         >
-          <span className="font-bold text-lg tracking-wide">To Book An Appointment</span>
-          <a href="tel:+919603911911" className="flex items-center gap-3 bg-[#0066B3] border border-white/20 px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-[#004a85] transition-colors whitespace-nowrap">
+          <span className="font-semibold text-3xl tracking-wide">To Book An Appointment</span>
+          <a href="tel:+919603911911" className="text-3xl flex items-center gap-3 bg-[#0066B3] border border-white/20 px-6 py-2.5 rounded-full font-semibold shadow-md hover:bg-[#004a85] transition-colors whitespace-nowrap">
             <div className="bg-white text-[#0066B3] rounded-full p-1.5 flex items-center justify-center">
-              <FaPhoneVolume className="text-xs" />
+              <FaPhoneVolume className="text-3xl" />
             </div>
             Call Us +91 9603 911 911
           </a>
@@ -151,7 +151,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
             <button
               key={nav.id}
               onClick={() => scrollToSection(nav.id)}
-              className={`px-5 py-2 rounded-full text-[13px] font-bold border transition-colors ${
+              className={`px-5 py-2 rounded-full text-[20px] font-medium border transition-colors ${
                 activeNav === nav.id 
                   ? "bg-[#5B328C] border-[#5B328C] text-white shadow-sm" 
                   : "bg-transparent border-[#5B328C] text-[#5B328C] hover:bg-[#F3E8FF]"
@@ -168,11 +168,11 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
           {doctor?.extraFields?.map((field: any, index: number) => (
             <div key={index} className="w-full mb-4 last:mb-0">
               {field.heading && field.heading.toLowerCase() !== 'about doctor' && (
-                <h4 className="text-lg font-bold text-gray-900 mb-3 break-words">{field.heading}</h4>
+                <h4 className="text-[26px] font-semibold text-gray-900 mb-3 break-words">{field.heading.replace(/&nbsp;/g, ' ')}</h4>
               )}
               <div 
-                className="text-[14px] leading-relaxed text-gray-700 prose prose-purple max-w-none break-words w-full"
-                dangerouslySetInnerHTML={{ __html: field.description }} 
+                className="text-[21px] leading-relaxed text-gray-700 prose prose-purple max-w-none break-words w-full"
+                dangerouslySetInnerHTML={{ __html: field.description.replace(/&nbsp;/g, ' ') }} 
               />
             </div>
           ))}
@@ -181,7 +181,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         {/* KEY EXPERTISE */}
         {doctor?.keyExpertise?.length > 0 && (
           <section id="expertise" className="bg-[#F4F9FF] border border-blue-100 rounded-2xl p-6 md:p-10 shadow-sm scroll-mt-24">
-            <h3 className="text-gray-900 font-bold text-xl mb-6">Key expertise</h3>
+            <h3 className="text-gray-900 font-semibold text-[26px] mb-6">Key expertise</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               {doctor.keyExpertise.map((item: string, idx: number) => (
                 <div 
@@ -189,7 +189,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   className="group flex items-start gap-4 border border-[#5B328C]/20 rounded p-4 bg-[#FBF7FF] hover:bg-[#3D2C7A] transition-all duration-300 shadow-sm w-full min-w-0"
                 >
                   <FaHandPointRight className="text-[#5B328C] group-hover:text-white text-lg shrink-0 mt-0.5 transition-colors" />
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-white break-words flex-1 min-w-0 transition-colors">
+                  <span className="text-[21px] font-semibold text-gray-800 group-hover:text-white break-words flex-1 min-w-0 transition-colors">
                     {item}
                   </span>
                 </div>
@@ -201,15 +201,15 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         {/* CONDITIONS TREATED */}
         {doctor?.conditionsTreated?.length > 0 && (
           <section id="conditions" className="bg-gradient-to-br from-[#54338A] to-[#2E376E] rounded-2xl p-6 md:p-10 shadow-lg scroll-mt-24">
-            <h3 className="text-white font-bold text-xl mb-2">Advanced Care for Multiple Health Conditions</h3>
+            <h3 className="text-white font-semibold text-[26px] mb-2">Advanced Care for Multiple Health Conditions</h3>
             {/* Dynamic RTE Description with Static Fallback */}
             {doctor?.conditionsTreatedDescription ? (
               <div 
-                className="text-white/80 text-sm mb-8 prose prose-invert prose-p:leading-relaxed max-w-none [&_p]:text-white/80 [&_ul]:text-white/80 [&_ol]:text-white/80 [&_strong]:text-white"
+                className="text-white/80 text-[21px] mb-8 prose prose-invert prose-p:leading-relaxed max-w-none [&_p]:text-white/80 [&_ul]:text-white/80 [&_ol]:text-white/80 [&_strong]:text-white"
                 dangerouslySetInnerHTML={{ __html: doctor.conditionsTreatedDescription }}
               />
             ) : (
-              <p className="text-white/80 text-sm mb-8">
+              <p className="text-white/80 text-[21px] mb-8">
                 From initial diagnosis to critical care support, offering trusted medical expertise across a wide spectrum of conditions.
               </p>
             )}
@@ -219,7 +219,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   key={idx} 
                   className="bg-white text-[#5B328C] border-none rounded p-3.5 shadow-sm hover:scale-[1.02] transition-transform duration-300 w-full min-w-0"
                 >
-                  <span className="text-[13px] font-semibold break-words block">
+                  <span className="text-[21px] font-semibold break-words block">
                     {item}
                   </span>
                 </div>
@@ -239,7 +239,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   setActiveTab(tab.id);
                   setActiveNav(tab.id);
                 }}
-                className={`cursor-pointer flex-1 py-3 px-4 text-[13px] font-bold border transition-colors duration-300 break-words rounded-sm ${
+                className={`cursor-pointer flex-1 py-3 px-4 text-[26px] font-semibold border transition-colors duration-300 break-words rounded-sm ${
                   activeTab === tab.id 
                     ? "bg-[#5B328C] border-[#5B328C] text-white" 
                     : "bg-white border-[#5B328C]/30 text-[#5B328C] hover:bg-[#F3E8FF]"
@@ -264,15 +264,15 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   <ul className="space-y-4 w-full">
                     {tabs.find(t => t.id === activeTab)?.data.map((item: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-4 w-full min-w-0">
-                        <FaCircle className="text-[#5B328C] text-[8px] mt-1.5 shrink-0" />
-                        <span className="text-[14px] font-bold text-gray-800 leading-relaxed break-words flex-1 min-w-0">
+                        <FaCircle className="text-[#5B328C] text-[8px] mt-3.5 shrink-0" />
+                        <span className="text-[21px] font-semibold text-gray-800 leading-relaxed break-words flex-1 min-w-0">
                           {item}
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-gray-500 text-sm italic">No details available.</p>
+                  <p className="text-gray-500 text-[21px] italic">No details available.</p>
                 )}
               </motion.div>
             </AnimatePresence>
@@ -285,7 +285,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         {/* FAQs */}
         {doctor?.faqs?.length > 0 && (
           <section className="pt-4 w-full">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center md:text-left break-words">Frequently asked questions</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center md:text-left break-words">Frequently asked questions</h3>
             <div className="space-y-3 w-full">
               {doctor.faqs.map((faq: any, idx: number) => {
                 const isOpen = openFaq === idx;
@@ -303,7 +303,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
                       className="w-full text-left px-6 py-4 flex justify-between items-center gap-4"
                     >
-                      <span className={`text-sm font-bold break-words flex-1 min-w-0 ${isOpen ? "text-white" : "text-gray-800"}`}>
+                      <span className={`text-[21px] font-semibold break-words flex-1 min-w-0 ${isOpen ? "text-white" : "text-gray-800"}`}>
                         {idx + 1}. {faq.question}
                       </span>
                       <FaChevronDown className={`shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-white" : "text-[#663399]"}`} />
@@ -320,7 +320,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                         >
                           {/* Enforced white text on all children elements (p, span, etc) when open */}
                           <div 
-                            className="px-6 pb-4 text-sm leading-relaxed max-w-none break-words w-full text-white/95 [&_p]:text-white [&_a]:text-blue-200 [&_a]:underline"
+                            className="px-6 pb-4 text-[21px] leading-relaxed max-w-none break-words w-full text-white/95 [&_p]:text-white [&_a]:text-blue-200 [&_a]:underline"
                             dangerouslySetInnerHTML={{ __html: faq.answer }}
                           />
                         </motion.div>

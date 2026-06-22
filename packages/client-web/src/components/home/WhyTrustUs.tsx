@@ -58,10 +58,10 @@ export default function WhyTrustUs() {
   };
 
   return (
-    <section className="bg-white overflow-hidden">
+    <section className="bg-white overflow-hidden py-4 lg:py-8 font-[Poppins]">
       
       <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#5B328C]">
+        <h2 className="text-3xl md:text-4xl font-semibold text-[#663399]">
           Why Patients Trust Us?
         </h2>
       </div>
@@ -119,10 +119,10 @@ export default function WhyTrustUs() {
                   </div>
 
                   <div className="flex flex-col text-left">
-                    <h3 className="text-white font-bold text-base lg:text-[18px] mb-1 tracking-wide">
+                    <h3 className="text-white font-bold text-lg mb-1 tracking-wide">
                       {item.title}
                     </h3>
-                    <p className="text-white/80 text-[13px] lg:text-[14px] leading-relaxed max-w-2xl font-medium">
+                    <p className="text-white text-sm leading-normal max-w-2xl font-medium">
                       {item.description}
                     </p>
                   </div>

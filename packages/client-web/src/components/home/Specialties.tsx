@@ -63,15 +63,15 @@ export default function Specialties() {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-white overflow-hidden">
+    <section className="py-4 lg:py-8 bg-white overflow-hidden">
       <div className="container mx-auto max-w-8xl px-4 lg:px-12">
         
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#5B328C] mb-3">
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#5B328C] mb-3 font-[Poppins]">
             Our Specialties
           </h2>
-          <p className="text-gray-900 font-medium text-lg">
+          <p className="text-gray-900 font-medium text-lg font-[Poppins]">
             Comprehensive Care for Every Need
           </p>
         </div>
@@ -84,10 +84,10 @@ export default function Specialties() {
               <button
                 key={spec.id}
                 onClick={() => setActiveIndex(idx)}
-                className={`cursor-pointer whitespace-nowrap px-6 py-2.5 rounded-full border-2 font-semibold text-sm transition-all duration-300 ${
+                className={`cursor-pointer w-52 font-[Poppins] whitespace-nowrap px-6 py-2.5 rounded-full border-2 font-medium text-lg transition-all duration-300 ${
                   isActive 
-                    ? "bg-[#0066B3] border-[#0066B3] text-white shadow-md" 
-                    : "bg-white border-[#0066B3] text-[#0066B3] hover:bg-blue-50"
+                    ? "bg-[#0066A9] border-[#0066A9] text-white shadow-md" 
+                    : "bg-white border-[#0066A9] text-[#000000] hover:bg-blue-50"
                 }`}
               >
                 {spec.name}
@@ -96,32 +96,44 @@ export default function Specialties() {
           })}
           
           <Link href="/specialties">
-            <button className="cursor-pointer whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-[#0066B3] bg-white text-[#0066B3] font-semibold text-sm flex items-center gap-2 hover:bg-blue-50 transition-colors">
+            <button className="cursor-pointer font-[Poppins] whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-[#0066A9] bg-white text-[#0066A9] font-semibold text-lg flex items-center gap-2 hover:bg-blue-50 transition-colors">
               View all <FaCirclePlay className="text-lg" />
             </button>
           </Link>
         </div>
 
         {/* Main Content Card Container */}
-        <div className="relative mt-4">
+        <div className="relative mt-4 font-[Poppins]">
           
           {/* Outer Navigation Arrows (Positioned over the card edges) */}
           <button 
             onClick={handlePrev}
-            className="absolute left-0 md:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-[#5B328C] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#4a2873] hover:scale-105 transition-all"
+            className="cursor-pointer absolute left-0 md:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center hover:scale-105 transition-all"
           >
-            <FaChevronLeft className="text-sm md:text-lg mr-1" />
+            {/* <FaChevronLeft className="text-sm md:text-lg mr-1" /> */}
+            <Image 
+                        src="/icons/leftArrow.png"
+                        alt="Left Navigation"
+                        fill 
+                        className="object-cover"
+                      />
           </button>
 
           <button 
             onClick={handleNext}
-            className="absolute right-0 md:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-[#5B328C] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#4a2873] hover:scale-105 transition-all"
+            className="cursor-pointer absolute right-0 md:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center hover:scale-105 transition-all"
           >
-            <FaChevronRight className="text-sm md:text-lg ml-1" />
+            {/* <FaChevronRight className="text-sm md:text-lg ml-1" /> */}
+            <Image 
+                        src="/icons/rightArrow.png"
+                        alt="Right Navigation"
+                        fill 
+                        className="object-cover"
+                      />
           </button>
 
           {/* Gradient Card */}
-          <div className="bg-gradient-to-br from-[#6A329F] via-[#4842A1] to-[#1660A9] rounded-[32px] md:rounded-[40px] shadow-2xl p-6 lg:p-10 min-h-[450px] flex items-center relative overflow-hidden">
+          <div style={{ background: 'linear-gradient(90deg, #663399 56.94%, #0066A9 116.43%)' }} className="rounded-[32px] md:rounded-[40px] shadow-2xl p-6 lg:p-10 min-h-[450px] flex items-center relative overflow-hidden">
             
             <AnimatePresence mode="wait">
               <motion.div
@@ -169,8 +181,8 @@ export default function Specialties() {
                     {/* Small Feature Cards */}
                     <div className="flex gap-4 lg:gap-6">
                       {currentSpecialty.features.map((feat, idx) => (
-                        <div key={idx} className="flex flex-col items-center text-center gap-3 w-20 md:w-24">
-                          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white/20 shrink-0 shadow-sm border border-white/10">
+                        <div key={idx} className="flex flex-col items-center text-center gap-3 w-32 md:w-36">
+                          <div className="relative w-32 h-36 md:w-36 md:h-40 rounded-2xl overflow-hidden bg-white/20 shrink-0 shadow-sm border border-white/10">
                             {feat.image && (
                               <Image src={feat.image} alt={feat.title} fill className="object-cover" />
                             )}
@@ -198,14 +210,14 @@ export default function Specialties() {
                   </div>
 
                   {/* Call to Action Buttons */}
-                  <div className="flex gap-4">
+                  <div className="flex gap-6">
                     <Link href={`/doctors?specialty=${currentSpecialty.id}`}>
-                      <button className="cursor-pointer bg-white text-[#5B328C] hover:bg-gray-50 px-8 py-3 rounded-full font-bold text-sm shadow-md transition-colors">
+                      <button className="cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-50 px-8 py-3 rounded-full font-semibold text-lg shadow-md transition-colors">
                         Find a doctor
                       </button>
                     </Link>
                     <Link href={`/specialties/${currentSpecialty.id}`}>
-                      <button className="cursor-pointer bg-white text-[#5B328C] hover:bg-gray-50 px-8 py-3 rounded-full font-bold text-sm shadow-md transition-colors">
+                      <button className="cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-50 px-8 py-3 rounded-full font-semibold text-lg shadow-md transition-colors">
                         Explore more
                       </button>
                     </Link>

@@ -51,7 +51,7 @@ const HospitalsAndFAQ = () => {
   };
 
   return (
-    <section className="py-20 bg-white px-4 lg:px-12 overflow-hidden">
+    <section className="py-8 bg-white px-4 lg:px-12 overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           
@@ -62,7 +62,7 @@ const HospitalsAndFAQ = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="text-3xl font-bold text-[#5B328C] mb-8 tracking-tight">
+            <h2 className="text-3xl font-semibold text-[#663399] mb-8 tracking-normal">
               Our Hospitals
             </h2>
             
@@ -98,7 +98,7 @@ const HospitalsAndFAQ = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight">
+            <h2 className="text-3xl font-semibold text-[#663399] mb-8 tracking-normal">
               FAQ's
             </h2>
 
@@ -120,7 +120,7 @@ const HospitalsAndFAQ = () => {
                       <span className="flex-shrink-0 text-xl font-bold">
                         {isOpen ? <FiMinus /> : <FiPlus className="text-[#5B328C]" />}
                       </span>
-                      <span className="font-bold text-[15px] lg:text-[16px] leading-tight">
+                      <span className="font-semibold text-[18px] leading-tight">
                         {faq.question}
                       </span>
                     </button>

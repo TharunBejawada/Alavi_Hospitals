@@ -49,22 +49,22 @@ export default function MeetSpecialists() {
   };
 
   return (
-    <section className="py-8 lg:py-16 bg-white overflow-hidden">
+    <section className="py-4 lg:py-8 bg-white overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-8xl px-4 lg:px-8">
         
         {/* Header Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
           {/* Using a rich blue to match the title in the design */}
-          <h2 className="text-3xl md:text-4xl font-bold text-[#005B9F] mb-4">
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#0066A9] mb-4">
             Meet Our Specialists
           </h2>
-          <p className="text-gray-900 text-base md:text-lg font-medium leading-relaxed">
+          <p className="text-[#0C0200] text-xl font-medium leading-normal">
             Delivering trusted, high-quality care through experienced doctors focused on accurate diagnosis, advanced treatment and patient well-being.
           </p>
         </div>
 
         {/* Main Blue Container Block */}
-        <div className="bg-[#005B9F] rounded-[32px] md:rounded-[40px] p-6 md:p-8 lg:p-10 shadow-xl">
+        <div className="bg-[#0066A9] rounded-[30px] p-6 md:p-8 lg:p-10 shadow-xl">
           
           <motion.div 
             variants={containerVariants}
@@ -82,7 +82,7 @@ export default function MeetSpecialists() {
               >
                 
                 {/* Image Container with Purple Border */}
-                <div className="w-full bg-[#F4F9FF] rounded-[28px] border-[2px] border-[#5B328C] overflow-hidden aspect-square relative mb-5">
+                <div className="w-full bg-[#F4F9FF] rounded-[28px] border-[2px] border-[#663399] overflow-hidden aspect-square relative mb-5">
                   {doctor.image ? (
                     <Image 
                       src={doctor.image} 
@@ -93,19 +93,19 @@ export default function MeetSpecialists() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
-                      No Image
+                      Alavi Hospitals
                     </div>
                   )}
                 </div>
 
                 {/* Text Content */}
                 <div className="flex flex-col flex-1 text-center">
-                  <h3 className="text-[17px] font-bold text-[#5B328C] group-hover:text-white transition-colors mb-2 line-clamp-1">
+                  <h3 className="text-[18px] font-bold text-[#663399] group-hover:text-white transition-colors mb-2 line-clamp-1">
                     {doctor.name}
                   </h3>
                   
                   {/* Designations mapped to handle multiple lines neatly */}
-                  <div className="text-[12px] font-medium text-gray-800 group-hover:text-white/90 transition-colors leading-snug mb-6 flex-1">
+                  <div className="text-[15px] font-normal text-[#000000] group-hover:text-white/90 transition-colors leading-snug mb-6 flex-1">
                     {doctor.designations.map((line, idx) => (
                       <p key={idx}>{line}</p>
                     ))}
@@ -114,12 +114,12 @@ export default function MeetSpecialists() {
                   {/* Action Buttons */}
                   <div className="flex flex-row gap-2 mt-auto">
                     <Link href={`/doctors/${doctor.id}`} className="flex-1">
-                      <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[11px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
+                      <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[14px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
                         Know More
                       </button>
                     </Link>
                     <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`} className="flex-1">
-                      <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[11px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
+                      <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[14px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
                         Book Appointment
                       </button>
                     </Link>

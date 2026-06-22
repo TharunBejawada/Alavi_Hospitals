@@ -17,7 +17,7 @@ const ChairmanMessage = () => {
   };
 
   return (
-    <section className="bg-[#F6FBFF] py-16 lg:py-24 overflow-hidden">
+    <section className="bg-[#F6FBFF] py-4 lg:py-8 overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-8xl px-4 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           
@@ -29,11 +29,11 @@ const ChairmanMessage = () => {
             variants={fadeLeft}
             className="lg:col-span-7 flex flex-col"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#5B328C] mb-8">
+            <h2 className="text-3xl md:text-4xl font-semibold text-[#5B328C] mb-8">
               Chairman’s Message
             </h2>
             
-            <div className="space-y-5 text-[15px] md:text-[16px] text-gray-800 leading-relaxed font-medium">
+            <div className="space-y-5 text-[15px] md:text-[16px] text-gray-800 leading-relaxed font-normal">
               <p>
                 At <span className="text-[#5B328C] font-bold">Alavi Multispecialty Hospitals</span>, our mission is to provide <span className="text-[#5B328C] font-bold">compassionate, ethical, and high-quality healthcare</span> that truly impacts lives. From the very beginning, our focus has been to build a place where patients feel safe, respected, and confident in every aspect of their care.
               </p>

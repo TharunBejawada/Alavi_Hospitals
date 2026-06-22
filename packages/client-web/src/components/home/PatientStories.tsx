@@ -75,10 +75,10 @@ const StoryCard = ({ data, heightClass, delay }: { data: any; heightClass: strin
 
       {/* Text Content */}
       <div className="absolute inset-x-0 bottom-0 p-4 lg:p-5 text-center flex flex-col items-center justify-end h-full pointer-events-none">
-        <h3 className="text-white font-bold text-[13px] lg:text-[15px] leading-tight mb-1.5 whitespace-pre-line">
+        <h3 className="text-white font-bold text-sm leading-tight mb-1.5 whitespace-pre-line">
           {data.treatment}
         </h3>
-        <p className="text-white/90 text-[11px] lg:text-[13px] font-medium">
+        <p className="text-white/90 text-sm font-medium">
           {data.patient}
         </p>
       </div>
@@ -88,7 +88,7 @@ const StoryCard = ({ data, heightClass, delay }: { data: any; heightClass: strin
 
 export default function PatientStories() {
   return (
-    <section className="py-16 lg:py-24 bg-[#F8FBFF] overflow-hidden">
+    <section className="py-4 lg:py-8 bg-[#F8FBFF] overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-[1400px] px-4 lg:px-8">
         
         {/* Section Header */}
@@ -97,7 +97,7 @@ export default function PatientStories() {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold text-[#5B328C] mb-4"
+            className="text-3xl md:text-4xl font-semibold text-[#663399] mb-4"
           >
             Patient Stories
           </motion.h2>
@@ -106,7 +106,7 @@ export default function PatientStories() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-gray-900 text-base md:text-[17px] font-medium leading-relaxed"
+            className="text-[#0C0200] text-xl font-medium leading-relaxed"
           >
             Real experiences, real recoveries. Hear from our patients as they share their journey of healing, trust and expert care at Alavi Hospitals.
           </motion.p>

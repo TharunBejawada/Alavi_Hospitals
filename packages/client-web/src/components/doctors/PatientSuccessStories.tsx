@@ -14,11 +14,11 @@ const patientStoriesData = [
 
 export default function PatientSuccessStories() {
   return (
-    <section className="pt-8 pb-8 w-full border-t border-gray-100">
+    <section className="font-[Poppins] pt-8 pb-8 w-full border-t border-gray-100">
       <div className="flex justify-between items-end mb-8 gap-4">
         <div>
-          <h3 className="text-2xl font-bold text-[#0066A9] mb-2">Patient Success Stories</h3>
-          <p className="text-gray-900 font-medium text-sm max-w-2xl">
+          <h3 className="text-[26px] font-semibold text-[#0066A9] mb-2">Patient Success Stories</h3>
+          <p className="text-gray-900 font-medium text-[21px] max-w-2xl">
             Hear from our patients as they share their journey of healing, trust and expert care at Alavi Hospitals.
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function PatientSuccessStories() {
             />
             <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[#0066A9] to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5 flex items-center gap-2">
-              <span className="text-white font-bold text-[15px]">Real experiences</span>
+              <span className="text-white font-bold text-[21px]">Real experiences</span>
               <FaRegCircleRight className="text-white text-[18px] font-light mt-0.5" />
             </div>
           </div>

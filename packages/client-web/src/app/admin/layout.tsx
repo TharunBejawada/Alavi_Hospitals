@@ -8,7 +8,9 @@ import {
   FileText, 
   HeartPulse,
   Users, 
+  Calendar,
   Settings, 
+  Newspaper, 
   LogOut, 
   Activity,
   Image as ImageIcon,
@@ -53,7 +55,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Blog Posts", href: "/admin/blogs", icon: FileText },
     { name: "Manage Doctors", href: "/admin/doctors", icon: HeartPulse },
-    { name: "Doctors Availability", href: "/admin/availability", icon: Activity },
+    { name: "Doctors Availability", href: "/admin/availability", icon: Calendar },
+    { name: "Specialities", href: "/admin/specialities", icon: Activity },
+    { name: "Speciality Pages", href: "/admin/speciality-pages", icon: Newspaper },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];

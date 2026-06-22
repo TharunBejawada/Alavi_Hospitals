@@ -11,6 +11,8 @@ import {
   addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors
 } from "./controllers/doctorController.js";
 import { setDoctorAvailability, getDoctorAvailability } from "./controllers/availabilityController.js";
+import * as specialityController from "./controllers/specialityController.js";
+import * as specialityPageController from "./controllers/specialityPageController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -57,6 +59,21 @@ app.post("/api/doctors/uploadDoctorImage", upload.single("image"), uploadDoctorI
 
 app.post("/api/availability/setDoctorAvailability", setDoctorAvailability);
 app.get("/api/availability/getDoctorAvailability/:doctorId", getDoctorAvailability);
+
+app.post("/api/specialities/addSpeciality", specialityController.addSpeciality);
+app.get("/api/specialities/getAllSpecialities", specialityController.getAllSpecialities);
+app.get("/api/specialities/getAllEnabledSpecialities", specialityController.getAllEnabledSpecialities);
+app.get("/api/specialities/getSpecialityById/:id", specialityController.getSpecialityById);
+app.put("/api/specialities/updateSpeciality/:id", specialityController.updateSpeciality);
+app.put("/api/specialities/toggleStatus/:id", specialityController.toggleSpecialityStatus);
+app.delete("/api/specialities/deleteSpeciality/:id", specialityController.deleteSpeciality);
+app.post("/api/specialities/uploadImage", upload.single("image"), specialityController.uploadSpecialityImage);
+
+app.post("/api/speciality-pages/add", specialityPageController.addSpecialityPage);
+app.get("/api/speciality-pages/getAll", specialityPageController.getAllSpecialityPages);
+app.get("/api/speciality-pages/getById/:id", specialityPageController.getSpecialityPageById);
+app.put("/api/speciality-pages/update/:id", specialityPageController.updateSpecialityPage);
+app.delete("/api/speciality-pages/delete/:id", specialityPageController.deleteSpecialityPage);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

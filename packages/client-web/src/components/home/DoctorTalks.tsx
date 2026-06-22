@@ -31,7 +31,7 @@ const DoctorTalks = () => {
   const [activeIndex, setActiveIndex] = useState(1);
 
   return (
-    <section className="py-20 bg-[#F4F7F9] px-4 lg:px-12 overflow-hidden">
+    <section className="py-20 bg-[#F4F7F9] px-4 lg:px-12 overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-[1400px]">
         
         {/* Main Grid Layout: Text on Left, Cards on Right */}
@@ -45,10 +45,10 @@ const DoctorTalks = () => {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-1/4 flex flex-col justify-center text-center lg:text-left pt-4"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-[#5B328C] mb-4">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-[#663399] mb-4">
               Doctor Talks
             </h2>
-            <p className="text-2xl lg:text-3xl font-bold text-[#275997] leading-tight mb-8">
+            <p className="text-2xl lg:text-3xl font-semibold text-[#0066A9] leading-[43px] mb-8">
               Expert insights from our doctors
             </p>
             

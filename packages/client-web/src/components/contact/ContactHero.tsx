@@ -15,7 +15,7 @@ const socialLinks = [
 
 const ContactHero = () => {
   return (
-    <section className="relative w-full bg-[#5B328C] pt-24 pb-32 lg:pt-32 lg:pb-40 overflow-hidden">
+    <section style={{ background: 'linear-gradient(90deg, #663399 0%, #0066A9 100%)' }} className="relative w-full pt-24 pb-32 lg:pt-32 lg:pb-40 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-12 relative z-10">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
           

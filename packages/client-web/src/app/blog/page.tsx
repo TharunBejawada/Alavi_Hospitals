@@ -84,7 +84,6 @@ export default function BlogsPage() {
     <div className="min-h-screen bg-[#FAFAFA] pb-24 font-sans">
       
       {/* --- HERO SECTION --- */}
-      {/* Applied Exact Linear Gradient Requested */}
       <section 
         className="relative w-full overflow-hidden flex min-h-[300px] md:min-h-[350px]"
         style={{ background: 'linear-gradient(90deg, #663399 48.69%, #0066A9 111.15%)' }}
@@ -104,19 +103,17 @@ export default function BlogsPage() {
            </div>
 
            {/* Right PNG Image Container */}
-           {/* Applied absolute positioning to the wrapper itself so it perfectly anchors to the bottom right */}
            <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0 md:absolute md:bottom-0 md:right-6 lg:right-12 z-0 pointer-events-none">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative w-80 h-80 md:w-[400px] md:h-[400px] lg:w-[1200px] lg:h-[500px] shrink-0 pointer-events-auto"
+                className="relative w-80 h-80 md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] shrink-0 pointer-events-auto"
               >
                  <Image 
-                   src="/blog-hero-hands.png" // Update to your exact PNG path
+                   src="/blog-hero-hands.png" 
                    alt="Expert Care" 
                    fill 
-                   // object-bottom forces the image pixels to perfectly touch the bottom boundary
                    className="object-contain object-bottom"
                    priority 
                  />
@@ -136,9 +133,9 @@ export default function BlogsPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-6 py-2.5 rounded-full text-[13px] md:text-sm font-bold whitespace-nowrap transition-all duration-300 ${
+                className={`px-6 py-2.5 rounded-full text-lg font-medium whitespace-nowrap transition-all duration-300 ${
                    activeCategory === cat 
-                     ? "bg-[#5B328C] text-white border border-[#5B328C] shadow-md" 
+                     ? "bg-[#663399] text-white border border-[#5B328C] shadow-md" 
                      : "bg-white border border-[#0066A9] text-[#0066A9] hover:bg-[#F3E8FF]"
                 }`}
               >
@@ -173,11 +170,10 @@ export default function BlogsPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
             <AnimatePresence mode="popLayout">
               {filteredBlogs.map((post, i) => {
                 
-                // Process Data
                 const primaryCategory = post.categories?.[0] || "Medical";
                 const rawDesc = post.extraFields?.[0]?.description || "";
                 const excerpt = getExcerpt(rawDesc);
@@ -190,13 +186,14 @@ export default function BlogsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: i * 0.05, duration: 0.4 }}
+                    className={i === 0 ? "md:col-span-2 lg:col-span-2" : ""}
                   >
                     <Link 
                       href={`/blog/${post.url || post.blogId}`} 
                       className="group flex flex-col h-full bg-white rounded-[24px] border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
                     >
                       {/* Image Area with Floating Category Pill */}
-                      <div className="relative w-full aspect-[16/10] bg-[#C4AED9] overflow-hidden">
+                      <div className="relative w-full h-[200px] md:h-[240px] bg-[#C4AED9] overflow-hidden shrink-0">
                         {post.blogImage && (
                           <Image 
                             src={post.blogImage} 
@@ -236,9 +233,12 @@ export default function BlogsPage() {
             </AnimatePresence>
           </div>
         )}
-        <CallToAction />
+        
       </section>
       
+      <div className="mt-20">
+        <CallToAction />
+      </div>
 
       {/* Global Style to hide horizontal scrollbar for pills */}
       <style dangerouslySetInnerHTML={{__html: `

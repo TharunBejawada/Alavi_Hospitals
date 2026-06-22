@@ -28,7 +28,7 @@ const blogs = [
 
 const Blogs = () => {
   return (
-    <section className="py-20 bg-[#FAFAFA] px-4 lg:px-12">
+    <section className="py-4 bg-[#FAFAFA] px-4 lg:px-12 font-[Poppins]">
       <div className="container mx-auto max-w-7xl">
         
         {/* Section Heading */}
@@ -39,7 +39,7 @@ const Blogs = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-3xl md:text-4xl text-[#663399] font-semibold tracking-normal mb-4">
             Blogs
           </h2>
         <motion.p 
@@ -47,7 +47,7 @@ const Blogs = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="justify-center max-w-3xl mx-auto text-gray-900 text-base md:text-[20px] font-medium leading-relaxed"
+                    className="justify-center max-w-3xl mx-auto text-[#0C0200] text-xl font-medium leading-relaxed"
                   >
                     Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
                   </motion.p>
@@ -83,16 +83,16 @@ const Blogs = () => {
                 <div className="relative z-10 bg-white rounded-[20px] p-6 lg:p-8 mx-0 shadow-[0_8px_30px_rgb(0,0,0,0.08)] -mt-16 group-hover:shadow-[0_15px_40px_rgb(91,50,140,0.15)] transition-shadow duration-300 min-h-[220px] flex flex-col justify-between">
                   
                   <div>
-                    <h3 className="text-[#5B328C] text-[16px] lg:text-[17px] font-bold leading-[1.4] mb-4">
+                    <h3 className="text-[#663399] text-[16px] lg:text-[17px] font-semibold leading-[1.4] mb-4">
                       {item.title}
                     </h3>
-                    <p className="text-gray-900 text-[13px] font-medium leading-relaxed mb-6">
+                    <p className="text-[#0C0200] text-[13px] font-medium leading-relaxed">
                       {item.excerpt}
                     </p>
                   </div>
 
                   {/* Read More Link */}
-                  <span className="text-[#5B328C] text-[14px] font-bold uppercase tracking-wide group-hover:underline decoration-2 underline-offset-4">
+                  <span className="text-[#5B328C] text-[14px] font-bold tracking-wide group-hover:underline decoration-2 underline-offset-4">
                     Read More
                   </span>
 
@@ -108,7 +108,7 @@ const Blogs = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-16 text-center"
+          className="mt-8 text-center"
         >
           <Link href="/blogs">
             <button className="bg-[#5B328C] text-white px-10 py-3.5 rounded-full text-[16px] font-semibold hover:bg-[#4a2873] hover:shadow-lg transition-all duration-300 active:scale-95">
