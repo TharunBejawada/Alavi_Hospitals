@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -65,10 +65,36 @@ export default function SpecialityLandingPage() {
   const slug = params?.slug as string;
 
   const [pageData, setPageData] = useState<SpecialityLandingPage | null>(null);
-  const [doctors, setDoctors] = useState<any[]>(MOCK_DOCTORS);
-  const [blogs, setBlogs] = useState<any[]>(MOCK_BLOGS);
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0); // First FAQ open by default
+
+  // --- NEW: Carousel State & Refs ---
+  const doctorsScrollRef = useRef<HTMLDivElement>(null);
+  const [activeDoctorIndex, setActiveDoctorIndex] = useState(0);
+
+  const handleDoctorScroll = () => {
+    if (doctorsScrollRef.current) {
+      const scrollLeft = doctorsScrollRef.current.scrollLeft;
+      const cardWidth = doctorsScrollRef.current.children[0]?.clientWidth || 0;
+      const gap = 32; // gap-8 equals 32px
+      const index = Math.round(scrollLeft / (cardWidth + gap));
+      setActiveDoctorIndex(index);
+    }
+  };
+
+  const scrollToDoctor = (index: number) => {
+    if (doctorsScrollRef.current) {
+      const cardWidth = doctorsScrollRef.current.children[0]?.clientWidth || 0;
+      const gap = 32;
+      doctorsScrollRef.current.scrollTo({
+        left: index * (cardWidth + gap),
+        behavior: 'smooth'
+      });
+      setActiveDoctorIndex(index);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -92,12 +118,34 @@ export default function SpecialityLandingPage() {
         if (matchedPage) {
           setPageData(matchedPage);
 
-          // 2. Dynamically fetch related doctors based on specialityId mapping
-          // Example: fetch(`${API_URL}/api/doctors/getBySpeciality/${matchedPage.specialityId}`)
-          // For now, we leave the MOCK_DOCTORS in state until the API is connected.
+          // --- Dynamically fetch doctors and blogs by accurate Department Name ---
+          try {
+            // 1. Fetch all specialities to find the exact database name
+            const specRes = await fetch(`${API_URL}/api/specialities/getAllEnabledSpecialities`);
+            const specData = await specRes.json();
+            
+            const actualSpeciality = (specData.Items || []).find(
+              (s: any) => s.specialityId === matchedPage.specialityId
+            );
 
-          // 3. Dynamically fetch recent blogs related to this category
-          // Example: fetch(`${API_URL}/api/blogs/getByCategory/${matchedPage.specialityId}`)
+            if (actualSpeciality && actualSpeciality.specialityName) {
+              const exactDepartmentName = actualSpeciality.specialityName;
+              
+              // 2. Fetch both Doctors and Blogs in parallel using the exact department string
+              const [docsRes, blogsRes] = await Promise.all([
+                fetch(`${API_URL}/api/doctors/getDoctorsByDepartment/${encodeURIComponent(exactDepartmentName)}`),
+                fetch(`${API_URL}/api/blogs/getBlogsByDepartmentKeywords/${encodeURIComponent(exactDepartmentName)}`)
+              ]);
+              
+              const docsData = await docsRes.json();
+              const blogsData = await blogsRes.json();
+              
+              setDoctors(docsData.Items || []);
+              setBlogs(blogsData.Items || []);
+            }
+          } catch (err) {
+            console.error("Failed to fetch department data:", err);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch landing page data:", error);
@@ -154,7 +202,7 @@ export default function SpecialityLandingPage() {
                   <Calendar className="w-8 h-8" /> Book an Appointment
                 </button>
               </Link>
-              <a href="tel:+919160606108">
+              <a href="tel:+919603911911">
                 <button className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors">
                   <Phone className="w-8 h-8" /> +91 9603 911 911
                 </button>
@@ -219,70 +267,112 @@ export default function SpecialityLandingPage() {
       )}
 
       {/* --- 3. DOCTORS SECTION --- */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto max-w-9xl px-4 text-center">
-          
-          <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
-            {pageData.specialityDoctors?.title || "Our Specialists"}
-          </h2>
-          
-          <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-5xl mx-auto mb-16">
-            {pageData.specialityDoctors?.description}
-          </p>
+      {doctors.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto max-w-[1400px] px-4 text-center">
+            
+            <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
+              {pageData.specialityDoctors?.title || "Our Specialists"}
+            </h2>
+            
+            <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-5xl mx-auto mb-16">
+              {pageData.specialityDoctors?.description}
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-9xl mx-auto">
-            {doctors.map((doc, idx) => (
+            <div className="relative w-full max-w-7xl mx-auto">
+              
+              {/* Dynamic Container: Grid for <= 3, Slider for > 3 */}
               <div 
-                key={idx} 
-                className="bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300"
+                ref={doctorsScrollRef}
+                onScroll={handleDoctorScroll}
+                className={`flex ${
+                  doctors.length <= 3 
+                    ? "flex-wrap justify-center" 
+                    : "overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
+                } gap-8`}
               >
-                
-                {/* Image Container with inner border */}
-                <div className="relative w-full aspect-[4/3] bg-[#E8F4FA] rounded-[19px] border-2 border-[#663399] overflow-hidden mb-6">
-                   
-                   {/* Experience Badge */}
-                   <div className="absolute top-4 left-4 bg-[#0066A9] shadow-[0px_1px_1.8px_#C3C3C3] rounded-[9px] px-3 py-1 z-10 flex items-center gap-1.5">
-                     <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience}</span>
-                     <div className="flex flex-col items-start justify-center">
-                       <span className="font-semibold text-[10px] leading-[100%] text-white mb-0.5">Years</span>
-                       <span className="font-semibold text-[8px] leading-[100%] text-white">Experience</span>
-                     </div>
-                   </div>
-                   
-                   <Image src={doc.image} alt={doc.name} fill className="object-cover object-top" />
-                </div>
-                
-                <div className="flex-grow flex flex-col items-center">
-                  {/* Name */}
-                  <h3 className="font-bold text-[26px] leading-[160%] text-[#2A255B]">{doc.name}</h3>
-                  
-                  {/* Divider Line */}
-                  <div className="w-[151px] border-t-2 border-[#2A255B] my-1"></div>
-                  
-                  {/* Designation & Qualification */}
-                  <p className="font-medium text-[14px] leading-[180%] text-[#0C0200] mt-1">{doc.designation}</p>
-                  <p className="font-medium text-[16px] leading-[180%] text-[#0C0200] mb-8">{doc.qualification}</p>
-                  
-                  {/* Buttons Group */}
-                  <div className="flex gap-3 mt-auto w-full px-1">
-                    <Link href={`/contact?doctor=${encodeURIComponent(doc.name)}`} className="flex-[3]">
-                      <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
-                        <Calendar className="w-4 h-4" /> Book an Appointment
-                      </button>
-                    </Link>
-                    <a href="tel:+919160606108" className="flex-[2]">
-                      <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
-                        <Phone className="w-4 h-4" /> Call Now
-                      </button>
-                    </a>
-                  </div>
-                </div>
+                {doctors.map((doc, idx) => {
+                  const designationText = doc.designations && doc.designations.length > 0 
+                    ? doc.designations.join(" | ") 
+                    : doc.designation;
 
+                  return (
+                    <div 
+                      key={doc.doctorId || idx} 
+                      className={`${
+                        doctors.length <= 3 
+                          ? "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-[420px]" 
+                          : "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
+                      } bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300`}
+                    >
+                      
+                      {/* Image Container */}
+                      <div className="relative w-full aspect-[4/3] bg-[#E8F4FA] rounded-[19px] border-2 border-[#663399] overflow-hidden mb-6 flex items-center justify-center">
+                         {doc.experience && (
+                           <div className="absolute top-4 left-4 bg-[#0066A9] shadow-[0px_1px_1.8px_#C3C3C3] rounded-[9px] px-3 py-1 z-10 flex items-center gap-1.5">
+                             <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience}</span>
+                             <div className="flex flex-col items-start justify-center">
+                               <span className="font-semibold text-[10px] leading-[100%] text-white mb-0.5">Years</span>
+                               <span className="font-semibold text-[8px] leading-[100%] text-white">Experience</span>
+                             </div>
+                           </div>
+                         )}
+                         
+                         {doc.image ? (
+                           <Image src={doc.image} alt={doc.name} fill className="object-cover object-top" />
+                         ) : (
+                           <span className="text-[#5B328C] font-semibold opacity-50 text-lg">No Image</span>
+                         )}
+                      </div>
+                      
+                      <div className="flex-grow flex flex-col items-center text-center">
+                        <h3 className="font-bold text-[26px] leading-[160%] text-[#2A255B]">{doc.name}</h3>
+                        <div className="w-[151px] border-t-2 border-[#2A255B] my-1"></div>
+                        <p className="font-medium text-[14px] leading-[180%] text-[#0C0200] mt-1 line-clamp-2">{designationText}</p>
+                        <p className="font-medium text-[16px] leading-[180%] text-[#0C0200] mb-8">{doc.qualification}</p>
+                        
+                        {/* Buttons Group */}
+                        <div className="flex gap-3 mt-auto w-full px-1">
+                          <Link href={`/doctors/${doc.url || doc.doctorId}`} className="flex-[3]">
+                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
+                              <Calendar className="w-4 h-4" /> Book an Appointment
+                            </button>
+                          </Link>
+                          <a href="tel:+919603911911" className="flex-[2]">
+                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
+                              <Phone className="w-4 h-4" /> Call Now
+                            </button>
+                          </a>
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+
+              {/* Slider Dots (Only shows if > 3 doctors) */}
+              {doctors.length > 3 && (
+                <div className="flex justify-center items-center gap-3 mt-10">
+                  {doctors.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => scrollToDoctor(idx)}
+                      className={`rounded-full transition-all duration-300 ${
+                        activeDoctorIndex === idx 
+                          ? "w-4 h-4 bg-[#663399]" 
+                          : "w-3 h-3 bg-gray-300 hover:bg-[#7E57A8]"
+                      }`}
+                      aria-label={`Go to doctor ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* --- 4. TREATMENTS & PROCEDURES --- */}
@@ -333,83 +423,104 @@ export default function SpecialityLandingPage() {
       )}
 
       {/* --- 5. BLOGS SECTION --- */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto max-w-9xl px-4">
-          
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
-              Blogs
-            </h2>
-            <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-[1035px] mx-auto">
-              Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
-            </p>
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-6">
+      {blogs.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto max-w-9xl px-4">
             
-            {/* Featured Blog (Left Side) */}
-            <div className="w-full lg:w-[56%] bg-[#663399] rounded-[24px] overflow-hidden flex flex-col shadow-md group cursor-pointer transition-transform hover:-translate-y-1 duration-300">
-              
-              {/* Featured Image Container */}
-              <div className="relative w-auto aspect-[11/5] bg-[#D9D9D9] overflow-hidden m-6 mb-0 rounded-[16px] w-[calc(100%-48px)]">
-                 <Image 
-                   src="/blog-1.jpg" 
-                   alt="Featured Blog" 
-                   fill 
-                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                 />
-              </div>
-              
-              {/* Featured Content */}
-              <div className="p-6 md:p-8 text-white flex flex-col flex-grow justify-center">
-                 <h3 className="font-bold text-[24px] leading-[150%] mb-3 group-hover:text-[#EEF8FF] transition-colors">
-                   Orthopaedics & Rehabilitation Understanding Knee Pain:
-                 </h3>
-                 <p className="font-normal text-[16px] leading-[160%] text-white/90 line-clamp-3">
-                   Occasional knee pain can happen after strain or activity, but persistent pain, swelling, stiffness, or difficulty walking may signal an underlying joint or ligament problem.
-                 </p>
-              </div>
+            {/* Header */}
+            <div className="text-center mb-12">
+              <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
+                Blogs
+              </h2>
+              <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-[1035px] mx-auto">
+                Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
+              </p>
             </div>
 
-            {/* List Blogs (Right Side) */}
-            <div className="w-full lg:w-[44%] bg-[rgba(217,217,217,0.25)] rounded-[24px] p-6 lg:p-8 flex flex-col h-full relative">
-               
-               {/* View All Button */}
-               <div className="absolute top-6 right-6 z-10">
-                 <Link href="/blog">
-                   <button className="bg-[#663399] text-white text-[14px] font-semibold px-6 py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity">
-                     View All
-                   </button>
-                 </Link>
-               </div>
-               
-               {/* Scrollable List */}
-               <div className="flex flex-col gap-6 pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
-                  {blogs.map((blog, idx) => (
-                    <div key={idx} className="flex gap-5 items-center group cursor-pointer">
-                       
-                       {/* Blog Thumbnail Box */}
-                       <div className="w-[120px] h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm">
-                          {/* Fallback to purple block if no image, matches design */}
-                          {/* <Image src={blog.image} alt={blog.title} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" /> */}
-                       </div>
-                       
-                       {/* Blog Title */}
-                       <div>
-                         <h4 className="font-semibold text-[16px] leading-[150%] text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
-                           {blog.title}
-                         </h4>
-                       </div>
-                       
-                    </div>
-                  ))}
-               </div>
-            </div>
+            <div className="flex flex-col lg:flex-row gap-6">
+              
+              {/* Featured Blog (Left Side) -> Takes blogs[0] */}
+              <Link 
+                href={`/blog/${blogs[0].url || blogs[0].blogId}`} 
+                className="w-full lg:w-[56%] bg-[#663399] rounded-[24px] overflow-hidden flex flex-col shadow-md group cursor-pointer transition-transform hover:-translate-y-1 duration-300"
+              >
+                {/* Featured Image Container */}
+                <div className="relative w-auto aspect-[11/5] bg-[#D9D9D9] overflow-hidden m-6 mb-0 rounded-[16px] w-[calc(100%-48px)] flex items-center justify-center">
+                   {blogs[0].blogImage ? (
+                     <Image 
+                       src={blogs[0].blogImage} 
+                       alt={blogs[0].blogTitle || "Featured Blog"} 
+                       fill 
+                       className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                     />
+                   ) : (
+                     <span className="text-[#663399] font-medium opacity-50">No Image</span>
+                   )}
+                </div>
+                
+                {/* Featured Content */}
+                <div className="p-6 md:p-8 text-white flex flex-col flex-grow justify-center">
+                   <h3 className="font-bold text-[24px] leading-[150%] mb-3 group-hover:text-[#EEF8FF] transition-colors line-clamp-2">
+                     {blogs[0].blogTitle}
+                   </h3>
+                   {/* Uses metaDescription first, falls back to stripping HTML from extraFields */}
+                   <p className="font-normal text-[16px] leading-[160%] text-white/90 line-clamp-3">
+                     {blogs[0].metaDescription || blogs[0].extraFields?.[0]?.description?.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ') || "Click to read more about this topic."}
+                   </p>
+                </div>
+              </Link>
 
+              {/* List Blogs (Right Side) -> Takes blogs.slice(1) */}
+              <div className="w-full lg:w-[44%] bg-[rgba(217,217,217,0.25)] rounded-[24px] p-6 lg:p-8 flex flex-col h-full relative">
+                 
+                 {/* View All Button */}
+                 <div className="absolute top-6 right-6 z-10">
+                   <Link href="/blog">
+                     <button className="bg-[#663399] text-white text-[14px] font-semibold px-6 py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+                       View All
+                     </button>
+                   </Link>
+                 </div>
+                 
+                 {/* Scrollable List OR Empty State */}
+                 {blogs.length > 1 ? (
+                   <div className="flex flex-col gap-6 pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
+                      {blogs.slice(1).map((blog, idx) => (
+                        <Link 
+                          href={`/blog/${blog.url || blog.blogId}`} 
+                          key={blog.blogId || idx} 
+                          className="flex gap-5 items-center group cursor-pointer"
+                        >
+                           {/* Blog Thumbnail Box */}
+                           <div className="w-[120px] h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm flex items-center justify-center">
+                              {blog.blogImage ? (
+                                <Image src={blog.blogImage} alt={blog.blogTitle || "Blog thumbnail"} fill className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                              ) : (
+                                <span className="text-white text-[10px] opacity-50">No Image</span>
+                              )}
+                           </div>
+                           
+                           {/* Blog Title */}
+                           <div>
+                             <h4 className="font-semibold text-[16px] leading-[150%] text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
+                               {blog.blogTitle}
+                             </h4>
+                           </div>
+                        </Link>
+                      ))}
+                   </div>
+                 ) : (
+                   /* Fallback when only 1 blog exists to maintain the 56/44 structural layout */
+                   <div className="flex flex-col items-center justify-center h-full pt-14 text-[#663399]/60 font-medium text-center px-4">
+                      <p>More expert articles for this specialty are coming soon.</p>
+                   </div>
+                 )}
+              </div>
+
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* --- 6. APPOINTMENT CTA SECTION --- */}
       <section className="py-20 bg-white">
@@ -515,12 +626,15 @@ export default function SpecialityLandingPage() {
         </section>
       )}
 
-      {/* Custom Scrollbar CSS for Blog List */}
+      {/* Custom Scrollbar CSS for Blog List and Doctor Carousel */}
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
 
     </div>

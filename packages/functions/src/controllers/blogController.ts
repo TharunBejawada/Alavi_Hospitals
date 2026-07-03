@@ -174,3 +174,63 @@ export const uploadBlogImage = async (req: any, res: any) => {
     res.status(500).json({ error: "Failed to upload image" });
   }
 };
+
+// --- 7. GET RELATED BLOGS BY DEPARTMENT KEYWORDS (WITH DEBUG LOGS) ---
+export const getBlogsByDepartmentKeywords = async (req: any, res: any) => {
+  try {
+    
+    const department = decodeURIComponent(req.params.department);
+
+    const keywords = department
+      .replace(/[&,-]/g, ' ') 
+      .split(/\s+/)           
+      .filter(word => word.length > 2) 
+      .map(word => word.toLowerCase()); 
+
+
+    if (keywords.length === 0) {
+      return res.status(200).json({ Items: [] });
+    }
+
+    const result = await db.send(new ScanCommand({
+      TableName: TABLE_NAME_BLOGS,
+      FilterExpression: "#enabled = :enabledVal",
+      ExpressionAttributeNames: { "#enabled": "enabled" },
+      ExpressionAttributeValues: { ":enabledVal": true }
+    }));
+
+    const allBlogs = result.Items || [];
+
+    const matchedBlogs = allBlogs.filter(blog => {
+      let categoryText = "";
+
+      if (blog.categories) {
+        let catData = blog.categories;
+
+        if (typeof catData === "string") {
+          try { catData = JSON.parse(catData); } 
+          catch (e) { categoryText = catData; }
+        }
+
+        if (Array.isArray(catData)) {
+          categoryText = catData.map(item => item.S || item).join(" ");
+        } else if (typeof catData === "object" && catData !== null) {
+           categoryText = catData.S || "";
+        } else if (typeof catData === "string") {
+          categoryText += " " + catData;
+        }
+      }
+
+      categoryText = categoryText.toLowerCase();
+
+      return keywords.some(kw => categoryText.includes(kw));
+    });
+
+    matchedBlogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    res.status(200).json({ Items: matchedBlogs });
+  } catch (error) {
+    console.error("Error fetching related blogs by category:", error);
+    res.status(500).json({ error: "Failed to fetch related blogs" });
+  }
+};

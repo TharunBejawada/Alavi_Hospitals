@@ -67,7 +67,7 @@ const Footer = () => {
                 <FaPhoneAlt className="text-white text-xs" />
               </div>
               <div className="text-[15px] space-y-1 font-medium">
-                <p>95331 21257 | 9160 606 108</p>
+                <p>95331 21257 | 9603 911 911</p>
                 <p>040-49 99 49 49</p>
               </div>
             </div>

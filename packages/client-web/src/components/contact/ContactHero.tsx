@@ -10,7 +10,7 @@ const socialLinks = [
   { icon: <FaInstagram />, href: "https://www.instagram.com/alavihospitals_?igsh=OTYxb3llZmZ4OXh5" },
   { icon: <FaXTwitter />, href: "https://x.com/alavihospitals" },
   { icon: <FaYoutube />, href: "https://www.youtube.com/@alavihospitals" },
-  { icon: <FaWhatsapp />, href: "https://wa.me/9160606108" },
+  { icon: <FaWhatsapp />, href: "https://wa.me/9603911911" },
 ];
 
 const ContactHero = () => {

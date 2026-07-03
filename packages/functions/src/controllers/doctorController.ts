@@ -218,3 +218,32 @@ export const getAllEnabledDoctors = async (req: any, res: any) => {
     res.status(500).json({ error: "Failed to fetch enabled doctors" });
   }
 };
+
+// --- 9. GET DOCTORS BY DEPARTMENT ---
+export const getDoctorsByDepartment = async (req: any, res: any) => {
+  try {
+    const { department } = req.params;
+
+    const result = await db.send(new ScanCommand({
+      TableName: TABLE_NAME_DOCTORS,
+      FilterExpression: "#dept = :deptVal AND #enabled = :enabledVal",
+      ExpressionAttributeNames: {
+        "#dept": "department",
+        "#enabled": "enabled"
+      },
+      ExpressionAttributeValues: {
+        ":deptVal": department,
+        ":enabledVal": true
+      }
+    }));
+
+    // Sort by priorityOrder
+    let doctors = result.Items || [];
+    doctors.sort((a, b) => (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99));
+
+    res.status(200).json({ Items: doctors });
+  } catch (error) {
+    console.error("Error fetching doctors by department:", error);
+    res.status(500).json({ error: "Failed to fetch doctors by department" });
+  }
+};

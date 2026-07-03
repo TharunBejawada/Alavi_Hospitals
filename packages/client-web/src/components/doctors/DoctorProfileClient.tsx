@@ -113,7 +113,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
               )}
 
               <div className="flex flex-wrap justify-center md:justify-start gap-8">
-                <a href="tel:+919160606108" className="flex items-center gap-2 border-[2px] border-white text-white px-8 py-2.5 rounded-[3px] hover:bg-white/10 transition-colors whitespace-nowrap font-semibold text-xl shadow-sm">
+                <a href="tel:+919603911911" className="flex items-center gap-2 border-[2px] border-white text-white px-8 py-2.5 rounded-[3px] hover:bg-white/10 transition-colors whitespace-nowrap font-semibold text-xl shadow-sm">
                   Call Now
                 </a>
                 <Link href={`/contact?doctor=${encodeURIComponent(doctor?.name || '')}`}>

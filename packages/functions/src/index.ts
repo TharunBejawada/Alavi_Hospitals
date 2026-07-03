@@ -5,10 +5,10 @@ import multer from "multer";
 import { createUser, getAllUsers } from "./controllers/userController.js";
 import { login } from "./controllers/authController.js";
 import { 
-  addBlog, getAllBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage 
+  addBlog, getAllBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage, getBlogsByDepartmentKeywords
 } from "./controllers/blogController.js";
 import { 
-  addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors
+  addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors, getDoctorsByDepartment
 } from "./controllers/doctorController.js";
 import { setDoctorAvailability, getDoctorAvailability } from "./controllers/availabilityController.js";
 import * as specialityController from "./controllers/specialityController.js";
@@ -46,6 +46,7 @@ app.get("/api/blogs/getBlogByUrl/:url", getBlogByURL);
 app.put("/api/blogs/updateBlog/:id", updateBlog);
 app.put("/api/blogs/:id/toggle", toggleBlogStatus);
 app.post("/api/blogs/uploadblogImage", upload.single("image"), uploadBlogImage);
+app.get("/api/blogs/getBlogsByDepartmentKeywords/:department", getBlogsByDepartmentKeywords);
 
 // ---> ADD DOCTOR ROUTES <---
 app.get("/api/doctors/getAllDoctors", getAllDoctors);
@@ -56,6 +57,7 @@ app.get("/api/doctors/getDoctorByUrl/:url", getDoctorByURL);
 app.put("/api/doctors/updateDoctor/:id", updateDoctor);
 app.put("/api/doctors/:id/toggle", toggleDoctorStatus);
 app.post("/api/doctors/uploadDoctorImage", upload.single("image"), uploadDoctorImage);
+app.get("/api/doctors/getDoctorsByDepartment/:department", getDoctorsByDepartment);
 
 app.post("/api/availability/setDoctorAvailability", setDoctorAvailability);
 app.get("/api/availability/getDoctorAvailability/:doctorId", getDoctorAvailability);

@@ -74,8 +74,8 @@ const ContactInfo = () => {
                     <span className="text-gray-500 text-[14px] font-medium mb-1.5">
                       Appointments & Support
                     </span>
-                    <a href="tel:9160606108" className="text-[#5B328C] text-[17px] font-bold hover:opacity-80 transition-opacity">
-                      9160 606 108
+                    <a href="tel:9603911911" className="text-[#5B328C] text-[17px] font-bold hover:opacity-80 transition-opacity">
+                      9603 911 911
                     </a>
                   </div>
 

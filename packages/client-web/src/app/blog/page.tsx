@@ -1,5 +1,7 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -24,10 +26,13 @@ interface BlogPost {
   extraFields: ExtraField[];
 }
 
-export default function BlogsPage() {
+function BlogsContent() {
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState(categoryFromUrl || "All");
 
   // --- HELPER: Strip HTML & Decode Entities ---
   const getExcerpt = (htmlContent: string) => {
@@ -66,6 +71,12 @@ export default function BlogsPage() {
     }
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    if (categoryFromUrl) {
+      setActiveCategory(categoryFromUrl);
+    }
+  }, [categoryFromUrl]);
 
   // --- DERIVE CATEGORIES & FILTER ---
   const categories = useMemo(() => {
@@ -251,5 +262,17 @@ export default function BlogsPage() {
         }
       `}} />
     </div>
+  );
+}
+
+export default function BlogsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-[#5B328C]" />
+      </div>
+    }>
+      <BlogsContent />
+    </Suspense>
   );
 }

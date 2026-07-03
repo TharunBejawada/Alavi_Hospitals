@@ -1,32 +1,80 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-
-const blogs = [
-  {
-    title: "Recovering from a Fracture: Do's and Don'ts for a Speedy Healing Process",
-    excerpt: "When a bone breaks, the body immediately begins repairing the damage. The healing process usually occurs in three stages.",
-    image: "/blog-1.jpg", // Replace with actual image path
-    link: "/blog/recovering-from-fracture",
-  },
-  {
-    title: "Understanding Hypertension: Causes, Symptoms & Management",
-    excerpt: "Hypertension occurs when blood pressure remains consistently high, increasing the risk of heart disease and stroke.",
-    image: "/blog-2.jpg",
-    link: "/blog/understanding-hypertension",
-  },
-  {
-    title: "Screen Time and Kids: How Much is Too Much?",
-    excerpt: "Excessive screen time can impact children's physical and mental health. Setting healthy limits and encouraging balanced activities.",
-    image: "/blog-3.jpg",
-    link: "/blog/screen-time-and-kids",
-  },
-];
+import { Loader2 } from "lucide-react";
+import { API_URL } from "../../config"; // Adjust your path if needed
 
 const Blogs = () => {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        const res = await fetch(`${API_URL}/api/blogs/getAllBlogs`);
+        const data = await res.json();
+        
+        // Backend returns either data.Items or just the array
+        const allBlogs = data.Items || data || [];
+        
+        // Filter enabled, Sort Newest to Oldest (using timeline or createdAt), Take top 3
+        const sorted = allBlogs
+          .filter((b: any) => b.enabled)
+          .sort((a: any, b: any) => {
+             const dateA = a.timeline || a.createdAt;
+             const dateB = b.timeline || b.createdAt;
+             return new Date(dateB).getTime() - new Date(dateA).getTime();
+          })
+          .slice(0, 3);
+          
+        setBlogs(sorted);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBlogs();
+  }, []);
+
+  // --- HELPER: Strip HTML & Decode Entities ---
+  const getExcerpt = (blog: any) => {
+    // Prefer metaDescription for the snippet, fallback to the first paragraph
+    const rawDesc = blog.metaDescription || blog.extraFields?.[0]?.description || "";
+    
+    // 1. Strip all HTML tags like <p>, <strong>, etc.
+    let text = rawDesc.replace(/<[^>]+>/g, ' ');
+    
+    // 2. Decode common HTML entities (Fixes the &nbsp; issue)
+    text = text
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+      
+    // 3. Remove extra double spaces caused by tag stripping
+    text = text.replace(/\s+/g, ' ').trim();
+    
+    // 4. Truncate to 120 characters cleanly
+    return text.length > 120 ? text.substring(0, 120) + "..." : text;
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 flex justify-center bg-[#FAFAFA]">
+        <Loader2 className="w-10 h-10 animate-spin text-[#5B328C]" />
+      </section>
+    );
+  }
+
+  // If no blogs exist, hide the section entirely
+  if (blogs.length === 0) return null;
+
   return (
     <section className="py-4 bg-[#FAFAFA] px-4 lg:px-12 font-[Poppins]">
       <div className="container mx-auto max-w-7xl">
@@ -42,57 +90,56 @@ const Blogs = () => {
           <h2 className="text-3xl md:text-4xl text-[#663399] font-semibold tracking-normal mb-4">
             Blogs
           </h2>
-        <motion.p 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="justify-center max-w-3xl mx-auto text-[#0C0200] text-xl font-medium leading-relaxed"
-                  >
-                    Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
-                  </motion.p>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="justify-center max-w-3xl mx-auto text-[#0C0200] text-xl font-medium leading-relaxed"
+          >
+            Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
+          </motion.p>
         </motion.div>
-
-        
 
         {/* Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {blogs.map((item, index) => (
             <motion.div
-              key={index}
+              key={item.blogId}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.15, duration: 0.6 }}
               className="flex flex-col group cursor-pointer"
             >
-              <Link href={item.link} className="block w-full h-full outline-none">
+              <Link href={`/blog/${item.url || '/' + item.blogId}`} className="block w-full h-full outline-none">
                 
                 {/* Image Section (Background Layer) */}
-                <div className="relative w-full h-[240px] rounded-[20px] overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                  />
+                <div className="relative w-full h-[240px] rounded-[20px] overflow-hidden bg-[#E7D8F5]">
+                  {item.blogImage && (
+                    <Image
+                      src={item.blogImage}
+                      alt={item.blogTitle}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                    />
+                  )}
                 </div>
 
                 {/* Content Box (Overlapping Foreground Layer) */}
-                {/* The -mt-16 pulls this white box up over the image */}
                 <div className="relative z-10 bg-white rounded-[20px] p-6 lg:p-8 mx-0 shadow-[0_8px_30px_rgb(0,0,0,0.08)] -mt-16 group-hover:shadow-[0_15px_40px_rgb(91,50,140,0.15)] transition-shadow duration-300 min-h-[220px] flex flex-col justify-between">
                   
                   <div>
-                    <h3 className="text-[#663399] text-[16px] lg:text-[17px] font-semibold leading-[1.4] mb-4">
-                      {item.title}
+                    <h3 className="text-[#663399] text-[16px] lg:text-[17px] font-semibold leading-[1.4] mb-4 line-clamp-2">
+                      {item.blogTitle}
                     </h3>
                     <p className="text-[#0C0200] text-[13px] font-medium leading-relaxed">
-                      {item.excerpt}
+                      {getExcerpt(item)}
                     </p>
                   </div>
 
                   {/* Read More Link */}
-                  <span className="text-[#5B328C] text-[14px] font-bold tracking-wide group-hover:underline decoration-2 underline-offset-4">
+                  <span className="text-[#5B328C] text-[14px] font-bold tracking-wide group-hover:underline decoration-2 underline-offset-4 mt-4">
                     Read More
                   </span>
 
@@ -108,10 +155,10 @@ const Blogs = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-8 text-center"
+          className="mt-12 text-center"
         >
-          <Link href="/blogs">
-            <button className="bg-[#5B328C] text-white px-10 py-3.5 rounded-full text-[16px] font-semibold hover:bg-[#4a2873] hover:shadow-lg transition-all duration-300 active:scale-95">
+          <Link href="/blog">
+            <button className="cursor-pointer bg-[#5B328C] text-white px-10 py-3.5 rounded-full text-[16px] font-semibold hover:bg-[#4a2873] hover:shadow-lg transition-all duration-300 active:scale-95">
               Show More
             </button>
           </Link>

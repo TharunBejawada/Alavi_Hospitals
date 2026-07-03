@@ -54,9 +54,9 @@ const Header = () => {
           <div className="bg-[#5B328C] text-white rounded-full px-8 py-3 flex items-center gap-8 text-[14px] font-semibold">
             <div className="flex items-center gap-2 border-r border-purple-400/50 pr-6">
               <span className="text-purple-200 font-normal">IDPL :</span>
-              <a href="tel:9160606108" className="flex items-center gap-2 hover:text-purple-200">
+              <a href="tel:9603911911" className="flex items-center gap-2 hover:text-purple-200">
         <FaPhoneAlt size={12} className="text-white" /> 
-        91 6060 6108
+        96 0391 1911
       </a>
             </div>
             <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ const Header = () => {
               {/* Mobile Contact Footer */}
               <div className="mt-auto p-5 bg-purple-50 rounded-2xl space-y-4">
                 <p className="text-[#5B328C] font-black text-xs tracking-widest uppercase">Quick Contact</p>
-                <a href="tel:9160606108" className="flex items-center gap-3 text-sm font-bold text-gray-700">
+                <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-bold text-gray-700">
                   <FaPhoneAlt className="text-[#5B328C]" /> IDPL
                 </a>
                 <a href="tel:9533121257" className="flex items-center gap-3 text-sm font-bold text-gray-700">

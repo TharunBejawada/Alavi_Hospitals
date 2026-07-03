@@ -276,7 +276,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                       .map((cat, idx) => (
                       <li key={idx}>
                         <Link 
-                          href={`/blogs?category=${encodeURIComponent(cat)}`} 
+                          href={`/blog?category=${encodeURIComponent(cat)}`} 
                           className="text-[14px] font-semibold text-gray-600 hover:text-[#5B328C] transition-colors block leading-snug"
                         >
                           {cat}

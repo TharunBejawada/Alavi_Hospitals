@@ -19,7 +19,7 @@ const ChairmanMessage = () => {
   return (
     <section className="bg-[#F6FBFF] py-4 lg:py-8 overflow-hidden font-[Poppins]">
       <div className="container mx-auto max-w-8xl px-4 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           
           {/* LEFT COLUMN: Text Content */}
           <motion.div 

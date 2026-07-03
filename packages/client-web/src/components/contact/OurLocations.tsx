@@ -70,7 +70,7 @@ export default function OurLocations() {
   };
 
   return (
-    <section className="py-20 bg-[#FAFAFA] overflow-hidden min-h-screen">
+    <section className="font-[Inter] py-20 bg-[#FAFAFA] overflow-hidden min-h-screen">
       <div className="container mx-auto max-w-[1400px] px-4 lg:px-8 xl:px-12 space-y-16">
         
         {locations.map((loc) => {
@@ -102,7 +102,7 @@ export default function OurLocations() {
                       </div>
                       <div>
                         <h3 className="text-xl font-bold mb-1.5">{loc.name}</h3>
-                        <p className="text-white/80 text-[13px] leading-relaxed">
+                        <p className="text-white/80 text-[14px] leading-relaxed">
                           {loc.address}
                         </p>
                       </div>
@@ -112,7 +112,7 @@ export default function OurLocations() {
                     <div className="mt-auto flex justify-center">
                       <button 
                         onClick={() => toggleMap(loc.id)}
-                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full border-2 text-sm font-semibold transition-all duration-300 ${
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full border-2 text-xl font-semibold transition-all duration-300 ${
                           isMapOpen 
                             ? "bg-white text-[#5B328C] border-white shadow-md" 
                             : "bg-transparent text-white border-white/50 hover:bg-white/10"
@@ -155,7 +155,7 @@ export default function OurLocations() {
                       >
                         <div>
                           <FaQuoteLeft className={`text-4xl mb-4 ${testi.isPurple ? "text-white/30" : "text-[#5B328C]/30"}`} />
-                          <p className={`text-[13px] leading-relaxed line-clamp-6 ${testi.isPurple ? "text-white/90" : "text-gray-600"}`}>
+                          <p className={`text-[14px] leading-relaxed line-clamp-6 ${testi.isPurple ? "text-white/90" : "text-gray-600"}`}>
                             {testi.text}
                           </p>
                         </div>
@@ -163,8 +163,8 @@ export default function OurLocations() {
                         <div className="flex items-center gap-3 mt-6 pt-6 border-t border-current border-opacity-10">
                           <FaUser className={`text-4xl ${testi.isPurple ? "text-white/70" : "text-gray-300"}`} />
                           <div className="flex flex-col">
-                            <span className="font-bold text-sm mb-1">{testi.patient}</span>
-                            <div className="flex text-[#FBBF24] text-xs gap-0.5">
+                            <span className="font-bold text-xl mb-1">{testi.patient}</span>
+                            <div className="flex text-[#FBBF24] text-sm gap-0.5">
                               {[...Array(testi.rating)].map((_, i) => (
                                 <FaStar key={i} />
                               ))}
