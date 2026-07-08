@@ -18,8 +18,10 @@ const ChairmanMessage = () => {
 
   return (
     <section className="bg-[#F6FBFF] py-4 lg:py-8 overflow-hidden font-[Poppins]">
-      <div className="container mx-auto max-w-8xl px-4 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+      {/* 1. SCALING FIX: Replaced .container with fluid max-w-[1440px] and increased responsive padding */}
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
+        {/* 2. DECREASED SPACE: Reduced lg:gap-12 down to lg:gap-6 to pull the image and text closer */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-2 xl:gap-4 items-center">
           
           {/* LEFT COLUMN: Text Content */}
           <motion.div 
@@ -77,7 +79,7 @@ const ChairmanMessage = () => {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeRight}
-            className="lg:col-span-5 flex justify-center lg:justify-end mt-8 lg:mt-0"
+            className="lg:col-span-5 flex justify-center lg:justify-start lg:pl-8 mt-8 lg:mt-0"
           >
             <div className="bg-[#5B328C] p-5 rounded-tl-[80px] rounded-br-[80px] w-full max-w-[420px] shadow-xl">
               

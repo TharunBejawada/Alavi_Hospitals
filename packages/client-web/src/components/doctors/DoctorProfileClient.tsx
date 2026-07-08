@@ -13,11 +13,16 @@ import {
 } from "react-icons/fa6";
 import DoctorTalks from "./DoctorTalks"; 
 import PatientSuccessStories from "./PatientSuccessStories"; 
+import AppointmentPopup from "../../components/AppointmentPopup"; // Ensure this path is correct for your structure
 
 export default function DoctorProfileClient({ doctor }: { doctor: any }) {
   const [activeTab, setActiveTab] = useState("qualifications");
   const [activeNav, setActiveNav] = useState("about");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  
+  // --- POPUP STATE ---
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupContext, setPopupContext] = useState({ doctor: "", speciality: "" });
 
   const tabs = [
     { id: "qualifications", label: "Qualifications", data: doctor?.qualificationsList || [] },
@@ -116,11 +121,20 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                 <a href="tel:+919603911911" className="flex items-center gap-2 border-[2px] border-white text-white px-8 py-2.5 rounded-[3px] hover:bg-white/10 transition-colors whitespace-nowrap font-semibold text-xl shadow-sm">
                   Call Now
                 </a>
-                <Link href={`/contact?doctor=${encodeURIComponent(doctor?.name || '')}`}>
-                  <button className="bg-white text-[#5B328C] px-8 py-3 rounded-[3px] font-semibold shadow-md hover:bg-gray-100 transition-colors whitespace-nowrap text-xl">
-                    Book an Appointment
-                  </button>
-                </Link>
+                
+                {/* REPLACED LINK WITH BUTTON FOR POPUP */}
+                <button 
+                  onClick={() => {
+                    setPopupContext({
+                      doctor: doctor?.name || "",
+                      speciality: doctor?.department || doctor?.speciality || ""
+                    });
+                    setIsPopupOpen(true);
+                  }}
+                  className="cursor-pointer bg-white text-[#5B328C] px-8 py-3 rounded-[3px] font-semibold shadow-md hover:bg-gray-100 transition-colors whitespace-nowrap text-xl"
+                >
+                  Book an Appointment
+                </button>
               </div>
             </div>
           </motion.div>
@@ -206,7 +220,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
             {doctor?.conditionsTreatedDescription ? (
               <div 
                 className="text-white/80 text-[21px] mb-8 prose prose-invert prose-p:leading-relaxed max-w-none [&_p]:text-white/80 [&_ul]:text-white/80 [&_ol]:text-white/80 [&_strong]:text-white"
-                dangerouslySetInnerHTML={{ __html: doctor.conditionsTreatedDescription }}
+                dangerouslySetInnerHTML={{ __html: doctor.conditionsTreatedDescription.replace(/&nbsp;/g, ' ') }}
               />
             ) : (
               <p className="text-white/80 text-[21px] mb-8">
@@ -334,6 +348,14 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         )}
 
       </div>
+      
+      {/* --- ADDED APPOINTMENT POPUP HERE --- */}
+      <AppointmentPopup 
+        isOpen={isPopupOpen} 
+        onClose={() => setIsPopupOpen(false)} 
+        defaultDoctor={popupContext.doctor}
+        defaultSpeciality={popupContext.speciality}
+      />
     </div>
   );
 }

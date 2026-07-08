@@ -7,6 +7,7 @@ import Script from "next/script";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer"; 
 import FloatingContact from "../components/FloatingContact";
+import FloatingSideNav from "../components/FloatingSideNav";
 import CanonicalTag from "../components/CanonicalTag";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -46,6 +47,7 @@ export default function RootLayout({
           />
         </noscript>
         <Navbar />
+        <FloatingSideNav />
         <main className="flex-grow">{children}</main>
         <Footer /> 
         <FloatingContact />

@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Calendar, Phone, ChevronDown, CheckCircle2 } from "lucide-react";
 import { API_URL } from "../../../config";
+import AppointmentPopup from "../../../components/AppointmentPopup";
 
 // --- TYPES ---
 import type { SpecialityLandingPage, Doctor, BlogPost } from "../../../../../core/src/types";
@@ -69,6 +71,46 @@ export default function SpecialityLandingPage() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0); // First FAQ open by default
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const router = useRouter();
+  
+  // Section 6 Form State
+  const [formData, setFormData] = useState({ name: "", mobile: "", concern: "" });
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
+
+  const handleSection6Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.mobile.trim()) return;
+
+    setIsSubmittingForm(true);
+
+    try {
+      await axios.post(`${API_URL}/api/forms/submit`, {
+        name: formData.name,
+        mobile: formData.mobile,
+        message: formData.concern ? `Concern: ${formData.concern}` : "No concern specified",
+        speciality: pageData?.title || "Unknown Speciality",
+        page: `Speciality Page - ${pageData?.title || "Unknown"}`
+      });
+
+      // Build the query string for the Thank You page
+      const query = new URLSearchParams({
+        name: formData.name,
+        mobile: formData.mobile,
+        department: pageData?.title || ""
+      }).toString();
+
+      // Redirect to Thank You page
+      router.push(`/thank-you?${query}`);
+      
+    } catch (error) {
+      console.error("Failed to submit form:", error);
+      alert("Something went wrong while booking. Please try again or call us directly.");
+    } finally {
+      setIsSubmittingForm(false);
+    }
+  };
 
   // --- NEW: Carousel State & Refs ---
   const doctorsScrollRef = useRef<HTMLDivElement>(null);
@@ -184,11 +226,11 @@ export default function SpecialityLandingPage() {
         {/* 3. Gradient Overlay */}
         <div 
           className="absolute inset-0 z-10"
-          style={{ background: 'linear-gradient(90deg, #663399 48.93%, rgba(0, 102, 169, 0) 67.09%)' }}
+          style={{ background: 'linear-gradient(90deg, #663399 48.93%, rgba(0, 102, 169, 0) 77.09%)' }}
         ></div>
 
-        <div className="container mx-auto max-w-9xl px-6 lg:px-4 relative z-20">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="max-w-2xl text-white">
+        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 relative z-20">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="max-w-xl text-white">
             <h1 className="text-3xl md:text-4xl lg:text-[46px] font-bold leading-tight mb-4">
               {pageData.title}
             </h1>
@@ -197,11 +239,14 @@ export default function SpecialityLandingPage() {
               dangerouslySetInnerHTML={{ __html: pageData.description.replace(/&nbsp;/g, ' ') }}
             />
             <div className="flex flex-wrap gap-8">
-              <Link href="/contact">
-                <button className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors">
-                  <Calendar className="w-8 h-8" /> Book an Appointment
-                </button>
-              </Link>
+              <button 
+  onClick={() => {
+    setIsPopupOpen(true);
+  }}
+  className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors"
+>
+  <Calendar className="w-8 h-8" /> Book an Appointment
+</button>
               <a href="tel:+919603911911">
                 <button className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors">
                   <Phone className="w-8 h-8" /> +91 9603 911 911
@@ -215,7 +260,7 @@ export default function SpecialityLandingPage() {
       {/* --- 2. CONDITIONS TREATED --- */}
       {pageData.conditionsTreated?.list?.length > 0 && (
         <section className="py-20 bg-[#FAFAFA]">
-          <div className="container mx-auto max-w-[1200px] px-4 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
             
             {/* Section Title */}
             <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
@@ -269,7 +314,7 @@ export default function SpecialityLandingPage() {
       {/* --- 3. DOCTORS SECTION --- */}
       {doctors.length > 0 && (
         <section className="py-20 bg-white">
-          <div className="container mx-auto max-w-[1400px] px-4 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
             
             <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
               {pageData.specialityDoctors?.title || "Our Specialists"}
@@ -378,7 +423,7 @@ export default function SpecialityLandingPage() {
       {/* --- 4. TREATMENTS & PROCEDURES --- */}
       {(pageData.treatmentsProcedures?.list?.length || 0) > 0 && (
         <section className="py-20 bg-[#F5F8FC]">
-          <div className="container mx-auto max-w-[1200px] px-4 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
             
             {/* Section Title */}
             <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
@@ -391,7 +436,7 @@ export default function SpecialityLandingPage() {
               dangerouslySetInnerHTML={{ __html: pageData.treatmentsProcedures.description.replace(/&nbsp;/g, ' ') }}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 text-left max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 text-left">
               {pageData.treatmentsProcedures.list.map((item, index) => (
                 <div 
                   key={index} 
@@ -425,7 +470,7 @@ export default function SpecialityLandingPage() {
       {/* --- 5. BLOGS SECTION --- */}
       {blogs.length > 0 && (
         <section className="py-20 bg-white">
-          <div className="container mx-auto max-w-9xl px-4">
+          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
             
             {/* Header */}
             <div className="text-center mb-12">
@@ -524,7 +569,7 @@ export default function SpecialityLandingPage() {
 
       {/* --- 6. APPOINTMENT CTA SECTION --- */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto max-w-9xl px-4">
+        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
           <div className="flex flex-col lg:flex-row shadow-xl rounded-[32px] overflow-hidden border-0 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)]">
             
             {/* Left Purple Side */}
@@ -562,19 +607,25 @@ export default function SpecialityLandingPage() {
                  Share your details and our care team will reach out to confirm your consultation with a specialist.
                </p>
                
-               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+               <form className="space-y-6" onSubmit={handleSection6Submit}>
                  <div>
-                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Patient Name</label>
+                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Patient Name*</label>
                    <input 
                      type="text" 
+                     required
+                     value={formData.name}
+                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                      placeholder="Enter Your Full Name" 
                      className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50" 
                    />
                  </div>
                  <div>
-                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Mobile Number</label>
+                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Mobile Number*</label>
                    <input 
                      type="tel" 
+                     required
+                     value={formData.mobile}
+                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                      placeholder="10 - digit mobile number" 
                      className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50" 
                    />
@@ -583,14 +634,28 @@ export default function SpecialityLandingPage() {
                    <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Concern</label>
                    <input 
                      type="text" 
+                     value={formData.concern}
+                     onChange={(e) => setFormData({ ...formData, concern: e.target.value })}
                      placeholder="Define" 
                      className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50" 
                    />
                  </div>
                  
                  <div className="pt-2">
-                   <button className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[21px] leading-[32px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md">
-                     <Calendar className="w-5 h-5" /> Book an Appointment
+                   <button 
+                     type="submit"
+                     disabled={isSubmittingForm || !formData.name || !formData.mobile}
+                     className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[21px] leading-[32px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                   >
+                     {isSubmittingForm ? (
+                       <>
+                         <Loader2 className="w-5 h-5 animate-spin" /> Processing...
+                       </>
+                     ) : (
+                       <>
+                         <Calendar className="w-5 h-5" /> Book an Appointment
+                       </>
+                     )}
                    </button>
                  </div>
                </form>
@@ -603,7 +668,7 @@ export default function SpecialityLandingPage() {
       {/* --- 7. FAQS --- */}
       {(pageData.faqs?.length || 0) > 0 && (
         <section className="py-20 bg-[#FAFAFA]">
-          <div className="container mx-auto max-w-9xl px-4">
+          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
             
             {/* Section Heading */}
             <h2 className="text-[32px] font-semibold leading-none text-center text-[#663399] mb-12">
@@ -636,6 +701,10 @@ export default function SpecialityLandingPage() {
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
+      <AppointmentPopup 
+  isOpen={isPopupOpen} 
+  onClose={() => setIsPopupOpen(false)} 
+/>
 
     </div>
   );

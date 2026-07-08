@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-// Importing the specific icons from the Hi (Heroicons) and Fa (Font Awesome) sets
 import { HiMenuAlt3, HiX, HiChevronDown } from "react-icons/hi";
 import { FaPhoneAlt } from "react-icons/fa";
 
@@ -36,28 +35,29 @@ const Header = () => {
     <header className={`w-full z-50 transition-all duration-300 ${isScrolled ? "fixed top-0 bg-white shadow-lg" : "relative bg-white"}`}>
       
       {/* --- TOP SECTION (Logo & Purple Contact Pill) --- */}
-      <div className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="flex-shrink-0">
+      {/* Increased padding: px-8 md:px-12 xl:px-16 and py-5 */}
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16 py-5 flex justify-between items-center">
+        
+        {/* Added min-w-[220px] to strictly prevent logo shrinking */}
+        <Link href="/" className="flex-shrink-0 min-w-[220px] mr-4">
           <Image 
             src="/logo-alavi.png" 
             alt="Alavi Hospitals" 
             width={220} 
             height={65} 
-            // className="h-auto w-auto"
             priority 
           />
         </Link>
 
         {/* Desktop Header Content */}
-        <div className="hidden lg:flex items-center gap-5">
-          {/* The Contact Pill from the design */}
-          <div className="bg-[#5B328C] text-white rounded-full px-8 py-3 flex items-center gap-8 text-[14px] font-semibold">
-            <div className="flex items-center gap-2 border-r border-purple-400/50 pr-6">
+        <div className="hidden lg:flex items-center gap-3 xl:gap-5">
+          <div className="bg-[#5B328C] text-white rounded-full px-6 xl:px-8 py-3 flex items-center gap-4 xl:gap-8 text-[13px] xl:text-[14px] font-semibold whitespace-nowrap">
+            <div className="flex items-center gap-2 border-r border-purple-400/50 pr-4 xl:pr-6">
               <span className="text-purple-200 font-normal">IDPL :</span>
               <a href="tel:9603911911" className="flex items-center gap-2 hover:text-purple-200">
-        <FaPhoneAlt size={12} className="text-white" /> 
-        96 0391 1911
-      </a>
+                <FaPhoneAlt size={12} className="text-white" /> 
+                96 0391 1911
+              </a>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-purple-200 font-normal">Chintal :</span>
@@ -69,7 +69,7 @@ const Header = () => {
           </div>
 
           {/* Language Selector */}
-          <button className="flex items-center gap-2 bg-[#5B328C] text-white px-6 py-3 rounded-full text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
+          <button className="flex items-center gap-2 bg-[#5B328C] text-white px-5 xl:px-6 py-3 rounded-full text-[13px] xl:text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
             English <HiChevronDown size={18} />
           </button>
         </div>
@@ -82,18 +82,18 @@ const Header = () => {
 
       {/* --- DESKTOP NAVIGATION BAR --- */}
       <nav className="hidden lg:block border-y border-gray-100 bg-white">
-        <div className="container mx-auto">
-          <ul className="flex justify-center items-center gap-10 py-4">
+        {/* Increased padding: px-8 md:px-12 xl:px-16 */}
+        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
+          <ul className="flex justify-center items-center gap-4 lg:gap-6 xl:gap-10 py-4">
             {navLinks.map((link) => (
               <li key={link.name}>
                 <Link 
                   href={link.href}
-                  className={`text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group ${
+                  className={`text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
                     pathname === link.href ? "text-[#5B328C]" : "text-gray-800"
                   }`}
                 >
                   {link.name}
-                  {/* Underline animation on hover */}
                   <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#5B328C] transition-all duration-300 group-hover:w-full ${pathname === link.href ? "w-full" : ""}`}></span>
                 </Link>
               </li>
@@ -106,13 +106,11 @@ const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-black/60 z-[60] lg:hidden backdrop-blur-sm"
             />
-            {/* Drawer */}
             <motion.div 
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
@@ -137,7 +135,6 @@ const Header = () => {
                 ))}
               </ul>
 
-              {/* Mobile Contact Footer */}
               <div className="mt-auto p-5 bg-purple-50 rounded-2xl space-y-4">
                 <p className="text-[#5B328C] font-black text-xs tracking-widest uppercase">Quick Contact</p>
                 <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-bold text-gray-700">

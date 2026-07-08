@@ -332,9 +332,9 @@ export default function Specialties() {
 
   return (
     <section className="py-4 lg:py-8 bg-white overflow-hidden">
-      <div className="container mx-auto max-w-8xl px-4 lg:px-12">
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
         
-        {/* Header */}
+
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-semibold text-[#5B328C] mb-3 font-[Poppins]">
             Our Specialties

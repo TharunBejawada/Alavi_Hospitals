@@ -115,7 +115,7 @@ const Blogs = () => {
               <Link href={`/blog/${item.url || '/' + item.blogId}`} className="block w-full h-full outline-none">
                 
                 {/* Image Section (Background Layer) */}
-                <div className="relative w-full h-[240px] rounded-[20px] overflow-hidden bg-[#E7D8F5]">
+                <div className="relative w-full h-[240px] rounded-[23px] overflow-hidden bg-[#E7D8F5]">
                   {item.blogImage && (
                     <Image
                       src={item.blogImage}
@@ -127,10 +127,14 @@ const Blogs = () => {
                 </div>
 
                 {/* Content Box (Overlapping Foreground Layer) */}
-                <div className="relative z-10 bg-white rounded-[20px] p-6 lg:p-8 mx-0 shadow-[0_8px_30px_rgb(0,0,0,0.08)] -mt-16 group-hover:shadow-[0_15px_40px_rgb(91,50,140,0.15)] transition-shadow duration-300 min-h-[220px] flex flex-col justify-between">
+                {/* w-[90%]  = 90% of the image width
+                  ml-auto  = pushes the box to the right side
+                  -mt-16   = pulls the box up to overlap the image
+                */}
+                <div className="relative z-10 bg-white rounded-[23px] p-6 lg:p-7 w-[90%] ml-auto shadow-[0px_3px_3.1px_rgba(102,51,153,0.38)] group-hover:shadow-[0px_8px_15px_rgba(102,51,153,0.30)] transition-shadow duration-300 min-h-[220px] flex flex-col justify-between -mt-8">
                   
                   <div>
-                    <h3 className="text-[#663399] text-[16px] lg:text-[17px] font-semibold leading-[1.4] mb-4 line-clamp-2">
+                    <h3 className="text-[#663399] text-[16px] lg:text-[17px] font-bold leading-[1.4] mb-3 line-clamp-2">
                       {item.blogTitle}
                     </h3>
                     <p className="text-[#0C0200] text-[13px] font-medium leading-relaxed">
@@ -139,7 +143,7 @@ const Blogs = () => {
                   </div>
 
                   {/* Read More Link */}
-                  <span className="text-[#5B328C] text-[14px] font-bold tracking-wide group-hover:underline decoration-2 underline-offset-4 mt-4">
+                  <span className="text-[#5B328C] text-[14px] font-bold tracking-wide group-hover:underline decoration-2 underline-offset-4 mt-4 inline-block">
                     Read More
                   </span>
 

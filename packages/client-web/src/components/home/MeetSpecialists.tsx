@@ -6,10 +6,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react"; 
 import { API_URL } from "../../config"; 
+import AppointmentPopup from "../AppointmentPopup";
 
 export default function MeetSpecialists() {
   const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupContext, setPopupContext] = useState({ doctor: "", speciality: "" });
 
   // --- Carousel State & Refs ---
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -88,7 +91,7 @@ export default function MeetSpecialists() {
 
   return (
     <section className="py-4 lg:py-8 bg-white overflow-hidden font-[Poppins]">
-      <div className="container mx-auto max-w-8xl px-4 lg:px-8">
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
         
         {/* Header Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
@@ -183,16 +186,23 @@ export default function MeetSpecialists() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-row gap-2 mt-auto">
-                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="flex-1">
-                            <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
+                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="flex-1 min-w-0">
+                            <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-2 rounded transition-colors whitespace-nowrap shadow-sm">
                               Know More
                             </button>
                           </Link>
-                          <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`} className="flex-1">
-                            <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-1 rounded transition-colors whitespace-nowrap shadow-sm">
-                              Book Appointment
-                            </button>
-                          </Link>
+                          <button 
+                            onClick={() => {
+                              setPopupContext({ 
+                                doctor: doctor.name, 
+                                speciality: doctor.department || doctor.speciality || "" 
+                              });
+                              setIsPopupOpen(true);
+                            }}
+                            className="cursor-pointer flex-1 min-w-0 bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-2 rounded transition-colors whitespace-nowrap shadow-sm"
+                          >
+                            Book Appointment
+                          </button>
                         </div>
                       </div>
 
@@ -241,6 +251,12 @@ export default function MeetSpecialists() {
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
+      <AppointmentPopup 
+  isOpen={isPopupOpen} 
+  onClose={() => setIsPopupOpen(false)} 
+  defaultDoctor={popupContext.doctor}
+  defaultSpeciality={popupContext.speciality}
+/>
     </section>
   );
 }

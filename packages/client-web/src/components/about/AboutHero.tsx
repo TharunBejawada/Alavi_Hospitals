@@ -26,7 +26,7 @@ const AboutHero = () => {
       />
 
       {/* 3. Text Content Container */}
-      <div className="container mx-auto px-6 md:px-12 relative z-20">
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 relative z-20">
         <div className="max-w-4xl">
           
           {/* Animated Main Heading: Slides up and fades in */}

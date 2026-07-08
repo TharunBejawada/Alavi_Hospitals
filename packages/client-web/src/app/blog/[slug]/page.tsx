@@ -11,6 +11,7 @@ import {
   FaXTwitter 
 } from "react-icons/fa6";
 import { API_URL } from "../../../config";
+import axios from "axios";
 
 // --- TYPES ---
 interface ExtraField {
@@ -50,6 +51,35 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
     damping: 30,
     restDelta: 0.001
   });
+  // --- QUERY FORM STATE ---
+  const [formData, setFormData] = useState({ name: "", mobile: "", email: "", message: "" });
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
+
+  const handleQuerySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.mobile.trim() || !formData.email.trim()) return;
+
+    setIsSubmittingForm(true);
+
+    try {
+      await axios.post(`${API_URL}/api/forms/submit`, {
+        name: formData.name,
+        mobile: formData.mobile,
+        email: formData.email,
+        message: formData.message || "No specific message provided",
+        page: `Blog Page - ${blog?.blogTitle || "Unknown"}`
+      });
+
+      alert("Your query has been submitted successfully! We will get back to you soon.");
+      setFormData({ name: "", mobile: "", email: "", message: "" }); // Reset form
+      
+    } catch (error) {
+      console.error("Failed to submit form:", error);
+      alert("Something went wrong. Please try again or contact us directly.");
+    } finally {
+      setIsSubmittingForm(false);
+    }
+  };
 
   // --- FETCH DATA ---
   useEffect(() => {
@@ -204,7 +234,7 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
                         [&_img]:!max-w-full [&_img]:!h-auto
                         [&_iframe]:!max-w-full
                         [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2"
-                      dangerouslySetInnerHTML={{ __html: field.description }} 
+                      dangerouslySetInnerHTML={{ __html: field.description.replace(/&nbsp;/g, ' ') }} 
                     />
                   </motion.div>
                 );
@@ -234,26 +264,57 @@ export default function SingleBlogPage({ params }: { params: Promise<{ slug: str
               {/* --- QUERY FORM CARD --- */}
               <div className="bg-white rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8">
                 <h3 className="text-xl font-bold text-[#5B328C] mb-6">Query Form</h3>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleQuerySubmit}>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Name <span className="text-red-500">*</span></label>
-                    <input type="text" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                    <input 
+                      type="text" 
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" 
+                    />
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Mobile number <span className="text-red-500">*</span></label>
-                    <input type="tel" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                    <input 
+                      type="tel" 
+                      required
+                      value={formData.mobile}
+                      onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                      className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" 
+                    />
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Email <span className="text-red-500">*</span></label>
-                    <input type="email" className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" />
+                    <input 
+                      type="email" 
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all" 
+                    />
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-700 mb-1.5 ml-1">Message</label>
-                    <textarea rows={3} className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all resize-none"></textarea>
+                    <textarea 
+                      rows={3} 
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full bg-[#F4F4F4] border-none rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-[#5B328C]/30 transition-all resize-none"
+                    ></textarea>
                   </div>
                   <div className="pt-2 flex justify-center">
-                    <button type="submit" className="bg-[#5B328C] text-white font-bold py-3 px-10 rounded-full text-sm hover:bg-[#4a2873] transition-colors shadow-md">
-                      Submit
+                    <button 
+                      type="submit" 
+                      disabled={isSubmittingForm || !formData.name || !formData.mobile || !formData.email}
+                      className="bg-[#5B328C] text-white font-bold py-3 px-10 rounded-full text-sm hover:bg-[#4a2873] transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[120px]"
+                    >
+                      {isSubmittingForm ? (
+                        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </form>

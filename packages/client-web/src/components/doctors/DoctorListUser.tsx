@@ -13,6 +13,7 @@ export default function DoctorListUser() {
   const [doctors, setDoctors] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupContext, setPopupContext] = useState({ doctor: "", speciality: "" });
 
   // Filtering States
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
@@ -332,9 +333,18 @@ export default function DoctorListUser() {
                               </button>
                             </Link>
                             {/* <Link href={`/contact?doctor=${encodeURIComponent(doctor.name)}`}> */}
-                              <button onClick={() => setIsPopupOpen(true)} className="cursor-pointer w-full sm:w-auto bg-[#5B328C] text-white group-hover:bg-white group-hover:text-[#663399] hover:opacity-90 font-medium text-[14px] py-2.5 px-6 rounded transition-colors whitespace-nowrap shadow-sm">
-                                Book an Appointment
-                              </button>
+                              <button 
+                              onClick={() => {
+                                setPopupContext({
+                                  doctor: doctor.name,
+                                  speciality: doctor.department || ""
+                                });
+                                setIsPopupOpen(true);
+                              }} 
+                              className="cursor-pointer w-full sm:w-auto bg-[#5B328C] text-white group-hover:bg-white group-hover:text-[#663399] hover:opacity-90 font-medium text-[14px] py-2.5 px-6 rounded transition-colors whitespace-nowrap shadow-sm"
+                            >
+                              Book an Appointment
+                            </button>
                             {/* </Link> */}
                           </div>
 
@@ -369,6 +379,8 @@ export default function DoctorListUser() {
       <AppointmentPopup 
         isOpen={isPopupOpen} 
         onClose={() => setIsPopupOpen(false)} 
+        defaultDoctor={popupContext.doctor}
+        defaultSpeciality={popupContext.speciality}
       />
     </div>
   );

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const AboutIntro = () => {
   return (
     <section className="py-16 lg:py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           
           {/* LEFT SIDE: Circular Image with Geometric Accent */}
