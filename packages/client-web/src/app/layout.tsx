@@ -14,8 +14,24 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
 export const metadata: Metadata = {
-  title: "Alavi Hospitals",
-  description: "Alavi Hospitals | Hyderabad",
+  title: "Alavi Hospitals IDPL, Hyderabad | Multi-Specialty Care",
+  description: "Alavi Hospitals in IDPL, Hyderabad offers multi-specialty care with expert doctors, modern facilities & 24x7 emergency services. Book an appointment today.",
+  keywords: "Alavi Hospitals, hospital in IDPL Hyderabad, multi-specialty hospital Hyderabad, best hospital near IDPL, 24x7 emergency hospital Hyderabad",
+  alternates: {
+    canonical: "https://www.alavihospitals.in/",
+  },
+  openGraph: {
+    title: "Alavi Hospitals IDPL, Hyderabad | Multi-Specialty Care",
+    description: "Multi-specialty care with expert doctors, modern facilities & 24x7 emergency services in IDPL, Hyderabad.",
+    url: "https://www.alavihospitals.in/",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "pW4_Pe0n4ElheXJSj5w1E3gdH52nCcnb5RjIIJ00W5Q",
+  },
 };
 
 export default function RootLayout({
@@ -33,14 +49,26 @@ export default function RootLayout({
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-NKRLX977');
+            })(window,document,'script','dataLayer','GTM-FVTSWDVH');
+          `}
+        </Script>
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-345CJXQ4ME`}
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-345CJXQ4ME');
           `}
         </Script>
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-white flex flex-col min-h-screen`}>
         <noscript>
           <iframe 
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NKRLX977"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-FVTSWDVH"
             height="0" 
             width="0" 
             style={{ display: "none", visibility: "hidden" }}

@@ -18,7 +18,9 @@ export default {
           allowHeaders: ["*"],
           allowOrigins: [
             "http://localhost:3000",
-            "https://main.d31qs8zv8gdtw.amplifyapp.com"
+            "https://main.d31qs8zv8gdtw.amplifyapp.com",
+            "https://www.alavihospitals.in",
+            "https://alavihospitals.in"
           ],
         },
         defaults: {
@@ -34,7 +36,7 @@ export default {
         },
         routes: {
           "ANY /{proxy+}": "packages/functions/src/index.handler",
-          "POST /api/submit-form": "packages/functions/src/forms.submit",
+          "POST /api/forms/submit": "packages/functions/src/forms.submit",
         },
       });
 
