@@ -31,7 +31,7 @@ const specialtiesData = [
     description: "Expert care for women at every stage of life, from adolescence to pregnancy and menopause.",
     mainImage: "/specialties/gynecology-main.webp",
     features: [
-      { title: "PCOS &\nMenstrual Disorders", image: "/specialties/pcos-feat.webp" },
+      { title: "PCOS &\nMenstrual Disorders", image: "/specialties/pcos.webp" },
       { title: "Pregnancy\nCare", image: "/specialties/pcos-feat.webp" },
       { title: "Menopause\nManagement", image: "/specialties/menopause-feat.webp" },
     ],

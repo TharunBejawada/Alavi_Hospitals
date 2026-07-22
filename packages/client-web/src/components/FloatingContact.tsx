@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function FloatingContact() {
   return (
-    <div className="fixed z-50 
+    <div className="hidden md:flex fixed z-50 
       /* Mobile: Bottom center, horizontal row */
       bottom-6 left-1/2 -translate-x-1/2 flex flex-row gap-4
       /* Desktop: Bottom right, vertical stack */

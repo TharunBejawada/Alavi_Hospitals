@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import FloatingContact from "../components/FloatingContact";
 import FloatingSideNav from "../components/FloatingSideNav";
 import CanonicalTag from "../components/CanonicalTag";
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -79,6 +80,7 @@ export default function RootLayout({
         <main className="flex-grow">{children}</main>
         <Footer /> 
         <FloatingContact />
+        <MobileBottomNav />
         <ToastContainer 
           position="bottom-right" 
           autoClose={3000} 

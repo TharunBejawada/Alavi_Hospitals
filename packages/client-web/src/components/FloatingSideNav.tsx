@@ -20,7 +20,7 @@ export default function FloatingSideNav() {
     return null;
   }
   return (
-    <div className="fixed left-0 top-1/3 flex flex-col gap-[8px] z-[90]">
+    <div className="hidden md:flex fixed left-0 top-1/3 flex flex-col gap-[8px] z-[90]">
       {leftNavItems.map((item) => (
         <motion.div
           key={item.id}

@@ -86,7 +86,7 @@ const ChairmanMessage = () => {
               {/* The Inner Image Container */}
               <div className="relative w-full aspect-[4/5] rounded-tl-[80px] rounded-br-[80px] overflow-hidden bg-gray-200">
                 <Image 
-                  src="/chairman-photo.png" 
+                  src="/chairman-photo.jpeg" 
                   alt="Dr. M. Chandra Sekhar" 
                   fill 
                   className="object-cover object-top"
