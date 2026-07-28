@@ -26,6 +26,25 @@ const leaders = [
     ),
   },
   {
+    name: "Dr. M. Pradeep Reddy",
+    role: "Director",
+    image: "/dr-pradeep.jpg",
+    alignment: "right",
+    content: (
+      <>
+        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
+          <strong className="text-[#5B328C]">Dr. M. Pradeep Reddy</strong>, Director, is a specialist in Pediatrics and Neonatology with 16 years of experience in child healthcare.
+        </p>
+        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
+          Holding qualifications of MBBS and MD in Pediatrics, he is dedicated to ensuring the healthy growth and development of infants and children.
+        </p>
+        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
+          His commitment to pediatric care ensures that young patients receive specialized treatment in a safe and supportive environment.
+        </p>
+      </>
+    ),
+  },
+  {
     name: "Dr. B. Kalyani",
     role: "Director",
     image: "/dr-kalyani.jpg",
@@ -59,25 +78,6 @@ const leaders = [
         </p>
         <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
           His guiding principle, <span className="text-[#5B328C] font-semibold">“Optimising Metabolism... For Good Health,”</span> reflects his holistic approach to long-term wellness and disease management.
-        </p>
-      </>
-    ),
-  },
-  {
-    name: "Dr. M. Pradeep Reddy",
-    role: "Director",
-    image: "/dr-pradeep.jpg",
-    alignment: "right",
-    content: (
-      <>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          <strong className="text-[#5B328C]">Dr. M. Pradeep Reddy</strong>, Director, is a specialist in Pediatrics and Neonatology with 16 years of experience in child healthcare.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          Holding qualifications of MBBS and MD in Pediatrics, he is dedicated to ensuring the healthy growth and development of infants and children.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
-          His commitment to pediatric care ensures that young patients receive specialized treatment in a safe and supportive environment.
         </p>
       </>
     ),

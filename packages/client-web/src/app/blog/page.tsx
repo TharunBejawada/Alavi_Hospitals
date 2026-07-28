@@ -214,9 +214,9 @@ function BlogsContent() {
                           />
                         )}
                         {/* Floating Pill */}
-                        <div className="absolute top-5 left-5 bg-[#5B328C] text-white text-[12px] font-bold px-4 py-1.5 rounded-full shadow-sm z-10">
+                        {/* <div className="absolute top-5 left-5 bg-[#5B328C] text-white text-[12px] font-bold px-4 py-1.5 rounded-full shadow-sm z-10">
                           {primaryCategory}
-                        </div>
+                        </div> */}
                       </div>
 
                       {/* Content Area */}

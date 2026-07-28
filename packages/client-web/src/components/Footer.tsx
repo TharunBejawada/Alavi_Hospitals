@@ -12,24 +12,40 @@ const Footer = () => {
   
   // --- STATE FOR SPECIALITIES ---
   const [specialities, setSpecialities] = useState<any[]>([]);
+  const [urlMap, setUrlMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   // --- FETCH SPECIALITIES ON MOUNT ---
   useEffect(() => {
-    async function fetchSpecialities() {
+    async function fetchData() {
       try {
-        const res = await fetch(`${API_URL}/api/specialities/getAllEnabledSpecialities`);
-        if (res.ok) {
-          const data = await res.json();
-          setSpecialities(data.Items || []);
-        }
+        // Fetch specialities and speciality landing pages in parallel
+        const [specRes, pagesRes] = await Promise.all([
+          fetch(`${API_URL}/api/specialities/getAllEnabledSpecialities`),
+          fetch(`${API_URL}/api/speciality-pages/getAll`)
+        ]);
+
+        const specData = await specRes.json();
+        const pagesData = await pagesRes.json();
+        
+        setSpecialities(specData.Items || []);
+
+        // Map specialityId to the custom SEO URL slug
+        const map: Record<string, string> = {};
+        (pagesData.Items || []).forEach((page: any) => {
+          if (page.specialityId && page.seoConfig?.url) {
+            map[page.specialityId] = page.seoConfig.url;
+          }
+        });
+        setUrlMap(map);
+
       } catch (error) {
-        console.error("Failed to fetch specialities for footer:", error);
+        console.error("Failed to fetch specialities data for footer:", error);
       } finally {
         setLoading(false);
       }
     }
-    fetchSpecialities();
+    fetchData();
   }, []);
 
   return (
@@ -43,7 +59,7 @@ const Footer = () => {
           <div className="space-y-6 lg:space-y-8">
             <div>
               <Image 
-                src="/logo-alavi.png" 
+                src="/logo-alavi-old.png" 
                 alt="Alavi Hospitals" 
                 width={280} 
                 height={90} 
@@ -75,7 +91,7 @@ const Footer = () => {
               </div>
             ) : (
               <>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
+                {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
                   {specialities.slice(0, 8).map((spec) => (
                     <li key={spec.specialityId || spec.specialityName} className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
                       <Link href={`/specialities/${spec.url || spec.specialityId}`} className="w-full">
@@ -83,6 +99,22 @@ const Footer = () => {
                       </Link>
                     </li>
                   ))}
+                </ul> */}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
+                  {specialities.slice(0, 8).map((spec) => {
+                    // Get the mapped URL slug, fallback to specialityId if no landing page exists yet
+                    const targetUrl = urlMap[spec.specialityId] 
+                      ? `${urlMap[spec.specialityId]}` 
+                      : `/specialities/${spec.specialityId}`;
+
+                    return (
+                      <li key={spec.specialityId || spec.specialityName} className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
+                        <Link href={targetUrl} className="w-full">
+                          {spec.specialityName}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
                 
                 {/* View More Link (Shows only if there are more than 8 specialities) */}

@@ -43,7 +43,7 @@ const DoctorTalks = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-1/4 flex flex-col justify-center text-center lg:text-left pt-4"
+            className="w-full lg:w-1/4 flex flex-col justify-center text-center lg:text-left pt-4 pl-6"
           >
             <h2 className="text-3xl lg:text-4xl font-semibold text-[#663399] mb-4">
               Doctor Talks

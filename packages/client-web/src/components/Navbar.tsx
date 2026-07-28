@@ -56,7 +56,7 @@ const Header = () => {
               <span className="text-purple-200 font-normal">IDPL :</span>
               <a href="tel:9603911911" className="flex items-center gap-2 hover:text-purple-200">
                 <FaPhoneAlt size={12} className="text-white" /> 
-                96 0391 1911
+                9603 911 911
               </a>
             </div>
             <div className="flex items-center gap-2">
