@@ -48,7 +48,7 @@ const leaders = [
     name: "Dr. B. Kalyani",
     role: "Director",
     image: "/dr-kalyani.jpg",
-    alignment: "right",
+    alignment: "left",
     content: (
       <>
         <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
@@ -67,7 +67,7 @@ const leaders = [
     name: "Dr. Srinivasa Rao Mallampati",
     role: "Director",
     image: "/dr-srinivasa.jpg",
-    alignment: "left",
+    alignment: "right",
     content: (
       <>
         <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
