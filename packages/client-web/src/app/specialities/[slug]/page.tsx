@@ -355,7 +355,7 @@ export default function SpecialityLandingPage() {
                       <div className="relative w-full aspect-[4/3] bg-[#E8F4FA] rounded-[19px] border-2 border-[#663399] overflow-hidden mb-6 flex items-center justify-center">
                          {doc.experience && (
                            <div className="absolute top-4 left-4 bg-[#0066A9] shadow-[0px_1px_1.8px_#C3C3C3] rounded-[9px] px-3 py-1 z-10 flex items-center gap-1.5">
-                             <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience}</span>
+                             <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience.replace(/years?|experience/gi, "").trim()}</span>
                              <div className="flex flex-col items-start justify-center">
                                <span className="font-semibold text-[10px] leading-[100%] text-white mb-0.5">Years</span>
                                <span className="font-semibold text-[8px] leading-[100%] text-white">Experience</span>
