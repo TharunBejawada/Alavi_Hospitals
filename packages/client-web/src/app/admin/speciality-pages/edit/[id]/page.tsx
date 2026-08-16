@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaImage, FaPlus, FaTrash, FaIcons } from "react-icons/fa6";
 import { API_URL } from "../../../../../config";
-import { SpecialityLandingPage, Speciality } from "../../../../../../../core/src/types";
+import { SpecialityLandingPage, Speciality, backfillItemIds } from "../../../../../../../core/src/types";
 import DoctorsRTE from "../../../../../../src/components/admin/SpecialitiesRTE";
 
 export default function SpecialityPageForm() {
@@ -53,7 +53,18 @@ export default function SpecialityPageForm() {
 
         if (isEditing) {
           const pageRes = await axios.get(`${API_URL}/api/speciality-pages/getById/${editId}`);
-          setFormData(pageRes.data.Item);
+          const page: SpecialityLandingPage = pageRes.data.Item;
+          setFormData({
+            ...page,
+            conditionsTreated: {
+              ...page.conditionsTreated,
+              list: backfillItemIds(page.conditionsTreated?.list, `${page.specialityId}-conditions`)
+            },
+            treatmentsProcedures: {
+              ...page.treatmentsProcedures,
+              list: backfillItemIds(page.treatmentsProcedures?.list, `${page.specialityId}-procedures`)
+            }
+          });
         }
       } catch (error) {
         toast.error("Failed to load data");
@@ -260,13 +271,13 @@ export default function SpecialityPageForm() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <label className="block text-sm font-bold text-gray-700">Conditions List</label>
-                <button type="button" onClick={() => addListItem("conditionsTreated", { icon: "", title: "", description: "" })} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
+                <button type="button" onClick={() => addListItem("conditionsTreated", { id: crypto.randomUUID(), icon: "", title: "", description: "" })} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
                   <FaPlus /> Add Condition
                 </button>
               </div>
               
               {formData.conditionsTreated?.list?.map((item, idx) => (
-                <div key={idx} className="flex flex-col md:flex-row gap-4 items-start bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group">
+                <div key={item.id ?? idx} className="flex flex-col md:flex-row gap-4 items-start bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group">
                   <button type="button" onClick={() => removeListItem("conditionsTreated", idx)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 p-2">
                     <FaTrash />
                   </button>
@@ -315,13 +326,13 @@ export default function SpecialityPageForm() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <label className="block text-sm font-bold text-gray-700">Procedures List</label>
-                <button type="button" onClick={() => addListItem("treatmentsProcedures", { title: "", description: "" })} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
+                <button type="button" onClick={() => addListItem("treatmentsProcedures", { id: crypto.randomUUID(), title: "", description: "" })} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
                   <FaPlus /> Add Procedure
                 </button>
               </div>
 
               {formData.treatmentsProcedures?.list?.map((item, idx) => (
-                <div key={idx} className="flex gap-4 items-start bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group">
+                <div key={item.id ?? idx} className="flex gap-4 items-start bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group">
                   <button type="button" onClick={() => removeListItem("treatmentsProcedures", idx)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 p-2">
                     <FaTrash />
                   </button>

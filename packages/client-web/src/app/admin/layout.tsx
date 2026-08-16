@@ -15,7 +15,8 @@ import {
   Activity,
   Image as ImageIcon,
   Menu,
-  X
+  X,
+  Stethoscope
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -58,6 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // { name: "Doctors Availability", href: "/admin/availability", icon: Calendar },
     { name: "Specialities", href: "/admin/specialities", icon: Activity },
     { name: "Speciality Pages", href: "/admin/speciality-pages", icon: Newspaper },
+    { name: "Treatments", href: "/admin/treatments", icon: Stethoscope },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];

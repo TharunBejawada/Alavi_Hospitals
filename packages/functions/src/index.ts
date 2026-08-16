@@ -13,6 +13,7 @@ import {
 import { setDoctorAvailability, getDoctorAvailability } from "./controllers/availabilityController.js";
 import * as specialityController from "./controllers/specialityController.js";
 import * as specialityPageController from "./controllers/specialityPageController.js";
+import * as treatmentController from "./controllers/treatmentController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -76,6 +77,16 @@ app.get("/api/speciality-pages/getAll", specialityPageController.getAllSpecialit
 app.get("/api/speciality-pages/getById/:id", specialityPageController.getSpecialityPageById);
 app.put("/api/speciality-pages/update/:id", specialityPageController.updateSpecialityPage);
 app.delete("/api/speciality-pages/delete/:id", specialityPageController.deleteSpecialityPage);
+
+app.post("/api/treatments/add", treatmentController.addTreatment);
+app.get("/api/treatments/getAll", treatmentController.getAllTreatments);
+app.get("/api/treatments/getBySpeciality/:specialityId", treatmentController.getTreatmentsBySpeciality);
+app.get("/api/treatments/getById/:id", treatmentController.getTreatmentById);
+app.get("/api/treatments/getByUrl/:url", treatmentController.getTreatmentByUrl);
+app.put("/api/treatments/update/:id", treatmentController.updateTreatment);
+app.put("/api/treatments/:id/toggle", treatmentController.toggleTreatmentStatus);
+app.delete("/api/treatments/delete/:id", treatmentController.deleteTreatment);
+app.post("/api/treatments/uploadImage", upload.single("image"), treatmentController.uploadTreatmentImage);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

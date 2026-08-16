@@ -1,0 +1,213 @@
+import { db, TABLE_NAME_TREATMENTS, BUCKET_NAME, AWS_REGION } from "../db/dynamo.js";
+import { PutCommand, ScanCommand, GetCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+
+// Initialize S3 Client
+const s3 = new S3Client({ region: AWS_REGION });
+
+// Returns existing Treatments mapped to the same (specialityId, itemType, itemId),
+// optionally excluding a given treatmentId (used by update to allow self-match).
+const findMappingConflict = async (specialityId: string, itemType: string, itemId: string, excludeTreatmentId?: string) => {
+  const result = await db.send(new ScanCommand({
+    TableName: TABLE_NAME_TREATMENTS,
+    FilterExpression: "specialityId = :sid AND itemType = :it AND itemId = :iid",
+    ExpressionAttributeValues: {
+      ":sid": specialityId,
+      ":it": itemType,
+      ":iid": itemId
+    }
+  }));
+
+  const items = (result.Items || []).filter((i: any) => i.treatmentId !== excludeTreatmentId);
+  return items.length > 0;
+};
+
+// --- 1. CREATE TREATMENT ---
+export const addTreatment = async (req: any, res: any) => {
+  try {
+    const { specialityId, itemType, itemId } = req.body;
+
+    const hasConflict = await findMappingConflict(specialityId, itemType, itemId);
+    if (hasConflict) {
+      return res.status(409).json({ error: "This condition/procedure already has a treatment page." });
+    }
+
+    const treatmentId = uuidv4();
+    const timestamp = new Date().toISOString();
+
+    const newTreatment = {
+      treatmentId,
+      ...req.body,
+      enabled: true,
+      createdAt: timestamp
+    };
+
+    await db.send(new PutCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Item: newTreatment,
+    }));
+
+    res.status(201).json({ success: true, message: "Treatment added successfully", treatment: newTreatment });
+  } catch (error) {
+    console.error("Add Treatment Error:", error);
+    res.status(500).json({ error: "Failed to add treatment" });
+  }
+};
+
+// --- 2. GET ALL TREATMENTS ---
+export const getAllTreatments = async (req: any, res: any) => {
+  try {
+    const result = await db.send(new ScanCommand({ TableName: TABLE_NAME_TREATMENTS }));
+    res.status(200).json({ Items: result.Items || [] });
+  } catch (error) {
+    console.error("Fetch Treatments Error:", error);
+    res.status(500).json({ error: "Failed to fetch treatments" });
+  }
+};
+
+// --- 3. GET TREATMENTS BY SPECIALITY ---
+export const getTreatmentsBySpeciality = async (req: any, res: any) => {
+  try {
+    const { specialityId } = req.params;
+    const result = await db.send(new ScanCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      FilterExpression: "specialityId = :sid",
+      ExpressionAttributeValues: { ":sid": specialityId }
+    }));
+    res.status(200).json({ Items: result.Items || [] });
+  } catch (error) {
+    console.error("Fetch Treatments By Speciality Error:", error);
+    res.status(500).json({ error: "Failed to fetch treatments for speciality" });
+  }
+};
+
+// --- 4. GET SINGLE TREATMENT BY ID ---
+export const getTreatmentById = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+    const result = await db.send(new GetCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Key: { treatmentId: id }
+    }));
+
+    if (!result.Item) return res.status(404).json({ error: "Treatment not found" });
+    res.status(200).json({ Item: result.Item });
+  } catch (error) {
+    console.error("Get Treatment By ID Error:", error);
+    res.status(500).json({ error: "Failed to fetch treatment" });
+  }
+};
+
+// --- 5. GET SINGLE TREATMENT BY URL SLUG ---
+export const getTreatmentByUrl = async (req: any, res: any) => {
+  try {
+    const { url } = req.params;
+    const result = await db.send(new ScanCommand({ TableName: TABLE_NAME_TREATMENTS }));
+    const items = result.Items || [];
+    const match = items.find((t: any) => t.seoConfig?.url === url);
+
+    if (!match) return res.status(404).json({ error: "Treatment not found" });
+    res.status(200).json({ Item: match });
+  } catch (error) {
+    console.error("Get Treatment By URL Error:", error);
+    res.status(500).json({ error: "Failed to fetch treatment" });
+  }
+};
+
+// --- 6. UPDATE TREATMENT ---
+export const updateTreatment = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+    const { specialityId, itemType, itemId } = req.body;
+
+    const hasConflict = await findMappingConflict(specialityId, itemType, itemId, id);
+    if (hasConflict) {
+      return res.status(409).json({ error: "This condition/procedure already has a treatment page." });
+    }
+
+    const updatedTreatment = {
+      ...req.body,
+      treatmentId: id,
+      updatedAt: new Date().toISOString()
+    };
+
+    await db.send(new PutCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Item: updatedTreatment
+    }));
+
+    res.status(200).json({ success: true, message: "Treatment updated" });
+  } catch (error) {
+    console.error("Update Treatment Error:", error);
+    res.status(500).json({ error: "Failed to update treatment" });
+  }
+};
+
+// --- 7. TOGGLE TREATMENT STATUS ---
+export const toggleTreatmentStatus = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+    const { enabled } = req.body;
+
+    const existing = await db.send(new GetCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Key: { treatmentId: id }
+    }));
+
+    if (!existing.Item) return res.status(404).json({ error: "Treatment not found" });
+
+    await db.send(new PutCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Item: { ...existing.Item, enabled }
+    }));
+
+    res.status(200).json({ success: true, message: "Treatment status updated" });
+  } catch (error) {
+    console.error("Toggle Treatment Status Error:", error);
+    res.status(500).json({ error: "Failed to toggle status" });
+  }
+};
+
+// --- 8. DELETE TREATMENT ---
+export const deleteTreatment = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+    await db.send(new DeleteCommand({
+      TableName: TABLE_NAME_TREATMENTS,
+      Key: { treatmentId: id }
+    }));
+    res.status(200).json({ success: true, message: "Treatment deleted" });
+  } catch (error) {
+    console.error("Delete Treatment Error:", error);
+    res.status(500).json({ error: "Failed to delete treatment" });
+  }
+};
+
+// --- 9. S3 IMAGE UPLOAD ---
+export const uploadTreatmentImage = async (req: any, res: any) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
+
+    const file = req.file;
+    const fileExtension = file.originalname.split('.').pop();
+    const key = `treatments/${uuidv4()}.${fileExtension}`;
+
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    });
+
+    await s3.send(command);
+    const imageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${key}`;
+
+    res.status(200).json({ success: true, imageUrl: imageUrl });
+  } catch (error) {
+    console.error("S3 Upload Error:", error);
+    res.status(500).json({ error: "Failed to upload image" });
+  }
+};
