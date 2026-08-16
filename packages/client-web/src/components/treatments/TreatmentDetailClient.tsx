@@ -15,14 +15,14 @@ import type { Treatment, TreatmentInfoItem } from "../../../../core/src/types";
 // into these exact paths under packages/client-web/public/ and everything
 // below will pick them up automatically — no code changes needed.
 const WHY_CHOOSE_ITEMS = [
-  { label: "Experienced Specialists", icon: "/icons/treatments/why-choose-experienced-specialists.svg" },
-  { label: "Accurate Diagnosis", icon: "/icons/treatments/why-choose-accurate-diagnosis.svg" },
-  { label: "Personalized Treatment", icon: "/icons/treatments/why-choose-personalized-treatment.svg" },
-  { label: "Modern Medical Facilities", icon: "/icons/treatments/why-choose-modern-facilities.svg" },
-  { label: "Comprehensive Support", icon: "/icons/treatments/why-choose-comprehensive-support.svg" },
-  { label: "Patient-Centered Approach", icon: "/icons/treatments/why-choose-patient-centered.svg" }
+  { label: "Experienced Specialists", icon: "/icons/treatments/why-choose-experienced-specialists.png" },
+  { label: "Accurate Diagnosis", icon: "/icons/treatments/why-choose-accurate-diagnosis.png" },
+  { label: "Personalized Treatment", icon: "/icons/treatments/why-choose-personalized-treatment.png" },
+  { label: "Modern Medical Facilities", icon: "/icons/treatments/why-choose-modern-facilities.png" },
+  { label: "Comprehensive Support", icon: "/icons/treatments/why-choose-comprehensive-support.png" },
+  { label: "Patient-Centered Approach", icon: "/icons/treatments/why-choose-patient-centered.png" }
 ];
-const CAUSE_FALLBACK_ICON = "/icons/treatments/cause-arrow.svg";
+const CAUSE_FALLBACK_ICON = "/icons/treatments/cause-arrow.png";
 const MID_CTA_DECORATIVE_IMAGE = "/images/treatments/mid-cta-decorative.png";
 
 // Renders an <Image>, but quietly collapses to an empty placeholder box
@@ -107,7 +107,7 @@ const WhyChooseAlaviBand = ({ heading }: { heading?: string }) => (
     variants={fadeUp}
     className="py-16 bg-[#663399]"
   >
-    <div className="max-w-[1268px] mx-auto px-6 md:px-10 text-center">
+    <div className="max-w-[1440px] mx-auto px-6 md:px-10 text-center">
       <p className="text-[24px] font-bold text-white tracking-wide mb-2">WHY CHOOSE ALAVI HOSPITAL?</p>
       <h2 className="text-[20px] md:text-[26px] font-semibold text-white mb-12 max-w-3xl mx-auto">
         {heading || "Expert Care for Better Health Management"}
@@ -148,12 +148,12 @@ const InfoItemIcon = ({
   }
   if (fallbackVariant === "arrow") {
     return (
-      <div className={`w-6 h-6 rounded-full bg-[#AFD0EC] flex items-center justify-center shrink-0 ${fallbackClassName || ""}`}>
-        <SafeImage src={CAUSE_FALLBACK_ICON} alt="" size={12} />
+      <div className={`w-6 h-6 flex items-center justify-center shrink-0 ${fallbackClassName || ""}`}>
+        <SafeImage src={CAUSE_FALLBACK_ICON} alt="" size={24} />
       </div>
     );
   }
-  return <div className={`w-6 h-6 rounded-full bg-[#AFD0EC] shrink-0 ${fallbackClassName || ""}`} />;
+  return <div className={`w-6 h-6 square-full bg-[#AFD0EC] shrink-0 ${fallbackClassName || ""}`} />;
 };
 
 export default function TreatmentDetailClient({ treatment }: { treatment: Treatment }) {
@@ -237,7 +237,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 onChange={(e) => setHeroName(e.target.value)}
                 placeholder="Name"
                 required
-                className="w-full h-[48px] bg-white border-[0.5px] border-black/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/40 transition-all"
+                className="w-full h-[48px] bg-white text-black border-[0.5px] border-black/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/40 transition-all"
               />
               <input
                 type="tel"
@@ -245,7 +245,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 onChange={(e) => setHeroMobile(e.target.value)}
                 placeholder="Mobile Number"
                 required
-                className="w-full h-[48px] bg-white border-[0.5px] border-black/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/40 transition-all"
+                className="w-full h-[48px] bg-white text-black border-[0.5px] border-black/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/40 transition-all"
               />
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -406,37 +406,72 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
         variants={fadeUp}
-        className="max-w-[1268px] mx-auto px-6 md:px-10 pb-16"
+        className="max-w-[1440px] mx-auto px-6 md:px-10 pb-16"
       >
-        <div className="bg-[#663399] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
-          <SafeImage
-            src={MID_CTA_DECORATIVE_IMAGE}
-            alt=""
-            size={320}
-            className="absolute -right-10 -bottom-16 w-[320px] h-[320px] object-cover rounded-[24px] -rotate-[16deg] opacity-25 pointer-events-none"
-          />
-          <p className="text-lg md:text-xl font-semibold max-w-2xl relative z-10">
-            {treatment.ctaText || "Early evaluation can help identify the cause and guide you toward the right treatment."}
-          </p>
-          <div className="flex gap-4 shrink-0 relative z-10">
-            <a href="tel:+919603911911">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.96 }}
-                className="border-2 border-white text-white font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-colors whitespace-nowrap"
+        <div className="bg-[#663399] rounded-2xl flex flex-col md:flex-row overflow-hidden relative shadow-lg min-h-[280px]">
+          
+          {/* Left Side: Image with Swoosh Transition */}
+          <div className="relative w-full md:w-[42%] h-[260px] md:h-auto shrink-0">
+            <SafeImage
+              src={MID_CTA_DECORATIVE_IMAGE}
+              alt="Doctor Consultation"
+              size={200}
+              className="w-full h-full object-cover"
+            />
+            {/* Desktop curved swoosh overlay to bridge image and background seamlessly */}
+            <div className="hidden md:block absolute inset-y-0 right-0 w-[120px] translate-x-[1px] pointer-events-none">
+              <svg
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                className="w-full h-full"
               >
-                <Phone className="w-4 h-4" /> Call Now
-              </motion.button>
-            </a>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setIsPopupOpen(true)}
-              className="bg-white text-[#663399] font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
-            >
-              <Calendar className="w-4 h-4" /> Book Appointment
-            </motion.button>
+                {/* Lighter purple accent curve */}
+                <path
+                  d="M100,0 L0,0 C60,40 60,60 0,100 L100,100 Z"
+                  fill="#8356AD"
+                  className="-translate-x-[6px]"
+                />
+                {/* Main dark purple background curve */}
+                <path
+                  d="M100,0 L10,0 C70,40 70,60 10,100 L100,100 Z"
+                  fill="#663399"
+                />
+              </svg>
+            </div>
+            {/* Mobile bottom curve (ensures smooth transition when stacked) */}
+            <div className="block md:hidden absolute bottom-0 inset-x-0 h-[40px] translate-y-[1px] pointer-events-none">
+               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+                 <path d="M0,100 L0,0 C40,60 60,60 100,0 L100,100 Z" fill="#663399" />
+               </svg>
+            </div>
           </div>
+
+          {/* Right Side: Content & Buttons */}
+          <div className="flex-1 p-8 md:py-12 md:pr-12 md:pl-8 flex flex-col justify-center z-10">
+            <p className="text-xl md:text-[22px] font-semibold text-white mb-8 leading-snug">
+              {treatment.ctaText || "Early evaluation can help identify the cause of recurring headaches and guide appropriate treatment."}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 shrink-0 relative z-10">
+              <a href="tel:+919603911911" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full sm:w-auto border-2 border-white bg-transparent text-white font-semibold px-8 py-3 rounded-full flex items-center justify-center gap-3 hover:bg-white/10 transition-colors whitespace-nowrap"
+                >
+                  <Phone className="w-5 h-5 fill-current" /> Call Now
+                </motion.button>
+              </a>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsPopupOpen(true)}
+                className="w-full sm:w-auto border-2 border-white bg-transparent text-white font-semibold px-8 py-3 rounded-full flex items-center justify-center gap-3 hover:bg-white/10 transition-colors whitespace-nowrap"
+              >
+                <Calendar className="w-5 h-5" /> Book Appointment
+              </motion.button>
+            </div>
+          </div>
+          
         </div>
       </motion.section>
 
@@ -447,20 +482,24 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
           whileInView="show"
           viewport={{ once: true, amount: 0.1 }}
           variants={fadeUp}
-          className="py-16 bg-[#F5F8FC]"
+          className="py-16 bg-white"
         >
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 text-center">
-            <p className="text-[#663399] font-bold tracking-wide mb-2">TREATMENT OPTIONS</p>
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#0066A9] mb-4">{treatment.treatmentOptions.title}</h2>
+            <p className="text-[#663399] font-bold tracking-wide mb-2 uppercase">TREATMENT OPTIONS</p>
+            <h2 className="text-2xl md:text-[32px] font-semibold text-[#0066A9] mb-4">
+              {treatment.treatmentOptions.title}
+            </h2>
             {treatment.treatmentOptions.description && (
               <div
-                className="text-[#023D6E] max-w-3xl mx-auto mb-12 leading-relaxed"
+                className="text-[#023D6E] max-w-4xl mx-auto mb-12 text-[17px] leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: treatment.treatmentOptions.description.replace(/&nbsp;/g, " ") }}
               />
             )}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 text-left items-stretch">
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 text-left items-stretch">
               {optionsList.map((item, idx) => {
                 const featured = idx === 0;
+                
                 if (featured) {
                   return (
                     <motion.div
@@ -470,24 +509,36 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                       viewport={{ once: true }}
                       variants={staggerItem(idx)}
                       whileHover={{ y: -4 }}
-                      className="group relative rounded-2xl overflow-hidden bg-[linear-gradient(180deg,#0066A9_0%,#663399_100%)] p-6 flex flex-col justify-end min-h-[320px] lg:row-span-2 cursor-pointer"
+                      className="group flex flex-col rounded-2xl overflow-hidden shadow-sm cursor-pointer bg-[#663399] h-full"
                     >
-                      {item.image && (
-                        <Image src={item.image} alt={item.title} fill className="object-cover opacity-40 group-hover:opacity-55 transition-opacity duration-300" />
-                      )}
-                      <div className="relative z-10">
-                        <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
-                        <p className="text-white/85 text-sm leading-relaxed mb-4">{item.description}</p>
-                        <span className="inline-flex items-center gap-1.5 text-white text-xs font-semibold">
-                          Read More <ArrowRight className="w-3.5 h-3.5" />
-                        </span>
+                      {/* Top Image Half */}
+                      <div className="relative w-full h-[180px] shrink-0 bg-white">
+                        {item.image ? (
+                          <Image src={item.image} alt={item.title} fill className="object-cover" />
+                        ) : (
+                          <div className="absolute inset-0 bg-[#663399]" />
+                        )}
+                      </div>
+                      
+                      {/* Bottom Text Half */}
+                      <div className="p-5 flex-1 flex flex-col">
+                        <h3 className="font-bold text-white text-[15px] mb-3 leading-snug">
+                          {item.title}
+                        </h3>
+                        <p className="text-white/90 text-[13px] leading-relaxed mb-6 flex-1">
+                          {item.description}
+                        </p>
+                        <div className="flex justify-end mt-auto">
+                          <span className="inline-flex items-center gap-1.5 text-white text-[12px] font-semibold tracking-wide">
+                            Read More <ArrowRight className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
                       </div>
                     </motion.div>
                   );
                 }
-                // Image + text blend into one seamless card; hovering tints the
-                // text portion purple; no uploaded image falls back to a solid
-                // purple-filled photo area (per Figma) instead of empty space.
+
+                // Standard Cards
                 return (
                   <motion.div
                     key={item.id ?? idx}
@@ -496,26 +547,36 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                     viewport={{ once: true }}
                     variants={staggerItem(idx)}
                     whileHover={{ y: -4 }}
-                    className="group flex flex-col rounded-2xl overflow-hidden shadow-sm cursor-pointer"
+                    className="group flex flex-col rounded-2xl overflow-hidden shadow-sm cursor-pointer bg-[#E8F4FA] h-full"
                   >
-                    <div className="relative w-full aspect-[4/3]">
+                    {/* Top Placeholder/Image Half */}
+                    <div className="relative w-full h-[180px] shrink-0 bg-white">
                       {item.image ? (
                         <Image src={item.image} alt={item.title} fill className="object-cover" />
                       ) : (
                         <div className="absolute inset-0 bg-[#663399]" />
                       )}
                     </div>
-                    <div className="bg-[#DFF2FF] group-hover:bg-[#663399] transition-colors duration-300 p-4 flex-1 flex flex-col">
-                      <h3 className="font-bold text-[#663399] group-hover:text-white text-sm mb-1 transition-colors duration-300">{item.title}</h3>
-                      <p className="text-[#023D6E] group-hover:text-white/90 text-xs leading-relaxed mb-3 flex-1 transition-colors duration-300">{item.description}</p>
-                      <span className="inline-flex items-center gap-1.5 text-[#023D6E] group-hover:text-white text-xs font-semibold transition-colors duration-300">
-                        Read More <ArrowRight className="w-3 h-3" />
-                      </span>
+
+                    {/* Bottom Text Half */}
+                    <div className="p-5 flex-1 flex flex-col">
+                      <h3 className="font-bold text-[#023D6E] text-[15px] mb-3 leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-[#023D6E]/80 text-[13px] leading-relaxed mb-6 flex-1">
+                        {item.description}
+                      </p>
+                      <div className="flex justify-end mt-auto">
+                        <span className="inline-flex items-center gap-1.5 text-[#023D6E] text-[12px] font-semibold tracking-wide">
+                          Read More <ArrowRight className="w-3.5 h-3.5" />
+                        </span>
+                      </div>
                     </div>
                   </motion.div>
                 );
               })}
             </div>
+            
           </div>
         </motion.section>
       )}
@@ -577,7 +638,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
           variants={fadeUp}
           className="py-20 bg-[#FAFAFA]"
         >
-          <div className="max-w-[1000px] w-full mx-auto px-6 md:px-10">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-10">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-[#663399] mb-12">
               Frequently Asked Questions
             </h2>
