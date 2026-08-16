@@ -30,6 +30,20 @@ type InfoListSection = { title: string; description: string; list: TreatmentInfo
 
 const emptySection = (): InfoListSection => ({ title: "", description: "", list: [] });
 
+// Cleans up an admin-entered SEO slug so the public /treatments/[slug] route
+// can always resolve it: strips a leading slash and any "treatments/"
+// prefix (the backend also tolerates these, but keeping the stored value
+// already-clean avoids relying on that), strips trailing slashes, lowercases,
+// and collapses anything that isn't a letter/number into a single hyphen.
+const sanitizeSlug = (raw: string) =>
+  raw
+    .trim()
+    .toLowerCase()
+    .replace(/^\/?(treatments\/)?/, "")
+    .replace(/\/+$/, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export default function TreatmentForm({ editId = null }: { editId?: string | null }) {
   const router = useRouter();
   const isEditing = !!editId;
@@ -40,9 +54,14 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
   const [pageLookupState, setPageLookupState] = useState<"idle" | "loading" | "no-page">("idle");
 
   const [takenItemIds, setTakenItemIds] = useState<Set<string>>(new Set());
-  const [originalItemId, setOriginalItemId] = useState<string | null>(null);
 
   const [selected, setSelected] = useState<SelectedItem | null>(null);
+  // Similar condition(s)/procedure(s) that should also link to this same treatment page.
+  const [additionalSelected, setAdditionalSelected] = useState<SelectedItem[]>([]);
+  // When editing, the speciality/mapping picker starts locked (read-only) so a
+  // stray click can't silently reassign this page to a different item; the
+  // admin must explicitly unlock it to remap.
+  const [mappingLocked, setMappingLocked] = useState(false);
 
   // Hero
   const [badgeLabel, setBadgeLabel] = useState("");
@@ -92,8 +111,9 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
           setSeoConfig(t.seoConfig || { title: "", url: "", metaDescription: "", metaKeywords: "" });
           setEnabled(t.enabled ?? true);
           setSelected({ itemType: t.itemType, itemId: t.itemId, itemTitle: t.itemTitle });
-          setOriginalItemId(t.itemId);
+          setAdditionalSelected(t.additionalItems || []);
           setSpecialityId(t.specialityId);
+          setMappingLocked(true);
         }
       } catch (error) {
         toast.error("Failed to load form data.");
@@ -145,8 +165,15 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         setMatchedPage(backfilledPage);
         setPageLookupState("idle");
 
+        // Items already mapped (primary or additional) by some OTHER treatment.
+        // This treatment's own record is excluded entirely so its existing
+        // mappings never show as "taken" against itself.
         const taken = new Set<string>();
-        (treatmentsRes.data.Items || []).forEach((t: Treatment) => taken.add(t.itemId));
+        (treatmentsRes.data.Items || []).forEach((t: Treatment) => {
+          if (isEditing && t.treatmentId === editId) return;
+          taken.add(t.itemId);
+          (t.additionalItems || []).forEach(a => taken.add(a.itemId));
+        });
         setTakenItemIds(taken);
       } catch (error) {
         toast.error("Failed to load speciality's conditions & procedures.");
@@ -160,23 +187,29 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
   const handleSelectSpecialityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSpecialityId(e.target.value);
     setSelected(null);
+    setAdditionalSelected([]);
   };
 
-  const isItemTaken = (itemId: string) => {
-    if (takenItemIds.has(itemId)) {
-      // Exempt this treatment's own original item when editing.
-      if (isEditing && itemId === originalItemId) return false;
-      return true;
-    }
-    return false;
-  };
+  const isItemTaken = (itemId: string) => takenItemIds.has(itemId);
 
   const pickItem = (itemType: TreatmentItemType, item: ConditionTreated | TreatmentProcedure) => {
     if (!item.id || isItemTaken(item.id)) return;
     const picked: SelectedItem = { itemType, itemId: item.id, itemTitle: item.title };
     setSelected(picked);
+    // An item can't be both the primary mapping and an "also apply to" item.
+    setAdditionalSelected(prev => prev.filter(a => a.itemId !== item.id));
     if (!title) setTitle(item.title);
     if (!badgeLabel) setBadgeLabel(item.title);
+  };
+
+  const isAdditionalChecked = (itemId: string) => additionalSelected.some(a => a.itemId === itemId);
+
+  const toggleAdditionalItem = (itemType: TreatmentItemType, item: ConditionTreated | TreatmentProcedure) => {
+    if (!item.id || item.id === selected?.itemId || isItemTaken(item.id)) return;
+    setAdditionalSelected(prev => {
+      if (prev.some(a => a.itemId === item.id)) return prev.filter(a => a.itemId !== item.id);
+      return [...prev, { itemType, itemId: item.id!, itemTitle: item.title }];
+    });
   };
 
   // --- Generic image upload (banner/icon/etc.) ---
@@ -249,6 +282,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         itemType: selected.itemType,
         itemId: selected.itemId,
         itemTitle: selected.itemTitle,
+        additionalItems: additionalSelected,
         pageId: matchedPage.pageId,
         badgeLabel,
         title,
@@ -262,7 +296,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         treatmentOptions,
         faqs,
         bottomCta,
-        seoConfig,
+        seoConfig: { ...seoConfig, url: sanitizeSlug(seoConfig.url) },
         enabled
       };
 
@@ -315,6 +349,43 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
           )}
         </div>
       </button>
+    );
+  };
+
+  // Renders a checkbox row for the "also apply to similar items" picker —
+  // any item not already taken by another treatment, and not the primary
+  // selection, can be checked to also link to this same treatment page.
+  const renderAdditionalPickerItem = (itemType: TreatmentItemType, item: ConditionTreated | TreatmentProcedure) => {
+    const isPrimary = !!item.id && selected?.itemId === item.id;
+    const taken = item.id ? isItemTaken(item.id) : false;
+    const checked = !!item.id && isAdditionalChecked(item.id);
+    const disabled = isPrimary || taken;
+    return (
+      <label
+        key={item.id}
+        className={`flex items-center gap-3 px-5 py-3.5 rounded-xl border-2 transition-all duration-200 ${
+          checked
+            ? "border-[#5B328C] bg-[#F3E8FF] cursor-pointer"
+            : disabled
+            ? "border-transparent bg-gray-100 opacity-60 cursor-not-allowed"
+            : "border-transparent bg-[#F8F6FA] hover:border-[#5B328C]/30 cursor-pointer"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={disabled}
+          onChange={() => toggleAdditionalItem(itemType, item)}
+          className="accent-[#5B328C] w-4 h-4 shrink-0"
+        />
+        <span className="font-medium text-gray-800 flex-1">{item.title}</span>
+        {isPrimary && (
+          <span className="text-xs font-bold text-[#5B328C] bg-[#F3E8FF] px-2 py-1 rounded-full shrink-0">Primary</span>
+        )}
+        {!isPrimary && taken && (
+          <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded-full shrink-0">Already mapped</span>
+        )}
+      </label>
     );
   };
 
@@ -386,61 +457,117 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
 
         <form onSubmit={handleSubmit} className="space-y-12">
 
-          {/* SECTION 1: Speciality Select */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">1. Select Speciality</h2>
-            <select
-              value={specialityId}
-              onChange={handleSelectSpecialityChange}
-              className={inputClass}
-              required
-            >
-              <option value="">-- Select Speciality --</option>
-              {specialities.map(s => (
-                <option key={s.specialityId} value={s.specialityId}>{s.specialityName}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* SECTION 2: Categorized Picker */}
-          {specialityId && (
+          {/* SECTIONS 1-2: Speciality + Mapping. Locked (read-only) while
+              editing, to prevent an accidental click from silently
+              reassigning this page to a different condition/procedure. */}
+          {mappingLocked ? (
             <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">2. Select a Condition or Procedure</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">1-2. Speciality &amp; Mapping</h2>
+              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                <p className="text-sm font-bold text-gray-500 mb-3">Currently mapped to:</p>
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {selected && (
+                    <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#F3E8FF] text-[#5B328C]">
+                      {selected.itemType === "condition" ? "Condition" : "Procedure"} · {selected.itemTitle}
+                    </span>
+                  )}
+                  {additionalSelected.map((a, i) => (
+                    <span key={i} className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#F3E8FF] text-[#5B328C]">
+                      {a.itemType === "condition" ? "Condition" : "Procedure"} · {a.itemTitle}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("Changing the speciality or mapped condition/procedure may break existing links to this treatment page. Continue?")) {
+                      setMappingLocked(false);
+                    }
+                  }}
+                  className="text-[#5B328C] text-sm font-bold hover:underline"
+                >
+                  Change Mapping
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* SECTION 1: Speciality Select */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">1. Select Speciality</h2>
+                <select
+                  value={specialityId}
+                  onChange={handleSelectSpecialityChange}
+                  className={inputClass}
+                  required
+                >
+                  <option value="">-- Select Speciality --</option>
+                  {specialities.map(s => (
+                    <option key={s.specialityId} value={s.specialityId}>{s.specialityName}</option>
+                  ))}
+                </select>
+              </div>
 
-              {pageLookupState === "loading" && (
-                <p className="text-gray-500">Loading conditions & procedures...</p>
-              )}
+              {/* SECTION 2: Categorized Picker */}
+              {specialityId && (
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">2. Select a Condition or Procedure</h2>
 
-              {pageLookupState === "no-page" && (
-                <p className="text-red-600 font-medium bg-red-50 p-4 rounded-xl">
-                  No speciality landing page found for this speciality. Please create one first under
-                  &quot;Speciality Pages&quot; before adding a treatment.
-                </p>
-              )}
+                  {pageLookupState === "loading" && (
+                    <p className="text-gray-500">Loading conditions & procedures...</p>
+                  )}
 
-              {matchedPage && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <h3 className="font-bold text-gray-700 mb-3">Conditions</h3>
-                    <div className="space-y-2">
-                      {(matchedPage.conditionsTreated?.list || []).length === 0 && (
-                        <p className="text-gray-400 text-sm">No conditions found for this speciality.</p>
+                  {pageLookupState === "no-page" && (
+                    <p className="text-red-600 font-medium bg-red-50 p-4 rounded-xl">
+                      No speciality landing page found for this speciality. Please create one first under
+                      &quot;Speciality Pages&quot; before adding a treatment.
+                    </p>
+                  )}
+
+                  {matchedPage && (
+                    <>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                          <h3 className="font-bold text-gray-700 mb-3">Conditions</h3>
+                          <div className="space-y-2">
+                            {(matchedPage.conditionsTreated?.list || []).length === 0 && (
+                              <p className="text-gray-400 text-sm">No conditions found for this speciality.</p>
+                            )}
+                            {(matchedPage.conditionsTreated?.list || []).map(item => renderPickerItem("condition", item))}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-700 mb-3">Procedures</h3>
+                          <div className="space-y-2">
+                            {(matchedPage.treatmentsProcedures?.list || []).length === 0 && (
+                              <p className="text-gray-400 text-sm">No procedures found for this speciality.</p>
+                            )}
+                            {(matchedPage.treatmentsProcedures?.list || []).map(item => renderPickerItem("procedure", item))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {selected && (
+                        <div className="mt-8">
+                          <h3 className="font-bold text-gray-700 mb-1">Also apply to similar items (optional)</h3>
+                          <p className="text-xs text-gray-500 mb-4">
+                            Check any other condition or procedure that should link to this same treatment page.
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                              {(matchedPage.conditionsTreated?.list || []).map(item => renderAdditionalPickerItem("condition", item))}
+                            </div>
+                            <div className="space-y-2">
+                              {(matchedPage.treatmentsProcedures?.list || []).map(item => renderAdditionalPickerItem("procedure", item))}
+                            </div>
+                          </div>
+                        </div>
                       )}
-                      {(matchedPage.conditionsTreated?.list || []).map(item => renderPickerItem("condition", item))}
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-700 mb-3">Procedures</h3>
-                    <div className="space-y-2">
-                      {(matchedPage.treatmentsProcedures?.list || []).length === 0 && (
-                        <p className="text-gray-400 text-sm">No procedures found for this speciality.</p>
-                      )}
-                      {(matchedPage.treatmentsProcedures?.list || []).map(item => renderPickerItem("procedure", item))}
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
 
           {/* SECTION 3+: Full Page Content */}
@@ -583,7 +710,24 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <input type="text" value={seoConfig.title} onChange={(e) => setSeoConfig({ ...seoConfig, title: e.target.value })} placeholder="SEO Title" className={inputClass} required />
-                  <input type="text" value={seoConfig.url} onChange={(e) => setSeoConfig({ ...seoConfig, url: e.target.value })} placeholder="Custom URL Slug (e.g. migraine-treatment)" className={inputClass} required />
+                  <div>
+                    <input
+                      type="text"
+                      value={seoConfig.url}
+                      onChange={(e) => setSeoConfig({ ...seoConfig, url: e.target.value })}
+                      onBlur={(e) => setSeoConfig(prev => ({ ...prev, url: sanitizeSlug(e.target.value) }))}
+                      placeholder="Custom URL Slug (e.g. migraine-treatment)"
+                      className={inputClass}
+                      required
+                    />
+                    <p className="text-xs text-gray-500 mt-2 ml-1">
+                      Just the slug — no leading/trailing slashes and no &quot;treatments/&quot; prefix; letters,
+                      numbers and hyphens only (auto-cleaned up when you leave the field).
+                      {seoConfig.url && (
+                        <> Page will load at <span className="font-mono font-semibold">/treatments/{sanitizeSlug(seoConfig.url)}</span>.</>
+                      )}
+                    </p>
+                  </div>
                   <textarea value={seoConfig.metaDescription} onChange={(e) => setSeoConfig({ ...seoConfig, metaDescription: e.target.value })} placeholder="Meta Description" rows={3} className={`${inputClass} md:col-span-2`} />
                   <textarea value={seoConfig.metaKeywords} onChange={(e) => setSeoConfig({ ...seoConfig, metaKeywords: e.target.value })} placeholder="Meta Keywords (comma separated)" rows={2} className={`${inputClass} md:col-span-2`} />
                 </div>

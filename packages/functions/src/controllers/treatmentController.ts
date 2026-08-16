@@ -10,31 +10,44 @@ const s3 = new S3Client({ region: AWS_REGION });
 // slugs saved as "/foo", "treatments/foo", or "foo" all match the same route param.
 const normalizeUrlSlug = (url: string) => (url || "").replace(/^\/?(treatments\/)?/, "").replace(/\/$/, "");
 
-// Returns existing Treatments mapped to the same (specialityId, itemType, itemId),
-// optionally excluding a given treatmentId (used by update to allow self-match).
-const findMappingConflict = async (specialityId: string, itemType: string, itemId: string, excludeTreatmentId?: string) => {
+// All (itemType, itemId) pairs a Treatment record covers: its primary
+// mapping plus any additionalItems.
+const getMappedPairs = (t: any): { itemType: string; itemId: string }[] => [
+  { itemType: t.itemType, itemId: t.itemId },
+  ...((t.additionalItems || []) as any[]).map((a) => ({ itemType: a.itemType, itemId: a.itemId }))
+];
+
+// Given a candidate set of (itemType, itemId) pairs for a speciality, returns
+// the subset already claimed (as primary or additional) by some other
+// Treatment in that speciality, optionally excluding a given treatmentId
+// (used by update to allow a record to keep its own existing mappings).
+const findMappingConflicts = async (
+  specialityId: string,
+  candidates: { itemType: string; itemId: string }[],
+  excludeTreatmentId?: string
+) => {
   const result = await db.send(new ScanCommand({
     TableName: TABLE_NAME_TREATMENTS,
-    FilterExpression: "specialityId = :sid AND itemType = :it AND itemId = :iid",
-    ExpressionAttributeValues: {
-      ":sid": specialityId,
-      ":it": itemType,
-      ":iid": itemId
-    }
+    FilterExpression: "specialityId = :sid",
+    ExpressionAttributeValues: { ":sid": specialityId }
   }));
 
-  const items = (result.Items || []).filter((i: any) => i.treatmentId !== excludeTreatmentId);
-  return items.length > 0;
+  const others = (result.Items || []).filter((t: any) => t.treatmentId !== excludeTreatmentId);
+  const taken = new Set<string>();
+  others.forEach((t: any) => getMappedPairs(t).forEach(({ itemType, itemId }) => taken.add(`${itemType}:${itemId}`)));
+
+  return candidates.filter(({ itemType, itemId }) => taken.has(`${itemType}:${itemId}`));
 };
 
 // --- 1. CREATE TREATMENT ---
 export const addTreatment = async (req: any, res: any) => {
   try {
-    const { specialityId, itemType, itemId } = req.body;
+    const { specialityId, itemType, itemId, additionalItems } = req.body;
+    const candidates = [{ itemType, itemId }, ...((additionalItems || []) as any[]).map((a) => ({ itemType: a.itemType, itemId: a.itemId }))];
 
-    const hasConflict = await findMappingConflict(specialityId, itemType, itemId);
-    if (hasConflict) {
-      return res.status(409).json({ error: "This condition/procedure already has a treatment page." });
+    const conflicts = await findMappingConflicts(specialityId, candidates);
+    if (conflicts.length > 0) {
+      return res.status(409).json({ error: "One or more selected items already have a treatment page.", conflicts });
     }
 
     const treatmentId = uuidv4();
@@ -124,11 +137,12 @@ export const getTreatmentByUrl = async (req: any, res: any) => {
 export const updateTreatment = async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { specialityId, itemType, itemId } = req.body;
+    const { specialityId, itemType, itemId, additionalItems } = req.body;
+    const candidates = [{ itemType, itemId }, ...((additionalItems || []) as any[]).map((a) => ({ itemType: a.itemType, itemId: a.itemId }))];
 
-    const hasConflict = await findMappingConflict(specialityId, itemType, itemId, id);
-    if (hasConflict) {
-      return res.status(409).json({ error: "This condition/procedure already has a treatment page." });
+    const conflicts = await findMappingConflicts(specialityId, candidates, id);
+    if (conflicts.length > 0) {
+      return res.status(409).json({ error: "One or more selected items already have a treatment page.", conflicts });
     }
 
     const updatedTreatment = {

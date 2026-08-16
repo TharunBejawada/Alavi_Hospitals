@@ -160,9 +160,17 @@ export interface TreatmentInfoItem {
   description: string;
 }
 
-// A detail page for exactly one condition or procedure within a speciality's
-// landing page. 1-to-1: (specialityId, itemType, itemId) uniquely identifies
-// at most one Treatment.
+export interface TreatmentMappedItem {
+  itemType: TreatmentItemType;
+  itemId: string;
+  itemTitle: string; // denormalized snapshot of the condition/procedure title
+}
+
+// A detail page primarily written for one condition or procedure within a
+// speciality's landing page, optionally also linked from other similar
+// items via `additionalItems` (e.g. "Migraine" and "Headache" both pointing
+// at the same treatment page). Each (specialityId, itemType, itemId) pair —
+// whether primary or additional — may map to at most one Treatment.
 export interface Treatment {
   treatmentId: string;
   specialityId: string;
@@ -170,6 +178,7 @@ export interface Treatment {
   itemType: TreatmentItemType;
   itemId: string; // -> ConditionTreated.id or TreatmentProcedure.id
   itemTitle: string; // denormalized snapshot of the condition/procedure title
+  additionalItems?: TreatmentMappedItem[]; // other similar items also served by this same page
   pageId: string; // SpecialityLandingPage.pageId this item came from
 
   // Hero
