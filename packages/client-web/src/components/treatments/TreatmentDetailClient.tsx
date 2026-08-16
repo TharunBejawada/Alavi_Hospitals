@@ -5,10 +5,23 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { Calendar, Phone, ChevronDown, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  Calendar,
+  Phone,
+  ChevronDown,
+  CheckCircle2,
+  Loader2,
+  ArrowRight,
+  Stethoscope,
+  ClipboardCheck,
+  HeartPulse,
+  Building2,
+  Users,
+  HeartHandshake
+} from "lucide-react";
 import { API_URL } from "../../config";
-import WhyChooseUs from "../home/WhyChooseUs";
-import type { Treatment } from "../../../../core/src/types";
+import AppointmentPopup from "../AppointmentPopup";
+import type { Treatment, TreatmentInfoItem } from "../../../../core/src/types";
 
 const FAQItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => (
   <div className="rounded-xl overflow-hidden mb-4 shadow-sm">
@@ -34,33 +47,77 @@ const FAQItem = ({ question, answer, isOpen, onClick }: { question: string; answ
   </div>
 );
 
+// The "WHY CHOOSE ALAVI HOSPITAL" band is static, site-wide marketing content
+// (same for every Treatment page), matching the Figma design's dedicated
+// icon-row layout rather than the differently-styled home/WhyChooseUs component.
+const WHY_CHOOSE_ITEMS = [
+  { label: "Experienced Specialists", Icon: Stethoscope },
+  { label: "Accurate Diagnosis", Icon: ClipboardCheck },
+  { label: "Personalized Treatment", Icon: HeartPulse },
+  { label: "Modern Medical Facilities", Icon: Building2 },
+  { label: "Comprehensive Support", Icon: Users },
+  { label: "Patient-Centered Approach", Icon: HeartHandshake }
+];
+
+const WhyChooseAlaviBand = () => (
+  <section className="py-14 bg-[#663399]">
+    <div className="max-w-[1268px] mx-auto px-6 md:px-10 text-center">
+      <p className="text-[24px] font-bold text-white tracking-wide mb-2">WHY CHOOSE ALAVI HOSPITAL?</p>
+      <h2 className="text-[20px] md:text-[26px] font-semibold text-white mb-10 max-w-3xl mx-auto">
+        Expert Care for Better Health Management
+      </h2>
+      <div className="flex flex-wrap justify-center">
+        {WHY_CHOOSE_ITEMS.map(({ label, Icon }, idx) => (
+          <div
+            key={label}
+            className={`flex flex-col items-center gap-3 px-6 py-2 w-1/2 sm:w-1/3 lg:w-auto lg:flex-1 ${
+              idx !== 0 ? "lg:border-l lg:border-white/30" : ""
+            }`}
+          >
+            <Icon className="w-10 h-10 text-white" strokeWidth={1.5} />
+            <span className="text-[14px] font-semibold text-white text-center">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const InfoItemIcon = ({ item, fallbackClassName }: { item: TreatmentInfoItem; fallbackClassName?: string }) =>
+  item.icon ? (
+    <div className="relative w-6 h-6 shrink-0">
+      <Image src={item.icon} alt="" fill className="object-contain" />
+    </div>
+  ) : (
+    <div className={`w-6 h-6 rounded-full bg-[#AFD0EC] flex items-center justify-center shrink-0 ${fallbackClassName || ""}`}>
+      <ArrowRight className="w-3.5 h-3.5 text-[#663399]" />
+    </div>
+  );
+
 export default function TreatmentDetailClient({ treatment }: { treatment: Treatment }) {
   const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Hero quick-lead form
   const [heroName, setHeroName] = useState("");
   const [heroMobile, setHeroMobile] = useState("");
   const [isSubmittingHero, setIsSubmittingHero] = useState(false);
 
-  const submitLead = async (name: string, mobile: string, concern: string, page: string) => {
-    await axios.post(`${API_URL}/api/forms/submit`, {
-      name,
-      mobile,
-      message: concern ? `Concern: ${concern}` : "No concern specified",
-      speciality: treatment.specialityName,
-      page
-    });
-    const query = new URLSearchParams({ name, mobile, department: treatment.specialityName }).toString();
-    router.push(`/thank-you?${query}`);
-  };
-
   const handleHeroSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!heroName.trim() || !heroMobile.trim()) return;
     setIsSubmittingHero(true);
     try {
-      await submitLead(heroName, heroMobile, "", `Treatment Page - ${treatment.title}`);
+      await axios.post(`${API_URL}/api/forms/submit`, {
+        name: heroName,
+        mobile: heroMobile,
+        message: "No concern specified",
+        speciality: treatment.specialityName,
+        page: `Treatment Page - ${treatment.title}`
+      });
+      const query = new URLSearchParams({ name: heroName, mobile: heroMobile, department: treatment.specialityName }).toString();
+      router.push(`/thank-you?${query}`);
     } catch (error) {
       console.error("Failed to submit lead:", error);
       alert("Something went wrong. Please try again or call us directly.");
@@ -69,23 +126,10 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
     }
   };
 
-  // Bottom consultation form
-  const [formData, setFormData] = useState({ name: "", mobile: "", concern: "" });
-  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
-
-  const handleConsultationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name.trim() || !formData.mobile.trim()) return;
-    setIsSubmittingForm(true);
-    try {
-      await submitLead(formData.name, formData.mobile, formData.concern, `Treatment Page - ${treatment.title}`);
-    } catch (error) {
-      console.error("Failed to submit form:", error);
-      alert("Something went wrong while booking. Please try again or call us directly.");
-    } finally {
-      setIsSubmittingForm(false);
-    }
-  };
+  const causesList = treatment.causes?.list || [];
+  const symptomsList = treatment.symptoms?.list || [];
+  const diagnosisList = treatment.diagnosis?.list || [];
+  const optionsList = treatment.treatmentOptions?.list || [];
 
   return (
     <div className="font-['Poppins'] min-h-screen bg-white pb-20">
@@ -159,10 +203,10 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
       )}
 
       {/* --- 3. CAUSES + SYMPTOMS --- */}
-      {(treatment.causes?.list?.length > 0 || treatment.symptoms?.list?.length > 0) && (
+      {(causesList.length > 0 || symptomsList.length > 0) && (
         <section className="py-16 bg-[#663399]">
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 grid lg:grid-cols-2 gap-10">
-            {treatment.causes?.list?.length > 0 && (
+            {causesList.length > 0 && (
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-white mb-4">{treatment.causes.title}</h2>
                 {treatment.causes.description && (
@@ -172,9 +216,9 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                   />
                 )}
                 <div className="space-y-6">
-                  {treatment.causes.list.map((item, idx) => (
+                  {causesList.map((item, idx) => (
                     <div key={item.id ?? idx} className="flex gap-4">
-                      <div className="w-6 h-6 rounded-full bg-[#AFD0EC] shrink-0 mt-1"></div>
+                      <InfoItemIcon item={item} fallbackClassName="mt-1" />
                       <div>
                         <h3 className="font-semibold text-white text-lg mb-1">{item.title}</h3>
                         <p className="text-white/80 text-sm leading-relaxed">{item.description}</p>
@@ -185,13 +229,16 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
               </div>
             )}
 
-            {treatment.symptoms?.list?.length > 0 && (
+            {symptomsList.length > 0 && (
               <div className="bg-white rounded-2xl p-8 h-fit">
-                <h3 className="text-xl md:text-2xl font-bold text-[#663399] mb-6">
+                <h3 className="text-xl md:text-2xl font-bold text-[#663399] mb-2">
                   {treatment.symptoms.title || "Common Signs & Symptoms"}
                 </h3>
+                {treatment.symptoms.description && (
+                  <p className="text-[#012B4E] text-sm mb-6">{treatment.symptoms.description}</p>
+                )}
                 <ul className="space-y-4">
-                  {treatment.symptoms.list.map((s, idx) => (
+                  {symptomsList.map((s, idx) => (
                     <li key={idx} className="flex items-center gap-3 text-[#663399] font-semibold">
                       <CheckCircle2 className="w-5 h-5 shrink-0 text-[#663399]" />
                       {s}
@@ -204,24 +251,8 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
         </section>
       )}
 
-      {/* --- 4. MID CTA --- */}
-      {treatment.ctaText && (
-        <section className="max-w-[1440px] mx-auto px-6 md:px-10 -mt-8 relative z-10">
-          <div className="bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-white shadow-xl">
-            <p className="text-base md:text-lg font-medium max-w-2xl">{treatment.ctaText}</p>
-            <div className="flex gap-4 shrink-0">
-              <a href="tel:+919603911911">
-                <button className="bg-white text-[#663399] font-semibold px-6 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap">
-                  <Phone className="w-4 h-4" /> Call Now
-                </button>
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* --- 5. DIAGNOSIS --- */}
-      {treatment.diagnosis?.list?.length > 0 && (
+      {/* --- 4. DIAGNOSIS --- */}
+      {diagnosisList.length > 0 && (
         <section className="py-16 max-w-[1440px] mx-auto px-6 md:px-10 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-4">{treatment.diagnosis.title}</h2>
           {treatment.diagnosis.description && (
@@ -231,9 +262,10 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
             />
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            {treatment.diagnosis.list.map((item, idx) => (
+            {diagnosisList.map((item, idx) => (
               <div key={item.id ?? idx} className="bg-[#DFF2FF] rounded-2xl p-6">
-                <h3 className="font-bold text-[#663399] text-lg mb-2">{item.title}</h3>
+                <InfoItemIcon item={item} fallbackClassName="mb-3" />
+                <h3 className="font-bold text-[#663399] text-lg mt-3 mb-2">{item.title}</h3>
                 <p className="text-[#023D6E] text-sm leading-relaxed">{item.description}</p>
               </div>
             ))}
@@ -241,8 +273,30 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
         </section>
       )}
 
+      {/* --- 5. MID CTA --- */}
+      {treatment.ctaText && (
+        <section className="max-w-[1268px] mx-auto px-6 md:px-10 pb-16">
+          <div className="bg-[#663399] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
+            <p className="text-lg md:text-xl font-semibold max-w-2xl relative z-10">{treatment.ctaText}</p>
+            <div className="flex gap-4 shrink-0 relative z-10">
+              <a href="tel:+919603911911">
+                <button className="border-2 border-white text-white font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-colors whitespace-nowrap">
+                  <Phone className="w-4 h-4" /> Call Now
+                </button>
+              </a>
+              <button
+                onClick={() => setIsPopupOpen(true)}
+                className="bg-white text-[#663399] font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
+              >
+                <Calendar className="w-4 h-4" /> Book Appointment
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* --- 6. TREATMENT OPTIONS --- */}
-      {treatment.treatmentOptions?.list?.length > 0 && (
+      {optionsList.length > 0 && (
         <section className="py-16 bg-[#F5F8FC]">
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 text-center">
             <p className="text-[#663399] font-bold tracking-wide mb-2">TREATMENT OPTIONS</p>
@@ -253,100 +307,85 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 dangerouslySetInnerHTML={{ __html: treatment.treatmentOptions.description.replace(/&nbsp;/g, " ") }}
               />
             )}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 text-left">
-              {treatment.treatmentOptions.list.map((item, idx) => (
-                <div key={item.id ?? idx} className="bg-[#663399] rounded-2xl p-6 text-white flex flex-col">
-                  {item.image && (
-                    <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4">
-                      <Image src={item.image} alt={item.title} fill className="object-cover" />
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 text-left items-stretch">
+              {optionsList.map((item, idx) => {
+                const featured = idx === 0;
+                if (featured) {
+                  return (
+                    <div
+                      key={item.id ?? idx}
+                      className="relative rounded-2xl overflow-hidden bg-[linear-gradient(180deg,#0066A9_0%,#663399_100%)] p-6 flex flex-col justify-end min-h-[320px] lg:row-span-2"
+                    >
+                      {item.image && (
+                        <Image src={item.image} alt={item.title} fill className="object-cover opacity-40" />
+                      )}
+                      <div className="relative z-10">
+                        <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
+                        <p className="text-white/85 text-sm leading-relaxed mb-4">{item.description}</p>
+                        <span className="inline-flex items-center gap-1.5 text-white text-xs font-semibold">
+                          Read More <ArrowRight className="w-3.5 h-3.5" />
+                        </span>
+                      </div>
                     </div>
-                  )}
-                  <h3 className="font-bold text-sm mb-2">{item.title}</h3>
-                  <p className="text-white/80 text-xs leading-relaxed">{item.description}</p>
-                </div>
-              ))}
+                  );
+                }
+                return (
+                  <div key={item.id ?? idx} className="flex flex-col gap-3">
+                    {item.image && (
+                      <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#DCF1FF]">
+                        <Image src={item.image} alt={item.title} fill className="object-cover" />
+                      </div>
+                    )}
+                    <div className="bg-[#DFF2FF] rounded-xl p-4 flex-1 flex flex-col">
+                      <h3 className="font-bold text-[#663399] text-sm mb-1">{item.title}</h3>
+                      <p className="text-[#023D6E] text-xs leading-relaxed mb-3 flex-1">{item.description}</p>
+                      <span className="inline-flex items-center gap-1.5 text-[#023D6E] text-xs font-semibold">
+                        Read More <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
       )}
 
       {/* --- 7. WHY CHOOSE ALAVI HOSPITALS --- */}
-      <WhyChooseUs />
+      <WhyChooseAlaviBand />
 
-      {/* --- 8. CONSULTATION CTA --- */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-10">
-          <div className="flex flex-col lg:flex-row shadow-xl rounded-[32px] overflow-hidden border-0 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)]">
-            <div className="lg:w-1/2 p-10 lg:p-16 flex flex-col justify-center text-white">
-              <div className="bg-[rgba(231,216,245,0.21)] w-fit px-5 py-2.5 rounded-[22px] flex items-center gap-2 mb-8">
-                <Calendar className="w-4 h-4 text-white" />
-                <span className="font-semibold text-[14px] text-white">Book an Appointment</span>
-              </div>
-              <h2 className="font-semibold text-[28px] leading-[42px] text-white mb-6">
-                Take the first step toward<br />better {treatment.itemTitle} care.
-              </h2>
-              <p className="font-medium text-[16px] leading-[170%] text-white mb-6 max-w-md">
-                Share your details and our care team will reach out to confirm your consultation with a specialist.
-              </p>
-            </div>
-
-            <div className="lg:w-1/2 bg-[#EEF8FF] p-10 lg:p-16 flex flex-col justify-center">
-              <h3 className="font-semibold text-[22px] text-[#663399] mb-2">Patient Details</h3>
-              <form className="space-y-6" onSubmit={handleConsultationSubmit}>
-                <div>
-                  <label className="block font-semibold text-[16px] text-[#250F3C] mb-2 ml-4">Patient Name*</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Enter Your Full Name"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-[16px] text-[#250F3C] mb-2 ml-4">Mobile Number*</label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.mobile}
-                    onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                    placeholder="10 - digit mobile number"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-[16px] text-[#250F3C] mb-2 ml-4">Concern</label>
-                  <input
-                    type="text"
-                    value={formData.concern}
-                    onChange={(e) => setFormData({ ...formData, concern: e.target.value })}
-                    placeholder="Describe your concern"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C]"
-                  />
-                </div>
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={isSubmittingForm || !formData.name || !formData.mobile}
-                    className="mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[18px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmittingForm ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" /> Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Calendar className="w-5 h-5" /> Book an Appointment
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
+      {/* --- 8. BOTTOM CTA: BOOK YOUR CONSULTATION --- */}
+      {(treatment.bottomCta?.heading || treatment.bottomCta?.description1) && (
+        <section className="py-16 max-w-[1268px] mx-auto px-6 md:px-10">
+          <div className="border-2 border-[#663399] rounded-2xl p-8 md:p-14 text-center">
+            {treatment.bottomCta.label && (
+              <p className="text-[#663399] font-extrabold tracking-wide mb-4">{treatment.bottomCta.label}</p>
+            )}
+            {treatment.bottomCta.heading && (
+              <h2 className="text-xl md:text-2xl font-bold text-[#0066A9] mb-6">{treatment.bottomCta.heading}</h2>
+            )}
+            {treatment.bottomCta.description1 && (
+              <p className="text-[#0C0200] text-base md:text-lg mb-3 max-w-3xl mx-auto">{treatment.bottomCta.description1}</p>
+            )}
+            {treatment.bottomCta.description2 && (
+              <p className="text-[#0C0200] text-base md:text-lg mb-8 max-w-3xl mx-auto">{treatment.bottomCta.description2}</p>
+            )}
+            <div className="flex flex-wrap justify-center gap-4">
+              <a href="tel:+919603911911">
+                <button className="bg-white border-2 border-[#663399] text-[#663399] font-semibold px-8 py-3 rounded-full flex items-center gap-2 hover:bg-[#F3E8FF] transition-colors">
+                  <Phone className="w-4 h-4" /> Call Now
+                </button>
+              </a>
+              <button
+                onClick={() => setIsPopupOpen(true)}
+                className="bg-[#663399] text-white font-semibold px-8 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                <Calendar className="w-4 h-4" /> Book Appointment
+              </button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* --- 9. FAQS --- */}
       {treatment.faqs?.length > 0 && (
@@ -369,6 +408,12 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
           </div>
         </section>
       )}
+
+      <AppointmentPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        defaultSpeciality={treatment.specialityName}
+      />
     </div>
   );
 }
