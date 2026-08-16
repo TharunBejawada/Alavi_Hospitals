@@ -194,11 +194,21 @@ export interface Treatment {
   // "Common Signs & Symptoms" checklist
   symptoms: {
     title: string;
+    description: string;
     list: string[];
   };
 
-  // Mid-page CTA banner text (buttons are fixed site-wide actions)
+  // Mid-page CTA banner (sits between the diagnosis steps and treatment
+  // options sections; buttons are fixed site-wide actions)
   ctaText: string;
+
+  // "BOOK YOUR CONSULTATION" bottom CTA band (buttons are fixed site-wide actions)
+  bottomCta: {
+    label: string; // small caps label, e.g. "BOOK YOUR CONSULTATION"
+    heading: string;
+    description1: string;
+    description2: string;
+  };
 
   // "How is X Diagnosed at Alavi Hospitals?"
   diagnosis: {

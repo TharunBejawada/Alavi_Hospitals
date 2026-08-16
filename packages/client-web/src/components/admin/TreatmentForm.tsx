@@ -52,11 +52,12 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
   // Sections
   const [overview, setOverview] = useState({ title: "", description: "", image: "" });
   const [causes, setCauses] = useState<InfoListSection>(emptySection());
-  const [symptoms, setSymptoms] = useState<{ title: string; list: string[] }>({ title: "", list: [] });
+  const [symptoms, setSymptoms] = useState<{ title: string; description: string; list: string[] }>({ title: "", description: "", list: [] });
   const [ctaText, setCtaText] = useState("");
   const [diagnosis, setDiagnosis] = useState<InfoListSection>(emptySection());
   const [treatmentOptions, setTreatmentOptions] = useState<InfoListSection>(emptySection());
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [bottomCta, setBottomCta] = useState({ label: "", heading: "", description1: "", description2: "" });
 
   const [seoConfig, setSeoConfig] = useState({ title: "", url: "", metaDescription: "", metaKeywords: "" });
   const [enabled, setEnabled] = useState(true);
@@ -80,11 +81,12 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
           setSubtitle(t.subtitle || "");
           setOverview(t.overview || { title: "", description: "", image: "" });
           setCauses(t.causes || emptySection());
-          setSymptoms(t.symptoms || { title: "", list: [] });
+          setSymptoms(t.symptoms || { title: "", description: "", list: [] });
           setCtaText(t.ctaText || "");
           setDiagnosis(t.diagnosis || emptySection());
           setTreatmentOptions(t.treatmentOptions || emptySection());
           setFaqs(t.faqs || []);
+          setBottomCta(t.bottomCta || { label: "", heading: "", description1: "", description2: "" });
           setSeoConfig(t.seoConfig || { title: "", url: "", metaDescription: "", metaKeywords: "" });
           setEnabled(t.enabled ?? true);
           setSelected({ itemType: t.itemType, itemId: t.itemId, itemTitle: t.itemTitle });
@@ -256,6 +258,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         diagnosis,
         treatmentOptions,
         faqs,
+        bottomCta,
         seoConfig,
         enabled
       };
@@ -487,6 +490,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
               <div>
                 <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">6. Common Signs & Symptoms</h2>
                 <input type="text" value={symptoms.title} onChange={(e) => setSymptoms(prev => ({ ...prev, title: e.target.value }))} placeholder="Section Title (e.g. Common Signs & Symptoms)" className={`${inputClass} mb-4`} />
+                <textarea value={symptoms.description} onChange={(e) => setSymptoms(prev => ({ ...prev, description: e.target.value }))} placeholder="Short intro line (e.g. Migraine can cause one or more of the following symptoms:)" rows={2} className={`${inputClass} mb-4`} />
                 <div className="flex justify-between items-center mb-4">
                   <label className="block text-sm font-bold text-gray-700">Symptoms List</label>
                   <button type="button" onClick={addSymptom} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
@@ -540,10 +544,21 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
                 </div>
               </div>
 
+              {/* Bottom CTA */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">11. Bottom CTA (&quot;Book Your Consultation&quot;)</h2>
+                <div className="grid grid-cols-1 gap-5">
+                  <input type="text" value={bottomCta.label} onChange={(e) => setBottomCta(prev => ({ ...prev, label: e.target.value }))} placeholder="Small Label (e.g. BOOK YOUR CONSULTATION)" className={inputClass} />
+                  <input type="text" value={bottomCta.heading} onChange={(e) => setBottomCta(prev => ({ ...prev, heading: e.target.value }))} placeholder="Heading (e.g. Take the First Step Towards Better Migraine Management)" className={inputClass} />
+                  <textarea value={bottomCta.description1} onChange={(e) => setBottomCta(prev => ({ ...prev, description1: e.target.value }))} placeholder="First paragraph" rows={2} className={inputClass} />
+                  <textarea value={bottomCta.description2} onChange={(e) => setBottomCta(prev => ({ ...prev, description2: e.target.value }))} placeholder="Second paragraph" rows={2} className={inputClass} />
+                </div>
+              </div>
+
               {/* SEO */}
               <div>
                 <div className="flex justify-between items-center mb-6 border-b pb-2">
-                  <h2 className="text-xl font-bold text-gray-800">11. SEO Settings</h2>
+                  <h2 className="text-xl font-bold text-gray-800">12. SEO Settings</h2>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
                     <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
                     Enabled
