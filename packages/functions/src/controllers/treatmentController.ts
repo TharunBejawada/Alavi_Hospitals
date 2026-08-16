@@ -6,6 +6,10 @@ import { v4 as uuidv4 } from "uuid";
 // Initialize S3 Client
 const s3 = new S3Client({ region: AWS_REGION });
 
+// Strips an optional leading slash and an optional "treatments/" prefix so
+// slugs saved as "/foo", "treatments/foo", or "foo" all match the same route param.
+const normalizeUrlSlug = (url: string) => (url || "").replace(/^\/?(treatments\/)?/, "").replace(/\/$/, "");
+
 // Returns existing Treatments mapped to the same (specialityId, itemType, itemId),
 // optionally excluding a given treatmentId (used by update to allow self-match).
 const findMappingConflict = async (specialityId: string, itemType: string, itemId: string, excludeTreatmentId?: string) => {
@@ -105,7 +109,8 @@ export const getTreatmentByUrl = async (req: any, res: any) => {
     const { url } = req.params;
     const result = await db.send(new ScanCommand({ TableName: TABLE_NAME_TREATMENTS }));
     const items = result.Items || [];
-    const match = items.find((t: any) => t.seoConfig?.url === url);
+    const normalizedUrl = normalizeUrlSlug(url);
+    const match = items.find((t: any) => normalizeUrlSlug(t.seoConfig?.url) === normalizedUrl);
 
     if (!match) return res.status(404).json({ error: "Treatment not found" });
     res.status(200).json({ Item: match });
