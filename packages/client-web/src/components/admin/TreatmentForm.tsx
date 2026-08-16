@@ -54,6 +54,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
   const [causes, setCauses] = useState<InfoListSection>(emptySection());
   const [symptoms, setSymptoms] = useState<{ title: string; description: string; list: string[] }>({ title: "", description: "", list: [] });
   const [ctaText, setCtaText] = useState("");
+  const [whyChooseHeading, setWhyChooseHeading] = useState("");
   const [diagnosis, setDiagnosis] = useState<InfoListSection>(emptySection());
   const [treatmentOptions, setTreatmentOptions] = useState<InfoListSection>(emptySection());
   const [faqs, setFaqs] = useState<FAQ[]>([]);
@@ -83,6 +84,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
           setCauses(t.causes || emptySection());
           setSymptoms(t.symptoms || { title: "", description: "", list: [] });
           setCtaText(t.ctaText || "");
+          setWhyChooseHeading(t.whyChooseHeading || "");
           setDiagnosis(t.diagnosis || emptySection());
           setTreatmentOptions(t.treatmentOptions || emptySection());
           setFaqs(t.faqs || []);
@@ -255,6 +257,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         causes,
         symptoms,
         ctaText,
+        whyChooseHeading,
         diagnosis,
         treatmentOptions,
         faqs,
@@ -513,6 +516,20 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
               <div>
                 <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">7. Mid-Page CTA Text</h2>
                 <textarea value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="e.g. Early evaluation can help identify the cause and guide appropriate treatment." rows={2} className={inputClass} />
+              </div>
+
+              {/* Why Choose Alavi Heading */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">
+                  7a. &quot;Why Choose Alavi&quot; Heading
+                </h2>
+                <input
+                  type="text"
+                  value={whyChooseHeading}
+                  onChange={(e) => setWhyChooseHeading(e.target.value)}
+                  placeholder="e.g. Expert Neurology Care for Better Migraine Management"
+                  className={inputClass}
+                />
               </div>
 
               {/* Diagnosis */}

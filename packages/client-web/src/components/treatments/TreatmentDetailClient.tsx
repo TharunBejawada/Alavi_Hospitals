@@ -9,7 +9,7 @@ import {
   Calendar,
   Phone,
   ChevronDown,
-  CheckCircle2,
+  Check,
   Loader2,
   ArrowRight,
   Stethoscope,
@@ -59,23 +59,23 @@ const WHY_CHOOSE_ITEMS = [
   { label: "Patient-Centered Approach", Icon: HeartHandshake }
 ];
 
-const WhyChooseAlaviBand = () => (
-  <section className="py-14 bg-[#663399]">
+const WhyChooseAlaviBand = ({ heading }: { heading?: string }) => (
+  <section className="py-16 bg-[#663399]">
     <div className="max-w-[1268px] mx-auto px-6 md:px-10 text-center">
       <p className="text-[24px] font-bold text-white tracking-wide mb-2">WHY CHOOSE ALAVI HOSPITAL?</p>
-      <h2 className="text-[20px] md:text-[26px] font-semibold text-white mb-10 max-w-3xl mx-auto">
-        Expert Care for Better Health Management
+      <h2 className="text-[20px] md:text-[26px] font-semibold text-white mb-12 max-w-3xl mx-auto">
+        {heading || "Expert Care for Better Health Management"}
       </h2>
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap justify-center items-start">
         {WHY_CHOOSE_ITEMS.map(({ label, Icon }, idx) => (
           <div
             key={label}
-            className={`flex flex-col items-center gap-3 px-6 py-2 w-1/2 sm:w-1/3 lg:w-auto lg:flex-1 ${
+            className={`flex flex-col items-center gap-4 px-6 py-2 w-1/2 sm:w-1/3 lg:w-auto lg:flex-1 ${
               idx !== 0 ? "lg:border-l lg:border-white/30" : ""
             }`}
           >
-            <Icon className="w-10 h-10 text-white" strokeWidth={1.5} />
-            <span className="text-[14px] font-semibold text-white text-center">{label}</span>
+            <Icon className="w-14 h-14 text-white" strokeWidth={1.25} />
+            <span className="text-[14px] font-semibold text-white text-center max-w-[140px]">{label}</span>
           </div>
         ))}
       </div>
@@ -240,7 +240,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 <ul className="space-y-4">
                   {symptomsList.map((s, idx) => (
                     <li key={idx} className="flex items-center gap-3 text-[#663399] font-semibold">
-                      <CheckCircle2 className="w-5 h-5 shrink-0 text-[#663399]" />
+                      <Check className="w-5 h-5 shrink-0 text-[#663399]" strokeWidth={3} />
                       {s}
                     </li>
                   ))}
@@ -264,8 +264,10 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             {diagnosisList.map((item, idx) => (
               <div key={item.id ?? idx} className="bg-[#DFF2FF] rounded-2xl p-6">
-                <InfoItemIcon item={item} fallbackClassName="mb-3" />
-                <h3 className="font-bold text-[#663399] text-lg mt-3 mb-2">{item.title}</h3>
+                <div className="flex items-center gap-3 mb-2">
+                  <InfoItemIcon item={item} />
+                  <h3 className="font-bold text-[#663399] text-lg">{item.title}</h3>
+                </div>
                 <p className="text-[#023D6E] text-sm leading-relaxed">{item.description}</p>
               </div>
             ))}
@@ -273,27 +275,32 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
         </section>
       )}
 
-      {/* --- 5. MID CTA --- */}
-      {treatment.ctaText && (
-        <section className="max-w-[1268px] mx-auto px-6 md:px-10 pb-16">
-          <div className="bg-[#663399] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
-            <p className="text-lg md:text-xl font-semibold max-w-2xl relative z-10">{treatment.ctaText}</p>
-            <div className="flex gap-4 shrink-0 relative z-10">
-              <a href="tel:+919603911911">
-                <button className="border-2 border-white text-white font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-colors whitespace-nowrap">
-                  <Phone className="w-4 h-4" /> Call Now
-                </button>
-              </a>
-              <button
-                onClick={() => setIsPopupOpen(true)}
-                className="bg-white text-[#663399] font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
-              >
-                <Calendar className="w-4 h-4" /> Book Appointment
-              </button>
+      {/* --- 5. MID CTA (static: always visible, both buttons always shown) --- */}
+      <section className="max-w-[1268px] mx-auto px-6 md:px-10 pb-16">
+        <div className="bg-[#663399] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
+          {treatment.overview?.image && (
+            <div className="absolute -right-10 -bottom-16 w-[320px] h-[320px] rotate-[-16deg] opacity-25 pointer-events-none">
+              <Image src={treatment.overview.image} alt="" fill className="object-cover rounded-[24px]" />
             </div>
+          )}
+          <p className="text-lg md:text-xl font-semibold max-w-2xl relative z-10">
+            {treatment.ctaText || "Early evaluation can help identify the cause and guide you toward the right treatment."}
+          </p>
+          <div className="flex gap-4 shrink-0 relative z-10">
+            <a href="tel:+919603911911">
+              <button className="border-2 border-white text-white font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-colors whitespace-nowrap">
+                <Phone className="w-4 h-4" /> Call Now
+              </button>
+            </a>
+            <button
+              onClick={() => setIsPopupOpen(true)}
+              className="bg-white text-[#663399] font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
+            >
+              <Calendar className="w-4 h-4" /> Book Appointment
+            </button>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* --- 6. TREATMENT OPTIONS --- */}
       {optionsList.length > 0 && (
@@ -314,10 +321,10 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                   return (
                     <div
                       key={item.id ?? idx}
-                      className="relative rounded-2xl overflow-hidden bg-[linear-gradient(180deg,#0066A9_0%,#663399_100%)] p-6 flex flex-col justify-end min-h-[320px] lg:row-span-2"
+                      className="group relative rounded-2xl overflow-hidden bg-[linear-gradient(180deg,#0066A9_0%,#663399_100%)] p-6 flex flex-col justify-end min-h-[320px] lg:row-span-2 cursor-pointer"
                     >
                       {item.image && (
-                        <Image src={item.image} alt={item.title} fill className="object-cover opacity-40" />
+                        <Image src={item.image} alt={item.title} fill className="object-cover opacity-40 group-hover:opacity-55 transition-opacity duration-300" />
                       )}
                       <div className="relative z-10">
                         <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
@@ -329,17 +336,22 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                     </div>
                   );
                 }
+                // Image + text blend into one seamless card; hovering tints the
+                // text portion purple; no uploaded image falls back to a solid
+                // purple-filled photo area (per Figma) instead of empty space.
                 return (
-                  <div key={item.id ?? idx} className="flex flex-col gap-3">
-                    {item.image && (
-                      <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#DCF1FF]">
+                  <div key={item.id ?? idx} className="group flex flex-col rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                    <div className="relative w-full aspect-[4/3]">
+                      {item.image ? (
                         <Image src={item.image} alt={item.title} fill className="object-cover" />
-                      </div>
-                    )}
-                    <div className="bg-[#DFF2FF] rounded-xl p-4 flex-1 flex flex-col">
-                      <h3 className="font-bold text-[#663399] text-sm mb-1">{item.title}</h3>
-                      <p className="text-[#023D6E] text-xs leading-relaxed mb-3 flex-1">{item.description}</p>
-                      <span className="inline-flex items-center gap-1.5 text-[#023D6E] text-xs font-semibold">
+                      ) : (
+                        <div className="absolute inset-0 bg-[#663399]" />
+                      )}
+                    </div>
+                    <div className="bg-[#DFF2FF] group-hover:bg-[#663399] transition-colors duration-300 p-4 flex-1 flex flex-col">
+                      <h3 className="font-bold text-[#663399] group-hover:text-white text-sm mb-1 transition-colors duration-300">{item.title}</h3>
+                      <p className="text-[#023D6E] group-hover:text-white/90 text-xs leading-relaxed mb-3 flex-1 transition-colors duration-300">{item.description}</p>
+                      <span className="inline-flex items-center gap-1.5 text-[#023D6E] group-hover:text-white text-xs font-semibold transition-colors duration-300">
                         Read More <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
@@ -352,7 +364,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
       )}
 
       {/* --- 7. WHY CHOOSE ALAVI HOSPITALS --- */}
-      <WhyChooseAlaviBand />
+      <WhyChooseAlaviBand heading={treatment.whyChooseHeading} />
 
       {/* --- 8. BOTTOM CTA: BOOK YOUR CONSULTATION --- */}
       {(treatment.bottomCta?.heading || treatment.bottomCta?.description1) && (
