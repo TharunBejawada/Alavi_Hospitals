@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaImage } from "react-icons/fa6";
+import { FaImage, FaPlus, FaTrash, FaIcons } from "react-icons/fa6";
 import { API_URL } from "../../config";
 import SpecialitiesRTE from "./SpecialitiesRTE";
 import {
@@ -13,8 +13,10 @@ import {
   SpecialityLandingPage,
   Treatment,
   TreatmentItemType,
+  TreatmentInfoItem,
   ConditionTreated,
   TreatmentProcedure,
+  FAQ,
   backfillItemIds
 } from "../../../../core/src/types";
 
@@ -23,6 +25,10 @@ type SelectedItem = {
   itemId: string;
   itemTitle: string;
 };
+
+type InfoListSection = { title: string; description: string; list: TreatmentInfoItem[] };
+
+const emptySection = (): InfoListSection => ({ title: "", description: "", list: [] });
 
 export default function TreatmentForm({ editId = null }: { editId?: string | null }) {
   const router = useRouter();
@@ -34,14 +40,24 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
   const [pageLookupState, setPageLookupState] = useState<"idle" | "loading" | "no-page">("idle");
 
   const [takenItemIds, setTakenItemIds] = useState<Set<string>>(new Set());
-  const [treatmentIdByItemId, setTreatmentIdByItemId] = useState<Record<string, string>>({});
   const [originalItemId, setOriginalItemId] = useState<string | null>(null);
 
   const [selected, setSelected] = useState<SelectedItem | null>(null);
 
+  // Hero
+  const [badgeLabel, setBadgeLabel] = useState("");
   const [title, setTitle] = useState("");
-  const [bannerImage, setBannerImage] = useState("");
-  const [content, setContent] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+
+  // Sections
+  const [overview, setOverview] = useState({ title: "", description: "", image: "" });
+  const [causes, setCauses] = useState<InfoListSection>(emptySection());
+  const [symptoms, setSymptoms] = useState<{ title: string; list: string[] }>({ title: "", list: [] });
+  const [ctaText, setCtaText] = useState("");
+  const [diagnosis, setDiagnosis] = useState<InfoListSection>(emptySection());
+  const [treatmentOptions, setTreatmentOptions] = useState<InfoListSection>(emptySection());
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+
   const [seoConfig, setSeoConfig] = useState({ title: "", url: "", metaDescription: "", metaKeywords: "" });
   const [enabled, setEnabled] = useState(true);
 
@@ -59,9 +75,16 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
           const res = await axios.get(`${API_URL}/api/treatments/getById/${editId}`);
           const t: Treatment = res.data.Item;
 
+          setBadgeLabel(t.badgeLabel || "");
           setTitle(t.title || "");
-          setBannerImage(t.bannerImage || "");
-          setContent(t.content || "");
+          setSubtitle(t.subtitle || "");
+          setOverview(t.overview || { title: "", description: "", image: "" });
+          setCauses(t.causes || emptySection());
+          setSymptoms(t.symptoms || { title: "", list: [] });
+          setCtaText(t.ctaText || "");
+          setDiagnosis(t.diagnosis || emptySection());
+          setTreatmentOptions(t.treatmentOptions || emptySection());
+          setFaqs(t.faqs || []);
           setSeoConfig(t.seoConfig || { title: "", url: "", metaDescription: "", metaKeywords: "" });
           setEnabled(t.enabled ?? true);
           setSelected({ itemType: t.itemType, itemId: t.itemId, itemTitle: t.itemTitle });
@@ -83,7 +106,6 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
     if (!specialityId) {
       setMatchedPage(null);
       setTakenItemIds(new Set());
-      setTreatmentIdByItemId({});
       return;
     }
 
@@ -120,13 +142,8 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         setPageLookupState("idle");
 
         const taken = new Set<string>();
-        const byItem: Record<string, string> = {};
-        (treatmentsRes.data.Items || []).forEach((t: Treatment) => {
-          taken.add(t.itemId);
-          byItem[t.itemId] = t.treatmentId;
-        });
+        (treatmentsRes.data.Items || []).forEach((t: Treatment) => taken.add(t.itemId));
         setTakenItemIds(taken);
-        setTreatmentIdByItemId(byItem);
       } catch (error) {
         toast.error("Failed to load speciality's conditions & procedures.");
         setPageLookupState("no-page");
@@ -155,9 +172,11 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
     const picked: SelectedItem = { itemType, itemId: item.id, itemTitle: item.title };
     setSelected(picked);
     if (!title) setTitle(item.title);
+    if (!badgeLabel) setBadgeLabel(item.title);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // --- Generic image upload (banner/icon/etc.) ---
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
@@ -166,12 +185,45 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
       const response = await axios.post(`${API_URL}/api/treatments/uploadImage`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setBannerImage(response.data.imageUrl);
+      callback(response.data.imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       toast.error("Image upload failed");
     }
   };
+
+  // --- Generic list-section helpers (causes / diagnosis / treatmentOptions) ---
+  const addInfoItem = (setter: React.Dispatch<React.SetStateAction<InfoListSection>>, emptyItem: TreatmentInfoItem) => {
+    setter(prev => ({ ...prev, list: [...prev.list, { id: crypto.randomUUID(), ...emptyItem }] }));
+  };
+  const updateInfoItem = (setter: React.Dispatch<React.SetStateAction<InfoListSection>>, idx: number, field: string, value: string) => {
+    setter(prev => {
+      const newList = [...prev.list];
+      newList[idx] = { ...newList[idx], [field]: value };
+      return { ...prev, list: newList };
+    });
+  };
+  const removeInfoItem = (setter: React.Dispatch<React.SetStateAction<InfoListSection>>, idx: number) => {
+    setter(prev => ({ ...prev, list: prev.list.filter((_, i) => i !== idx) }));
+  };
+
+  // --- Symptoms (plain string list) ---
+  const addSymptom = () => setSymptoms(prev => ({ ...prev, list: [...prev.list, ""] }));
+  const updateSymptom = (idx: number, value: string) => setSymptoms(prev => {
+    const newList = [...prev.list];
+    newList[idx] = value;
+    return { ...prev, list: newList };
+  });
+  const removeSymptom = (idx: number) => setSymptoms(prev => ({ ...prev, list: prev.list.filter((_, i) => i !== idx) }));
+
+  // --- FAQs ---
+  const addFaq = () => setFaqs([...faqs, { question: "", answer: "" }]);
+  const updateFaq = (idx: number, field: string, value: string) => {
+    const newFaqs = [...faqs];
+    newFaqs[idx] = { ...newFaqs[idx], [field]: value };
+    setFaqs(newFaqs);
+  };
+  const removeFaq = (idx: number) => setFaqs(faqs.filter((_, i) => i !== idx));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,9 +246,16 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
         itemId: selected.itemId,
         itemTitle: selected.itemTitle,
         pageId: matchedPage.pageId,
+        badgeLabel,
         title,
-        bannerImage,
-        content,
+        subtitle,
+        overview,
+        causes,
+        symptoms,
+        ctaText,
+        diagnosis,
+        treatmentOptions,
+        faqs,
         seoConfig,
         enabled
       };
@@ -252,6 +311,64 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
       </button>
     );
   };
+
+  // Renders an editable list of {icon/image, title, description} items with add/remove controls.
+  const renderInfoListSection = (
+    heading: string,
+    section: InfoListSection,
+    setter: React.Dispatch<React.SetStateAction<InfoListSection>>,
+    itemLabel: string,
+    thumbField: "icon" | "image"
+  ) => (
+    <div>
+      <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">{heading}</h2>
+      <div className="grid grid-cols-1 gap-5 mb-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+        <input type="text" placeholder="Section Title" value={section.title} onChange={(e) => setter(prev => ({ ...prev, title: e.target.value }))} className={inputClass} />
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Section Description</label>
+          <div className="bg-white rounded-xl overflow-hidden border-2 border-transparent focus-within:border-[#5B328C]/30 transition-all duration-300">
+            <SpecialitiesRTE value={section.description} onChange={(val) => setter(prev => ({ ...prev, description: val }))} />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <label className="block text-sm font-bold text-gray-700">{itemLabel} List</label>
+          <button type="button" onClick={() => addInfoItem(setter, { title: "", description: "", [thumbField]: "" })} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
+            <FaPlus /> Add {itemLabel}
+          </button>
+        </div>
+
+        {section.list.map((item, idx) => (
+          <div key={item.id ?? idx} className="flex flex-col md:flex-row gap-4 items-start bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group">
+            <button type="button" onClick={() => removeInfoItem(setter, idx)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 p-2">
+              <FaTrash />
+            </button>
+
+            <div className="w-24 h-24 shrink-0 mt-2">
+              <input type="file" onChange={(e) => handleImageUpload(e, (url) => updateInfoItem(setter, idx, thumbField, url))} className="hidden" id={`upload-${heading}-${idx}`} accept="image/*" />
+              <label htmlFor={`upload-${heading}-${idx}`} className="cursor-pointer group/thumb relative w-full h-full rounded-[16px] overflow-hidden bg-[#F8F6FA] border-2 border-dashed border-[#5B328C]/40 flex flex-col items-center justify-center hover:border-[#5B328C] transition-colors">
+                {item[thumbField] ? (
+                  <Image src={item[thumbField] as string} alt={item.title} fill className="object-contain p-2" />
+                ) : (
+                  <FaIcons className="text-gray-400 text-2xl" />
+                )}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                  <span className="text-white text-[10px] font-bold text-center px-1">Upload</span>
+                </div>
+              </label>
+            </div>
+
+            <div className="flex-grow grid grid-cols-1 gap-4 w-full">
+              <input type="text" placeholder={`${itemLabel} Title`} value={item.title} onChange={(e) => updateInfoItem(setter, idx, "title", e.target.value)} className={inputClass} />
+              <textarea placeholder="Short Description..." value={item.description} onChange={(e) => updateInfoItem(setter, idx, "description", e.target.value)} className={inputClass} rows={2} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="p-6 lg:p-10 bg-[#FAFAFA] min-h-screen">
@@ -320,21 +437,32 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
             </div>
           )}
 
-          {/* SECTION 3: Content + SEO */}
+          {/* SECTION 3+: Full Page Content */}
           {selected && (
             <>
+              {/* Hero */}
               <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">3. Treatment Content</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">3. Hero</h2>
+                <div className="grid grid-cols-1 gap-5">
+                  <input type="text" value={badgeLabel} onChange={(e) => setBadgeLabel(e.target.value)} placeholder="Badge Label (e.g. Migraine Treatment)" className={inputClass} />
+                  <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Headline (e.g. Find Relief from Migraine with Expert Neurology Care)" className={inputClass} required />
+                  <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Supporting line under the headline" rows={2} className={inputClass} />
+                </div>
+              </div>
+
+              {/* Overview: "What is X?" */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">4. Overview (&quot;What is it?&quot;)</h2>
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="flex flex-col items-center gap-4 shrink-0">
-                    <input type="file" onChange={handleImageUpload} className="hidden" id="upload-treatment-banner" accept="image/*" />
-                    <label htmlFor="upload-treatment-banner" className="cursor-pointer group relative w-40 h-40 rounded-[24px] overflow-hidden bg-[#F8F6FA] border-2 border-dashed border-[#5B328C]/40 flex flex-col items-center justify-center hover:border-[#5B328C] transition-colors">
-                      {bannerImage ? (
-                        <Image src={bannerImage} alt="Preview" fill className="object-cover" />
+                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => setOverview(prev => ({ ...prev, image: url })))} className="hidden" id="upload-overview-image" accept="image/*" />
+                    <label htmlFor="upload-overview-image" className="cursor-pointer group relative w-40 h-40 rounded-[24px] overflow-hidden bg-[#F8F6FA] border-2 border-dashed border-[#5B328C]/40 flex flex-col items-center justify-center hover:border-[#5B328C] transition-colors">
+                      {overview.image ? (
+                        <Image src={overview.image} alt="Overview" fill className="object-cover" />
                       ) : (
                         <>
                           <FaImage className="text-3xl text-gray-400 mb-2" />
-                          <span className="text-sm text-gray-500 font-medium">Upload Banner</span>
+                          <span className="text-sm text-gray-500 font-medium">Upload Image</span>
                         </>
                       )}
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -344,24 +472,78 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
                   </div>
 
                   <div className="flex-grow space-y-5">
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Treatment Page Title"
-                      className={inputClass}
-                      required
-                    />
+                    <input type="text" value={overview.title} onChange={(e) => setOverview(prev => ({ ...prev, title: e.target.value }))} placeholder="Overview Title (e.g. What is Migraine?)" className={inputClass} />
                     <div className="bg-white rounded-xl overflow-hidden border-2 border-transparent focus-within:border-[#5B328C]/30 transition-all duration-300">
-                      <SpecialitiesRTE value={content} onChange={setContent} />
+                      <SpecialitiesRTE value={overview.description} onChange={(val) => setOverview(prev => ({ ...prev, description: val }))} />
                     </div>
                   </div>
                 </div>
               </div>
 
+              {/* Causes & Triggers */}
+              {renderInfoListSection("5. Causes & Triggers (\"Why Does it Occur?\")", causes, setCauses, "Cause", "icon")}
+
+              {/* Symptoms */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">6. Common Signs & Symptoms</h2>
+                <input type="text" value={symptoms.title} onChange={(e) => setSymptoms(prev => ({ ...prev, title: e.target.value }))} placeholder="Section Title (e.g. Common Signs & Symptoms)" className={`${inputClass} mb-4`} />
+                <div className="flex justify-between items-center mb-4">
+                  <label className="block text-sm font-bold text-gray-700">Symptoms List</label>
+                  <button type="button" onClick={addSymptom} className="text-[#5B328C] text-sm font-bold flex items-center gap-1 hover:bg-[#F3E8FF] px-3 py-1.5 rounded-lg transition">
+                    <FaPlus /> Add Symptom
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {symptoms.list.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <input type="text" value={item} onChange={(e) => updateSymptom(idx, e.target.value)} placeholder="e.g. Sensitivity to bright light" className={inputClass} />
+                      <button type="button" onClick={() => removeSymptom(idx)} className="text-red-400 hover:text-red-600 p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shrink-0">
+                        <FaTrash />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mid CTA */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">7. Mid-Page CTA Text</h2>
+                <textarea value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="e.g. Early evaluation can help identify the cause and guide appropriate treatment." rows={2} className={inputClass} />
+              </div>
+
+              {/* Diagnosis */}
+              {renderInfoListSection("8. Diagnosis Steps (\"How is it Diagnosed?\")", diagnosis, setDiagnosis, "Step", "icon")}
+
+              {/* Treatment Options */}
+              {renderInfoListSection("9. Treatment Options", treatmentOptions, setTreatmentOptions, "Option", "image")}
+
+              {/* FAQs */}
               <div>
                 <div className="flex justify-between items-center mb-6 border-b pb-2">
-                  <h2 className="text-xl font-bold text-gray-800">SEO Settings</h2>
+                  <h2 className="text-xl font-bold text-gray-800">10. Frequently Asked Questions</h2>
+                  <button type="button" onClick={addFaq} className="text-[#5B328C] font-bold flex items-center gap-2 hover:bg-[#F3E8FF] px-4 py-2 rounded-lg transition">
+                    <FaPlus /> Add FAQ
+                  </button>
+                </div>
+                <div className="space-y-6">
+                  {faqs.map((faq, idx) => (
+                    <div key={idx} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 relative group">
+                      <button type="button" onClick={() => removeFaq(idx)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <FaTrash />
+                      </button>
+                      <input type="text" placeholder="Question" value={faq.question} onChange={(e) => updateFaq(idx, "question", e.target.value)} className={`${inputClass} mb-4 pr-10`} />
+                      <div className="bg-white rounded-xl overflow-hidden border-2 border-transparent focus-within:border-[#5B328C]/30 transition-all duration-300">
+                        <SpecialitiesRTE value={faq.answer} onChange={(val) => updateFaq(idx, "answer", val)} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SEO */}
+              <div>
+                <div className="flex justify-between items-center mb-6 border-b pb-2">
+                  <h2 className="text-xl font-bold text-gray-800">11. SEO Settings</h2>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
                     <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
                     Enabled
@@ -369,7 +551,7 @@ export default function TreatmentForm({ editId = null }: { editId?: string | nul
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <input type="text" value={seoConfig.title} onChange={(e) => setSeoConfig({ ...seoConfig, title: e.target.value })} placeholder="SEO Title" className={inputClass} required />
-                  <input type="text" value={seoConfig.url} onChange={(e) => setSeoConfig({ ...seoConfig, url: e.target.value })} placeholder="Custom URL Slug (e.g. angioplasty)" className={inputClass} required />
+                  <input type="text" value={seoConfig.url} onChange={(e) => setSeoConfig({ ...seoConfig, url: e.target.value })} placeholder="Custom URL Slug (e.g. migraine-treatment)" className={inputClass} required />
                   <textarea value={seoConfig.metaDescription} onChange={(e) => setSeoConfig({ ...seoConfig, metaDescription: e.target.value })} placeholder="Meta Description" rows={3} className={`${inputClass} md:col-span-2`} />
                   <textarea value={seoConfig.metaKeywords} onChange={(e) => setSeoConfig({ ...seoConfig, metaKeywords: e.target.value })} placeholder="Meta Keywords (comma separated)" rows={2} className={`${inputClass} md:col-span-2`} />
                 </div>

@@ -150,6 +150,16 @@ export interface SpecialityLandingPage {
 
 export type TreatmentItemType = "condition" | "procedure";
 
+// A generic icon/image + title + description entry used across several
+// Treatment sections (causes, symptoms, diagnosis steps, treatment options).
+export interface TreatmentInfoItem {
+  id?: string;
+  icon?: string;
+  image?: string;
+  title: string;
+  description: string;
+}
+
 // A detail page for exactly one condition or procedure within a speciality's
 // landing page. 1-to-1: (specialityId, itemType, itemId) uniquely identifies
 // at most one Treatment.
@@ -161,9 +171,51 @@ export interface Treatment {
   itemId: string; // -> ConditionTreated.id or TreatmentProcedure.id
   itemTitle: string; // denormalized snapshot of the condition/procedure title
   pageId: string; // SpecialityLandingPage.pageId this item came from
-  title: string; // detail page H1, defaults to itemTitle, editable
-  bannerImage: string;
-  content: string; // RTE HTML
+
+  // Hero
+  badgeLabel: string; // small pill above the headline, e.g. "Migraine Treatment"
+  title: string; // headline (H1), defaults to itemTitle, editable
+  subtitle: string; // short supporting line under the headline
+
+  // "What is X?" overview
+  overview: {
+    title: string;
+    description: string; // RTE
+    image: string;
+  };
+
+  // "Why Does X Occur?" causes & triggers
+  causes: {
+    title: string;
+    description: string; // RTE
+    list: TreatmentInfoItem[];
+  };
+
+  // "Common Signs & Symptoms" checklist
+  symptoms: {
+    title: string;
+    list: string[];
+  };
+
+  // Mid-page CTA banner text (buttons are fixed site-wide actions)
+  ctaText: string;
+
+  // "How is X Diagnosed at Alavi Hospitals?"
+  diagnosis: {
+    title: string;
+    description: string; // RTE
+    list: TreatmentInfoItem[];
+  };
+
+  // Treatment options / advanced solutions
+  treatmentOptions: {
+    title: string;
+    description: string; // RTE
+    list: TreatmentInfoItem[];
+  };
+
+  faqs: FAQ[];
+
   seoConfig: {
     title: string;
     url: string; // unique URL slug
