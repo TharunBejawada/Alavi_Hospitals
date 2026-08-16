@@ -208,7 +208,9 @@ export default function SpecialityLandingPage() {
             const treatmentsData = await treatmentsRes.json();
             const map: Record<string, string> = {};
             (treatmentsData.Items || []).forEach((t: Treatment) => {
-              if (t.enabled) map[t.itemId] = t.seoConfig.url;
+              if (!t.enabled) return;
+              map[t.itemId] = t.seoConfig.url;
+              (t.additionalItems || []).forEach((a) => { map[a.itemId] = t.seoConfig.url; });
             });
             setTreatmentUrlByItemId(map);
           } catch (err) {

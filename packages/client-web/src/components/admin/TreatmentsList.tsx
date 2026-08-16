@@ -121,7 +121,14 @@ export default function TreatmentsList() {
                           {t.itemType === "condition" ? "Condition" : "Procedure"}
                         </span>
                       </td>
-                      <td className="p-5 text-gray-600 font-medium">{t.itemTitle}</td>
+                      <td className="p-5 text-gray-600 font-medium">
+                        {t.itemTitle}
+                        {(t.additionalItems?.length || 0) > 0 && (
+                          <span className="ml-2 text-xs font-bold text-[#5B328C] bg-[#F3E8FF] px-2 py-0.5 rounded-full">
+                            +{t.additionalItems!.length} more
+                          </span>
+                        )}
+                      </td>
                       <td className="p-5 text-gray-600 font-medium">{t.title}</td>
                       <td className="p-5 whitespace-nowrap">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${t.enabled ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
