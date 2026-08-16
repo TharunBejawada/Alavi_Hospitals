@@ -88,14 +88,28 @@ export interface Speciality {
 }
 
 export interface ConditionTreated {
+  id?: string;
   icon: string;
   title: string;
   description: string;
 }
 
 export interface TreatmentProcedure {
+  id?: string;
   title: string;
   description: string;
+}
+
+// Deterministic fallback id for legacy list items saved before `id` existed.
+// Stable across renders as long as array order/length don't change; real
+// persistence happens the next time the owning speciality-pages record is saved.
+export function backfillItemIds<T extends { id?: string; title: string }>(
+  items: T[] | undefined,
+  seedPrefix: string
+): (T & { id: string })[] {
+  return (items || []).map((item, index) =>
+    item.id ? (item as T & { id: string }) : { ...item, id: `${seedPrefix}-${index}` }
+  );
 }
 
 export interface FAQ {
@@ -132,4 +146,31 @@ export interface SpecialityLandingPage {
   };
   enabled: boolean;
   createdAt?: string;
+}
+
+export type TreatmentItemType = "condition" | "procedure";
+
+// A detail page for exactly one condition or procedure within a speciality's
+// landing page. 1-to-1: (specialityId, itemType, itemId) uniquely identifies
+// at most one Treatment.
+export interface Treatment {
+  treatmentId: string;
+  specialityId: string;
+  specialityName: string; // denormalized, for admin list display
+  itemType: TreatmentItemType;
+  itemId: string; // -> ConditionTreated.id or TreatmentProcedure.id
+  itemTitle: string; // denormalized snapshot of the condition/procedure title
+  pageId: string; // SpecialityLandingPage.pageId this item came from
+  title: string; // detail page H1, defaults to itemTitle, editable
+  bannerImage: string;
+  content: string; // RTE HTML
+  seoConfig: {
+    title: string;
+    url: string; // unique URL slug
+    metaDescription: string;
+    metaKeywords: string;
+  };
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

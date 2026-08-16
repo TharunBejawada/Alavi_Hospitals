@@ -11,7 +11,8 @@ import { API_URL } from "../../../config";
 import AppointmentPopup from "../../../components/AppointmentPopup";
 
 // --- TYPES ---
-import type { SpecialityLandingPage, Doctor, BlogPost } from "../../../../../core/src/types";
+import type { SpecialityLandingPage, Doctor, BlogPost, Treatment } from "../../../../../core/src/types";
+import { backfillItemIds } from "../../../../../core/src/types";
 
 // --- MOCK DATA FOR IMMEDIATE RENDERING ---
 const MOCK_DOCTORS = [
@@ -69,6 +70,7 @@ export default function SpecialityLandingPage() {
   const [pageData, setPageData] = useState<SpecialityLandingPage | null>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [treatmentUrlByItemId, setTreatmentUrlByItemId] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0); // First FAQ open by default
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -158,35 +160,59 @@ export default function SpecialityLandingPage() {
         });
 
         if (matchedPage) {
-          setPageData(matchedPage);
+          const backfilledPage: SpecialityLandingPage = {
+            ...matchedPage,
+            conditionsTreated: {
+              ...matchedPage.conditionsTreated,
+              list: backfillItemIds(matchedPage.conditionsTreated?.list, `${matchedPage.specialityId}-conditions`)
+            },
+            treatmentsProcedures: {
+              ...matchedPage.treatmentsProcedures,
+              list: backfillItemIds(matchedPage.treatmentsProcedures?.list, `${matchedPage.specialityId}-procedures`)
+            }
+          };
+          setPageData(backfilledPage);
 
           // --- Dynamically fetch doctors and blogs by accurate Department Name ---
           try {
             // 1. Fetch all specialities to find the exact database name
             const specRes = await fetch(`${API_URL}/api/specialities/getAllEnabledSpecialities`);
             const specData = await specRes.json();
-            
+
             const actualSpeciality = (specData.Items || []).find(
               (s: any) => s.specialityId === matchedPage.specialityId
             );
 
             if (actualSpeciality && actualSpeciality.specialityName) {
               const exactDepartmentName = actualSpeciality.specialityName;
-              
+
               // 2. Fetch both Doctors and Blogs in parallel using the exact department string
               const [docsRes, blogsRes] = await Promise.all([
                 fetch(`${API_URL}/api/doctors/getDoctorsByDepartment/${encodeURIComponent(exactDepartmentName)}`),
                 fetch(`${API_URL}/api/blogs/getBlogsByDepartmentKeywords/${encodeURIComponent(exactDepartmentName)}`)
               ]);
-              
+
               const docsData = await docsRes.json();
               const blogsData = await blogsRes.json();
-              
+
               setDoctors(docsData.Items || []);
               setBlogs(blogsData.Items || []);
             }
           } catch (err) {
             console.error("Failed to fetch department data:", err);
+          }
+
+          // --- Fetch treatments mapped to this speciality to power hyperlinks on the cards below ---
+          try {
+            const treatmentsRes = await fetch(`${API_URL}/api/treatments/getBySpeciality/${matchedPage.specialityId}`);
+            const treatmentsData = await treatmentsRes.json();
+            const map: Record<string, string> = {};
+            (treatmentsData.Items || []).forEach((t: Treatment) => {
+              if (t.enabled) map[t.itemId] = t.seoConfig.url;
+            });
+            setTreatmentUrlByItemId(map);
+          } catch (err) {
+            console.error("Failed to fetch treatments for speciality:", err);
           }
         }
       } catch (error) {
@@ -274,31 +300,39 @@ export default function SpecialityLandingPage() {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-              {pageData.conditionsTreated.list.map((item, index) => (
-                
-                <div 
-                  key={index} 
-                  className="group p-8 rounded-2xl border border-[#7E57A8] bg-[#EEF8FF] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:bg-[linear-gradient(97.66deg,#0066A9_-66.74%,#7E57A8_128.58%)]"
-                >
-                  
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm bg-[#DCF1FF] group-hover:bg-[#EEF8FF] transition-colors duration-300">
-                     {item.icon ? (
-                       <Image src={item.icon} alt={item.title} width={32} height={32} className="object-contain" />
-                     ) : (
-                       <div className="w-8 h-8 bg-[#5B328C]/30 rounded-full"></div>
-                     )}
+              {pageData.conditionsTreated.list.map((item, index) => {
+                const treatmentUrl = item.id ? treatmentUrlByItemId[item.id] : undefined;
+
+                const cardInner = (
+                  <div className="group p-8 rounded-2xl border border-[#7E57A8] bg-[#EEF8FF] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:bg-[linear-gradient(97.66deg,#0066A9_-66.74%,#7E57A8_128.58%)]">
+
+                    <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm bg-[#DCF1FF] group-hover:bg-[#EEF8FF] transition-colors duration-300">
+                       {item.icon ? (
+                         <Image src={item.icon} alt={item.title} width={32} height={32} className="object-contain" />
+                       ) : (
+                         <div className="w-8 h-8 bg-[#5B328C]/30 rounded-full"></div>
+                       )}
+                    </div>
+
+                    <h3 className="text-[21px] font-semibold leading-[156%] text-[#663399] group-hover:text-white transition-colors duration-300 mb-3">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-[14px] font-medium leading-[156%] text-[#0C0200] group-hover:text-white transition-colors duration-300">
+                      {item.description}
+                    </p>
+
                   </div>
-                  
-                  <h3 className="text-[21px] font-semibold leading-[156%] text-[#663399] group-hover:text-white transition-colors duration-300 mb-3">
-                    {item.title}
-                  </h3>
-                  
-                  <p className="text-[14px] font-medium leading-[156%] text-[#0C0200] group-hover:text-white transition-colors duration-300">
-                    {item.description}
-                  </p>
-                  
-                </div>
-              ))}
+                );
+
+                return treatmentUrl ? (
+                  <Link key={item.id ?? index} href={`/treatments/${treatmentUrl.replace(/^\/?(treatments\/)?/, "")}`} className="block">
+                    {cardInner}
+                  </Link>
+                ) : (
+                  <div key={item.id ?? index}>{cardInner}</div>
+                );
+              })}
             </div>
             
             {pageData.conditionsTreated.list.length > 6 && (
@@ -437,30 +471,43 @@ export default function SpecialityLandingPage() {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 text-left">
-              {pageData.treatmentsProcedures.list.map((item, index) => (
-                <div 
-                  key={index} 
-                  className={`p-8 rounded-2xl flex flex-col justify-center ${
-                    index === 0 
-                      ? 'md:col-span-1 md:row-span-2 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] shadow-md'
-                      : 'md:col-span-1 md:row-span-1 bg-[#EEF8FF] shadow-[0px_0px_4px_0px_#00000040]'
-                  }`}
-                >
-                  {/* Card Title */}
-                  <h3 className={`font-semibold leading-[156%] mb-3 ${
-                    index === 0 ? 'text-[26px] text-white' : 'text-[21px] text-[#663399]'
-                  }`}>
-                    {item.title}
-                  </h3>
-                  
-                  {/* Card Description */}
-                  <p className={`font-normal leading-[156%] ${
-                    index === 0 ? 'text-[18px] text-white' : 'text-[16px] text-[#000000]'
-                  }`}>
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+              {pageData.treatmentsProcedures.list.map((item, index) => {
+                const treatmentUrl = item.id ? treatmentUrlByItemId[item.id] : undefined;
+
+                const cardInner = (
+                  <div
+                    className={`p-8 rounded-2xl flex flex-col justify-center h-full ${
+                      index === 0
+                        ? 'bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] shadow-md'
+                        : 'bg-[#EEF8FF] shadow-[0px_0px_4px_0px_#00000040]'
+                    }`}
+                  >
+                    {/* Card Title */}
+                    <h3 className={`font-semibold leading-[156%] mb-3 ${
+                      index === 0 ? 'text-[26px] text-white' : 'text-[21px] text-[#663399]'
+                    }`}>
+                      {item.title}
+                    </h3>
+
+                    {/* Card Description */}
+                    <p className={`font-normal leading-[156%] ${
+                      index === 0 ? 'text-[18px] text-white' : 'text-[16px] text-[#000000]'
+                    }`}>
+                      {item.description}
+                    </p>
+                  </div>
+                );
+
+                const wrapperClass = index === 0 ? 'md:col-span-1 md:row-span-2' : 'md:col-span-1 md:row-span-1';
+
+                return treatmentUrl ? (
+                  <Link key={item.id ?? index} href={`/treatments/${treatmentUrl.replace(/^\/?(treatments\/)?/, "")}`} className={`block ${wrapperClass}`}>
+                    {cardInner}
+                  </Link>
+                ) : (
+                  <div key={item.id ?? index} className={wrapperClass}>{cardInner}</div>
+                );
+              })}
             </div>
             
           </div>
