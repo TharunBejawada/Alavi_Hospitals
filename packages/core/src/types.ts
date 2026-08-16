@@ -202,6 +202,11 @@ export interface Treatment {
   // options sections; buttons are fixed site-wide actions)
   ctaText: string;
 
+  // Heading for the static "Why Choose Alavi Hospital" band, e.g.
+  // "Expert Neurology Care for Better Migraine Management" (the icon
+  // row itself is fixed sitewide content, not per-treatment).
+  whyChooseHeading: string;
+
   // "BOOK YOUR CONSULTATION" bottom CTA band (buttons are fixed site-wide actions)
   bottomCta: {
     label: string; // small caps label, e.g. "BOOK YOUR CONSULTATION"
