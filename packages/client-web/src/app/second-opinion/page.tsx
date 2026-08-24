@@ -197,7 +197,7 @@ export default function SecondOpinionHubPage() {
         const data = await res.json();
         setTopics(data.Items || []);
       } catch (error) {
-        console.error("Failed to fetch Second Opinion topics:", error);
+        console.error("Failed to fetch Second Opinion:", error);
       } finally {
         setLoadingTopics(false);
       }
@@ -425,7 +425,7 @@ export default function SecondOpinionHubPage() {
               <Loader2 className="w-8 h-8 animate-spin text-[#663399]" />
             </div>
           ) : topics.length === 0 ? (
-            <p className="text-center text-[#012B4E]/60">No topics available yet.</p>
+            <p className="text-center text-[#012B4E]/60">No Second Opinions available yet.</p>
           ) : (
             <div className="flex flex-wrap justify-center gap-8">
               {topics.map((topic, idx) => (
