@@ -16,7 +16,8 @@ import {
   Image as ImageIcon,
   Menu,
   X,
-  Stethoscope
+  Stethoscope,
+  MessageCircleQuestionMark
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -60,6 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Specialities", href: "/admin/specialities", icon: Activity },
     { name: "Speciality Pages", href: "/admin/speciality-pages", icon: Newspaper },
     { name: "Treatments", href: "/admin/treatments", icon: Stethoscope },
+    { name: "Second Opinion", href: "/admin/second-opinions", icon: MessageCircleQuestionMark },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
