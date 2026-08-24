@@ -14,6 +14,7 @@ import { setDoctorAvailability, getDoctorAvailability } from "./controllers/avai
 import * as specialityController from "./controllers/specialityController.js";
 import * as specialityPageController from "./controllers/specialityPageController.js";
 import * as treatmentController from "./controllers/treatmentController.js";
+import * as secondOpinionController from "./controllers/secondOpinionController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -87,6 +88,17 @@ app.put("/api/treatments/update/:id", treatmentController.updateTreatment);
 app.put("/api/treatments/:id/toggle", treatmentController.toggleTreatmentStatus);
 app.delete("/api/treatments/delete/:id", treatmentController.deleteTreatment);
 app.post("/api/treatments/uploadImage", upload.single("image"), treatmentController.uploadTreatmentImage);
+
+app.post("/api/second-opinions/add", secondOpinionController.addSecondOpinion);
+app.get("/api/second-opinions/getAll", secondOpinionController.getAllSecondOpinions);
+app.get("/api/second-opinions/getAllEnabled", secondOpinionController.getAllEnabledSecondOpinions);
+app.get("/api/second-opinions/getById/:id", secondOpinionController.getSecondOpinionById);
+app.get("/api/second-opinions/getByUrl/:url", secondOpinionController.getSecondOpinionByUrl);
+app.put("/api/second-opinions/update/:id", secondOpinionController.updateSecondOpinion);
+app.put("/api/second-opinions/:id/toggle", secondOpinionController.toggleSecondOpinionStatus);
+app.delete("/api/second-opinions/delete/:id", secondOpinionController.deleteSecondOpinion);
+app.post("/api/second-opinions/uploadImage", upload.single("image"), secondOpinionController.uploadSecondOpinionImage);
+app.post("/api/second-opinions/uploadReport", upload.single("file"), secondOpinionController.uploadSecondOpinionReport);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

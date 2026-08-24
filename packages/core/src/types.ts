@@ -250,3 +250,73 @@ export interface Treatment {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// A standalone "Second Opinion" topic page (e.g. Hernia, Cardiac Surgery),
+// independent of the Speciality/Treatment mapping — admin-authored, listed
+// on a public hub page and sorted by priorityOrder (lower shows first).
+export interface SecondOpinionTopic {
+  secondOpinionId: string;
+  priorityOrder?: number; // lower shows first, missing/falsy treated as last
+
+  title: string; // topic name, e.g. "Hernia" — used on the hub listing card
+  icon: string; // small icon shown with the title in the hub's "Conditions Commonly Reviewed" row
+  heroHeading: string; // e.g. "Already advised hernia surgery? Get an expert second opinion before you decide."
+  heroImage: string;
+
+  // "What is X?" overview
+  overview: {
+    title: string;
+    description: string; // RTE
+    image: string;
+  };
+
+  // "When is Surgery Recommended?"
+  surgeryRecommendation: {
+    title: string;
+    description: string; // RTE
+    listIntro: string; // e.g. "Surgery may be considered when you experience:"
+    list: string[];
+    note: string; // closing note, e.g. "The decision to undergo surgery should always be based on..."
+  };
+
+  // "What are the risks of delaying treatment?" timeline
+  risks: {
+    title: string;
+    description: string; // RTE
+    list: TreatmentInfoItem[];
+  };
+
+  // Mid-page CTA banner text (buttons are fixed site-wide actions)
+  ctaText: string;
+
+  // "What are the benefits of timely surgery?" band
+  benefits: {
+    title: string;
+    description: string; // RTE
+    list: string[];
+    note: string;
+  };
+
+  // "A second opinion, step by step." numbered timeline
+  steps: TreatmentInfoItem[];
+
+  // Bottom "Request a Second Opinion" section (form fields are fixed;
+  // only the surrounding copy/image is admin-editable)
+  requestSection: {
+    image: string;
+    heading: string;
+    description: string;
+  };
+
+  faqs: FAQ[];
+
+  seoConfig: {
+    title: string;
+    url: string; // unique URL slug
+    metaDescription: string;
+    metaKeywords: string;
+  };
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}

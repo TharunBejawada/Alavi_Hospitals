@@ -17,6 +17,7 @@ export const TABLE_NAME_AVAILABILITY = "DoctorAvailability";
 export const TABLE_NAME_SPECIALITIES = "Specialities";
 export const TABLE_NAME_SPECIALITY_PAGES = "SpecialityPages";
 export const TABLE_NAME_TREATMENTS = "Treatments";
+export const TABLE_NAME_SECOND_OPINIONS = "SecondOpinions";
 export const TABLE_NAME_FORM = "Forms";
 
 // S3 Configuration
