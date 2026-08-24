@@ -30,6 +30,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
 
   // Basic
   const [title, setTitle] = useState("");
+  const [icon, setIcon] = useState("");
   const [priorityOrder, setPriorityOrder] = useState("");
   const [heroImage, setHeroImage] = useState("");
   const [heroHeading, setHeroHeading] = useState("");
@@ -59,6 +60,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
 
         setTitle(t.title || "");
         setPriorityOrder(t.priorityOrder != null ? String(t.priorityOrder) : "");
+        setIcon(t.icon || "");
         setHeroImage(t.heroImage || "");
         setHeroHeading(t.heroHeading || "");
         setOverview(t.overview || { title: "", description: "", image: "" });
@@ -149,6 +151,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
     try {
       const payload = {
         title,
+        icon,
         priorityOrder: priorityOrder ? Math.abs(Number(priorityOrder)) : 99,
         heroImage,
         heroHeading,
@@ -296,7 +299,16 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
           <div>
             <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">1. Basic Info</h2>
             <div className="flex flex-col md:flex-row gap-8">
-              {renderImageUploadBox(heroImage, "upload-hero-image", setHeroImage, "Upload Hero Image")}
+              <div className="flex flex-col md:flex-row gap-4 shrink-0">
+                <div>
+                  <p className="text-xs font-bold text-gray-500 mb-2 text-center">Icon</p>
+                  {renderImageUploadBox(icon, "upload-topic-icon", setIcon, "Upload Icon")}
+                  <p className="text-[11px] text-gray-400 mt-2 max-w-[160px] text-center">
+                    Shown with the title in the &quot;Conditions Commonly Reviewed&quot; row on the Second Opinion hub page.
+                  </p>
+                </div>
+                {renderImageUploadBox(heroImage, "upload-hero-image", setHeroImage, "Upload Hero Image")}
+              </div>
               <div className="flex-grow grid grid-cols-1 gap-5">
                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Topic Name (e.g. Hernia)" className={inputClass} required />
                 <textarea value={heroHeading} onChange={(e) => setHeroHeading(e.target.value)} placeholder="Hero Headline (e.g. Already advised hernia surgery? Get an expert second opinion before you decide.)" rows={3} className={inputClass} required />

@@ -259,6 +259,7 @@ export interface SecondOpinionTopic {
   priorityOrder?: number; // lower shows first, missing/falsy treated as last
 
   title: string; // topic name, e.g. "Hernia" — used on the hub listing card
+  icon: string; // small icon shown with the title in the hub's "Conditions Commonly Reviewed" row
   heroHeading: string; // e.g. "Already advised hernia surgery? Get an expert second opinion before you decide."
   heroImage: string;
 
