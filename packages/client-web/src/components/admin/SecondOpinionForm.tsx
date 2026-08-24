@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaImage, FaPlus, FaTrash, FaIcons } from "react-icons/fa6";
+import { FaImage, FaPlus, FaTrash } from "react-icons/fa6";
 import { API_URL } from "../../config";
 import SpecialitiesRTE from "./SpecialitiesRTE";
 import { SecondOpinionTopic, TreatmentInfoItem, FAQ } from "../../../../core/src/types";
 
-type InfoListSection = { title: string; description: string; list: TreatmentInfoItem[] };
+type InfoListSection = { title: string; description: string; list: TreatmentInfoItem[]; note?: string };
 const emptyInfoSection = (): InfoListSection => ({ title: "", description: "", list: [] });
 
 // Cleans up an admin-entered SEO slug so the public /second-opinion/[slug]
@@ -39,7 +39,6 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
   const [overview, setOverview] = useState({ title: "", description: "", image: "" });
   const [surgeryRecommendation, setSurgeryRecommendation] = useState({ title: "", description: "", listIntro: "", list: [] as string[], note: "" });
   const [risks, setRisks] = useState<InfoListSection>(emptyInfoSection());
-  const [ctaText, setCtaText] = useState("");
   const [benefits, setBenefits] = useState({ title: "", description: "", list: [] as string[], note: "" });
   const [steps, setSteps] = useState<TreatmentInfoItem[]>([]);
   const [requestSection, setRequestSection] = useState({ image: "", heading: "", description: "" });
@@ -66,7 +65,6 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
         setOverview(t.overview || { title: "", description: "", image: "" });
         setSurgeryRecommendation(t.surgeryRecommendation || { title: "", description: "", listIntro: "", list: [], note: "" });
         setRisks(t.risks || emptyInfoSection());
-        setCtaText(t.ctaText || "");
         setBenefits(t.benefits || { title: "", description: "", list: [], note: "" });
         setSteps(t.steps || []);
         setRequestSection(t.requestSection || { image: "", heading: "", description: "" });
@@ -74,7 +72,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
         setSeoConfig(t.seoConfig || { title: "", url: "", metaDescription: "", metaKeywords: "" });
         setEnabled(t.enabled ?? true);
       } catch (error) {
-        toast.error("Failed to load Second Opinion topic.");
+        toast.error("Failed to load Second Opinion.");
       } finally {
         setIsLoading(false);
       }
@@ -158,7 +156,6 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
         overview,
         surgeryRecommendation,
         risks,
-        ctaText,
         benefits,
         steps,
         requestSection,
@@ -169,14 +166,14 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
 
       if (isEditing) {
         await axios.put(`${API_URL}/api/second-opinions/update/${editId}`, payload);
-        toast.success("Second Opinion topic modified successfully!");
+        toast.success("Second Opinion modified successfully!");
       } else {
         await axios.post(`${API_URL}/api/second-opinions/add`, payload);
-        toast.success("Second Opinion topic added successfully!");
+        toast.success("Second Opinion added successfully!");
       }
       router.push("/admin/second-opinions");
     } catch (error) {
-      toast.error(isEditing ? "Error updating topic" : "Error adding topic");
+      toast.error(isEditing ? "Error updating Second Opinion" : "Error adding Second Opinion");
     } finally {
       setIsSubmitting(false);
     }
@@ -237,27 +234,21 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
               <FaTrash />
             </button>
 
-            <div className="w-24 h-24 shrink-0 mt-2">
-              <input type="file" onChange={(e) => handleImageUpload(e, (url) => updateInfoItem(setter, idx, "icon", url))} className="hidden" id={`upload-${heading}-${idx}`} accept="image/*" />
-              <label htmlFor={`upload-${heading}-${idx}`} className="cursor-pointer group/thumb relative w-full h-full rounded-[16px] overflow-hidden bg-[#F8F6FA] border-2 border-dashed border-[#5B328C]/40 flex flex-col items-center justify-center hover:border-[#5B328C] transition-colors">
-                {item.icon ? (
-                  <Image src={item.icon} alt={item.title} fill className="object-contain p-2" />
-                ) : (
-                  <FaIcons className="text-gray-400 text-2xl" />
-                )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
-                  <span className="text-white text-[10px] font-bold text-center px-1">Upload</span>
-                </div>
-              </label>
-            </div>
-
-            <div className="flex-grow grid grid-cols-1 gap-4 w-full">
+            <div className="flex-grow grid grid-cols-1 gap-4 w-full pr-10">
               <input type="text" placeholder={`${itemLabel} Title`} value={item.title} onChange={(e) => updateInfoItem(setter, idx, "title", e.target.value)} className={inputClass} />
               <textarea placeholder="Description..." value={item.description} onChange={(e) => updateInfoItem(setter, idx, "description", e.target.value)} className={inputClass} rows={2} />
             </div>
           </div>
         ))}
       </div>
+
+      <textarea
+        value={section.note ?? ""}
+        onChange={(e) => setter(prev => ({ ...prev, note: e.target.value }))}
+        placeholder="Closing note (e.g. Delaying treatment can increase risk of complications — consult your doctor promptly.)"
+        rows={2}
+        className={`${inputClass} mt-4`}
+      />
     </div>
   );
 
@@ -290,7 +281,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
       <div className="max-w-5xl mx-auto bg-white p-8 lg:p-12 rounded-[32px] shadow-sm border border-gray-100">
 
         <h1 className="text-3xl font-bold text-[#5B328C] mb-8">
-          {isEditing ? "Modify Second Opinion Topic" : "Add New Second Opinion Topic"}
+          {isEditing ? "Modify Second Opinion" : "Add New Second Opinion"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-12">
@@ -310,7 +301,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
                 {renderImageUploadBox(heroImage, "upload-hero-image", setHeroImage, "Upload Hero Image")}
               </div>
               <div className="flex-grow grid grid-cols-1 gap-5">
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Topic Name (e.g. Hernia)" className={inputClass} required />
+                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Second Opinion Name (e.g. Hernia)" className={inputClass} required />
                 <textarea value={heroHeading} onChange={(e) => setHeroHeading(e.target.value)} placeholder="Hero Headline (e.g. Already advised hernia surgery? Get an expert second opinion before you decide.)" rows={3} className={inputClass} required />
                 <input
                   type="number"
@@ -356,15 +347,9 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
           {/* SECTION 4: Risks */}
           {renderInfoListSection("4. Risks of Delaying Treatment", risks, setRisks, "Risk")}
 
-          {/* SECTION 5: Mid CTA */}
+          {/* SECTION 5: Benefits */}
           <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">5. Mid-Page CTA Text</h2>
-            <textarea value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="e.g. Get Your Second Medical Opinion with our Specialists" rows={2} className={inputClass} />
-          </div>
-
-          {/* SECTION 6: Benefits */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">6. Benefits of Timely Treatment</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">5. Benefits of Timely Treatment</h2>
             <div className="grid grid-cols-1 gap-5 mb-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
               <input type="text" placeholder="Section Title" value={benefits.title} onChange={(e) => setBenefits(prev => ({ ...prev, title: e.target.value }))} className={inputClass} />
               <div className="bg-white rounded-xl overflow-hidden border-2 border-transparent focus-within:border-[#5B328C]/30 transition-all duration-300">
@@ -378,7 +363,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
           {/* SECTION 7: Steps */}
           <div>
             <div className="flex justify-between items-center mb-6 border-b pb-2">
-              <h2 className="text-xl font-bold text-gray-800">7. Second Opinion Steps</h2>
+              <h2 className="text-xl font-bold text-gray-800">6. Second Opinion Steps</h2>
               <button type="button" onClick={addStep} className="text-[#5B328C] font-bold flex items-center gap-2 hover:bg-[#F3E8FF] px-4 py-2 rounded-lg transition">
                 <FaPlus /> Add Step
               </button>
@@ -399,7 +384,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
 
           {/* SECTION 8: Request Section */}
           <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">8. &quot;Request a Second Opinion&quot; Section</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">7. &quot;Request a Second Opinion&quot; Section</h2>
             <div className="flex flex-col md:flex-row gap-8">
               {renderImageUploadBox(requestSection.image, "upload-request-image", (url) => setRequestSection(prev => ({ ...prev, image: url })))}
               <div className="flex-grow space-y-5">
@@ -412,7 +397,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
           {/* SECTION 9: FAQs */}
           <div>
             <div className="flex justify-between items-center mb-6 border-b pb-2">
-              <h2 className="text-xl font-bold text-gray-800">9. Frequently Asked Questions</h2>
+              <h2 className="text-xl font-bold text-gray-800">8. Frequently Asked Questions</h2>
               <button type="button" onClick={addFaq} className="text-[#5B328C] font-bold flex items-center gap-2 hover:bg-[#F3E8FF] px-4 py-2 rounded-lg transition">
                 <FaPlus /> Add FAQ
               </button>
@@ -435,7 +420,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
           {/* SECTION 10: SEO */}
           <div>
             <div className="flex justify-between items-center mb-6 border-b pb-2">
-              <h2 className="text-xl font-bold text-gray-800">10. SEO Settings</h2>
+              <h2 className="text-xl font-bold text-gray-800">9. SEO Settings</h2>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
                 <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
                 Enabled
@@ -468,7 +453,7 @@ export default function SecondOpinionForm({ editId = null }: { editId?: string |
 
           <div className="flex gap-4 pt-6">
             <button type="submit" disabled={isSubmitting} className="bg-[#5B328C] text-white px-8 py-4 rounded-xl font-bold shadow-md hover:bg-[#4a2873] active:scale-95 transition-all disabled:opacity-70">
-              {isSubmitting ? "Saving..." : isEditing ? "Save Changes" : "Create Topic"}
+              {isSubmitting ? "Saving..." : isEditing ? "Save Changes" : "Create Second Opinion"}
             </button>
             <button type="button" onClick={() => router.push("/admin/second-opinions")} className="bg-gray-100 text-gray-700 px-8 py-4 rounded-xl font-bold hover:bg-gray-200 transition-colors">
               Cancel

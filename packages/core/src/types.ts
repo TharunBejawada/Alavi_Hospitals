@@ -283,11 +283,9 @@ export interface SecondOpinionTopic {
   risks: {
     title: string;
     description: string; // RTE
-    list: TreatmentInfoItem[];
+    list: TreatmentInfoItem[]; // icon not used in this section
+    note: string; // closing note
   };
-
-  // Mid-page CTA banner text (buttons are fixed site-wide actions)
-  ctaText: string;
 
   // "What are the benefits of timely surgery?" band
   benefits: {

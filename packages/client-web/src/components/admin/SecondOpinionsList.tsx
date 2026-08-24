@@ -18,7 +18,7 @@ export default function SecondOpinionsList() {
       const response = await axios.get(`${API_URL}/api/second-opinions/getAll`);
       setTopics(response.data.Items || []);
     } catch (error) {
-      toast.error("Failed to load Second Opinion topics.");
+      toast.error("Failed to load Second Opinions.");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -34,7 +34,7 @@ export default function SecondOpinionsList() {
       await axios.put(`${API_URL}/api/second-opinions/${id}/toggle`, {
         enabled: !currentStatus,
       });
-      toast.success(`Topic ${currentStatus ? "disabled" : "enabled"} successfully.`);
+      toast.success(`Second Opinion ${currentStatus ? "disabled" : "enabled"} successfully.`);
       fetchTopics();
     } catch (error) {
       toast.error("Failed to update status.");
@@ -43,13 +43,13 @@ export default function SecondOpinionsList() {
   };
 
   const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Delete the Second Opinion topic "${title}"? This cannot be undone.`)) return;
+    if (!confirm(`Delete the Second Opinion "${title}"? This cannot be undone.`)) return;
     try {
       await axios.delete(`${API_URL}/api/second-opinions/delete/${id}`);
-      toast.success("Topic deleted successfully.");
+      toast.success("Second Opinion deleted successfully.");
       fetchTopics();
     } catch (error) {
-      toast.error("Failed to delete topic.");
+      toast.error("Failed to delete Second Opinion.");
       console.error(error);
     }
   };
@@ -70,7 +70,7 @@ export default function SecondOpinionsList() {
               <FaMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by topic name..."
+                placeholder="Search by name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#5B328C]/50 focus:ring-2 focus:ring-[#5B328C]/20 transition-all text-sm shadow-sm placeholder-gray-400"
@@ -79,7 +79,7 @@ export default function SecondOpinionsList() {
 
             <Link href="/admin/second-opinions/add" className="w-full sm:w-auto">
               <button className="w-full flex items-center justify-center gap-2 bg-[#5B328C] text-white px-6 py-3 rounded-xl hover:bg-[#4a2873] shadow-md transition-all active:scale-95 whitespace-nowrap text-sm font-semibold">
-                <FaPlus /> Add Topic
+                <FaPlus /> Add Second Opinion
               </button>
             </Link>
           </div>
@@ -87,18 +87,18 @@ export default function SecondOpinionsList() {
 
         <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
           {isLoading ? (
-            <div className="p-10 text-center text-gray-500 font-medium">Loading topics...</div>
+            <div className="p-10 text-center text-gray-500 font-medium">Loading Second Opinions...</div>
           ) : topics.length === 0 ? (
-            <div className="p-10 text-center text-gray-500 font-medium">No Second Opinion topics found. Add one to get started.</div>
+            <div className="p-10 text-center text-gray-500 font-medium">No Second Opinions found. Add one to get started.</div>
           ) : filteredTopics.length === 0 ? (
-            <div className="p-10 text-center text-gray-500 font-medium">No topics match your search.</div>
+            <div className="p-10 text-center text-gray-500 font-medium">No Second Opinions match your search.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#F8F6FA] text-[#5B328C] border-b border-gray-100">
                     <th className="p-5 font-semibold whitespace-nowrap">Priority</th>
-                    <th className="p-5 font-semibold whitespace-nowrap">Topic</th>
+                    <th className="p-5 font-semibold whitespace-nowrap">Second Opinion</th>
                     <th className="p-5 font-semibold whitespace-nowrap">Status</th>
                     <th className="p-5 font-semibold text-center whitespace-nowrap">Actions</th>
                   </tr>
@@ -115,21 +115,21 @@ export default function SecondOpinionsList() {
                       </td>
                       <td className="p-5 flex justify-center gap-3">
                         <Link href={`/admin/second-opinions/${t.secondOpinionId}/edit`}>
-                          <button className="p-2 text-[#5B328C] hover:bg-[#F3E8FF] rounded-lg transition-colors" title="Modify Topic">
+                          <button className="p-2 text-[#5B328C] hover:bg-[#F3E8FF] rounded-lg transition-colors" title="Modify Second Opinion">
                             <FaPencil className="text-lg" />
                           </button>
                         </Link>
                         <button
                           onClick={() => toggleStatus(t.secondOpinionId, t.enabled)}
                           className={`p-2 rounded-lg transition-colors ${t.enabled ? "text-red-500 hover:bg-red-50" : "text-green-500 hover:bg-green-50"}`}
-                          title={t.enabled ? "Disable Topic" : "Enable Topic"}
+                          title={t.enabled ? "Disable Second Opinion" : "Enable Second Opinion"}
                         >
                           <FaPowerOff className="text-lg" />
                         </button>
                         <button
                           onClick={() => handleDelete(t.secondOpinionId, t.title)}
                           className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete Topic"
+                          title="Delete Second Opinion"
                         >
                           <FaTrash className="text-lg" />
                         </button>
