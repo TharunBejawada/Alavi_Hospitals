@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
 import {
   Loader2,
   Phone,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import { API_URL } from "../../config";
 import type { SecondOpinionTopic } from "../../../../core/src/types";
+import SecondOpinionRequestModal from "../../components/second-opinion/SecondOpinionRequestModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -185,10 +185,7 @@ export default function SecondOpinionHubPage() {
   const [topics, setTopics] = useState<SecondOpinionTopic[]>([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  const [form, setForm] = useState({ name: "", mobile: "", email: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchTopics() {
@@ -204,28 +201,6 @@ export default function SecondOpinionHubPage() {
     }
     fetchTopics();
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name.trim() || !form.mobile.trim()) return;
-    setIsSubmitting(true);
-    try {
-      await axios.post(`${API_URL}/api/forms/submit`, {
-        name: form.name,
-        mobile: form.mobile,
-        email: form.email,
-        message: form.message || "No additional details provided",
-        page: "Second Opinion Hub"
-      });
-      setSubmitted(true);
-      setForm({ name: "", mobile: "", email: "", message: "" });
-    } catch (error) {
-      console.error("Failed to submit request:", error);
-      alert("Something went wrong. Please try again or call us directly.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-white font-['Poppins']">
@@ -257,14 +232,13 @@ export default function SecondOpinionHubPage() {
           </p>
           
           <div className="flex flex-wrap gap-4">
-            <a href="#request-form">
-              <button 
-                className="text-white font-bold text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[402.42px] h-[64.45px] flex items-center justify-center"
-                style={{ background: 'linear-gradient(90deg, #0066A9 -128.06%, #663399 51.87%)' }}
-              >
-                Request a Second Opinion Today
-              </button>
-            </a>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="text-white font-bold text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[402.42px] h-[64.45px] flex items-center justify-center"
+              style={{ background: 'linear-gradient(90deg, #0066A9 -128.06%, #663399 51.87%)' }}
+            >
+              Request a Second Opinion Today
+            </button>
             <a href="tel:+919603911911">
               <button 
                 className="text-white font-bold text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[145.59px] h-[64.45px] flex items-center justify-center"
@@ -634,6 +608,8 @@ export default function SecondOpinionHubPage() {
                 </div>
               </motion.section>
             )}
+
+      <SecondOpinionRequestModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
     </div>
   );

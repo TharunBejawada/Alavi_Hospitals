@@ -8,6 +8,7 @@ import axios from "axios";
 import { Calendar, Phone, ChevronDown, ArrowRight, Loader2, Paperclip } from "lucide-react";
 import { API_URL } from "../../config";
 import type { SecondOpinionTopic } from "../../../../core/src/types";
+import SecondOpinionRequestModal from "./SecondOpinionRequestModal";
 
 const FAQItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => (
   <div className="rounded-xl overflow-hidden mb-4 shadow-sm">
@@ -39,6 +40,7 @@ const emptyRequestForm = (): RequestFormState => ({ name: "", mobile: "", email:
 export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpinionTopic }) {
   const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [heroForm, setHeroForm] = useState<RequestFormState>(emptyRequestForm());
   const [bottomForm, setBottomForm] = useState<RequestFormState>(emptyRequestForm());
@@ -305,7 +307,9 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
             Get Your Second Medical Opinion<br className="hidden md:block" /> with our Specialists
           </h2>
           
-          <button 
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
             className="group flex items-center justify-center gap-3 w-full md:w-[479.32px] h-[48px] bg-[#663399] border-[2px] border-[#FFFFFF] rounded-[31.7px] shadow-[4px_6px_4px_-4px_rgba(0,44,75,0.24)] hover:bg-white/10 transition-colors shrink-0"
           >
             {/* Calendar / Clock Icon */}
@@ -504,6 +508,8 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
           </div>
         </section>
       )}
+
+      <SecondOpinionRequestModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} topicTitle={topic.title} />
     </div>
   );
 }
