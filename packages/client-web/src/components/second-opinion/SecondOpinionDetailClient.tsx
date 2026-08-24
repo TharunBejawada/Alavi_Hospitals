@@ -223,6 +223,9 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
                 </div>
               ))}
             </div>
+            {topic.risks.note && (
+              <p className="text-[#012B4E] font-semibold text-lg max-w-4xl mx-auto mt-8">{topic.risks.note}</p>
+            )}
           </div>
         </section>
       )}
@@ -231,7 +234,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       <section className="max-w-[1268px] mx-auto px-6 lg:px-12 py-8">
         <div className="bg-[#663399] rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-white">
           <p className="text-lg md:text-xl font-semibold max-w-2xl">
-            {topic.ctaText || `Get Your Second Medical Opinion with our Specialists`}
+            Get Your Second Medical Opinion with our Specialists
           </p>
           <div className="flex gap-4 shrink-0">
             <a href="tel:+919603911911">
