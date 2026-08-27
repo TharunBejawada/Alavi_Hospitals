@@ -15,6 +15,7 @@ import * as specialityController from "./controllers/specialityController.js";
 import * as specialityPageController from "./controllers/specialityPageController.js";
 import * as treatmentController from "./controllers/treatmentController.js";
 import * as secondOpinionController from "./controllers/secondOpinionController.js";
+import * as vaccineController from "./controllers/vaccineController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -99,6 +100,14 @@ app.put("/api/second-opinions/:id/toggle", secondOpinionController.toggleSecondO
 app.delete("/api/second-opinions/delete/:id", secondOpinionController.deleteSecondOpinion);
 app.post("/api/second-opinions/uploadImage", upload.single("image"), secondOpinionController.uploadSecondOpinionImage);
 app.post("/api/second-opinions/uploadReport", upload.single("file"), secondOpinionController.uploadSecondOpinionReport);
+
+app.post("/api/vaccines/add", vaccineController.addVaccine);
+app.get("/api/vaccines/getAll", vaccineController.getAllVaccines);
+app.get("/api/vaccines/getAllEnabled", vaccineController.getAllEnabledVaccines);
+app.get("/api/vaccines/getById/:id", vaccineController.getVaccineById);
+app.put("/api/vaccines/update/:id", vaccineController.updateVaccine);
+app.put("/api/vaccines/:id/toggle", vaccineController.toggleVaccineStatus);
+app.delete("/api/vaccines/delete/:id", vaccineController.deleteVaccine);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);
