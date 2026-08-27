@@ -17,7 +17,8 @@ import {
   Menu,
   X,
   Stethoscope,
-  MessageCircleQuestionMark
+  MessageCircleQuestionMark,
+  Syringe
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -62,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Speciality Pages", href: "/admin/speciality-pages", icon: Newspaper },
     { name: "Treatments", href: "/admin/treatments", icon: Stethoscope },
     { name: "Second Opinion", href: "/admin/second-opinions", icon: MessageCircleQuestionMark },
+    { name: "Vaccinations", href: "/admin/vaccinations", icon: Syringe },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];

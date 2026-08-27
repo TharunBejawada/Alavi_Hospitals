@@ -318,3 +318,16 @@ export interface SecondOpinionTopic {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// A single entry in the "Types of vaccines" list on the public Vaccinations
+// page (e.g. Hepatitis B vaccination) — admin-authored, independent entries
+// sorted by priorityOrder (lower shows first).
+export interface VaccineInfo {
+  vaccineId: string;
+  priorityOrder?: number; // lower shows first, missing/falsy treated as last
+  title: string; // e.g. "Hepatitis B vaccination"
+  description: string; // RTE
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
