@@ -22,12 +22,12 @@ const fadeUp = {
 };
 
 const VACCINES_AVAILABLE_FOR = [
-  { icon: Baby, title: "Children", subtitle: "(0–18 years)" },
-  { icon: User, title: "Adults", subtitle: "" },
-  { icon: UserRound, title: "Senior Citizens", subtitle: "" },
-  { icon: HeartHandshake, title: "Pregnant Women", subtitle: "" },
-  { icon: Plane, title: "Travellers", subtitle: "" },
-  { icon: ShieldAlert, title: "Special Risk Groups", subtitle: "" },
+  { icon: "/assets/child-icon.png", title: "Children", subtitle: "(0–18 years)" },
+  { icon: "/assets/adult-icon.png", title: "Adults", subtitle: "" },
+  { icon: "/assets/senior-icon.png", title: "Senior Citizens", subtitle: "" },
+  { icon: "/assets/pregnant-icon.png", title: "Pregnant Women", subtitle: "" },
+  { icon: "/assets/travel-icon.png", title: "Travellers", subtitle: "" },
+  { icon: "/assets/risk-icon.png", title: "Special Risk Groups", subtitle: "" },
 ];
 
 const VACCINATION_SERVICES = [
@@ -65,70 +65,111 @@ export default function VaccinationsPage() {
     <div className="min-h-screen bg-white font-['Poppins']">
 
       {/* --- 1. HERO --- */}
-      <section className="relative w-full min-h-[560px] flex items-center overflow-hidden bg-[#663399] font-['Inter']">
-        <div className="max-w-[1453px] w-full mx-auto grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-10">
+<section className="relative w-full min-h-[560px] bg-[#663399] font-['Inter'] flex flex-col lg:block">
+  
+  {/* Left Image - Bleeds to left edge on desktop, stacks on top for mobile */}
+  <div className="w-full h-[280px] lg:absolute lg:top-0 lg:left-0 lg:w-1/2 lg:h-full z-0">
+    <img 
+      src="/assets/vaccination-hero.png" 
+      alt="Child receiving a vaccination" 
+      className="w-full h-full object-cover" 
+    />
+  </div>
 
-          {/* Left Image */}
-          <div className="relative w-full h-[280px] lg:h-auto lg:min-h-[560px] order-2 lg:order-1">
-            <img src="/assets/vaccination-hero.jpg" alt="Child receiving a vaccination" className="w-full h-full object-cover" />
-          </div>
+  {/* Content Wrapper */}
+  <div className="max-w-[1453px] w-full mx-auto grid grid-cols-1 lg:grid-cols-2 relative z-10 h-full lg:min-h-[560px]">
+    
+    {/* Invisible Spacer - Replaces the image in the grid to keep text on the right */}
+    <div className="hidden lg:block w-full h-full"></div>
 
-          {/* Right Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="px-6 lg:px-16 py-14 lg:py-0 order-1 lg:order-2"
-          >
-            <h1 className="text-[34px] font-bold text-white leading-[138%] mb-3">Vaccination</h1>
-            <h2 className="text-[24px] font-semibold text-white leading-[149%] mb-4 max-w-[341px]">
-              Protect yourself. Protect your loved ones.
-            </h2>
-            <p className="text-[16px] font-semibold text-white leading-[149%] mb-8 max-w-[434px]">
-              Vaccination is one of the most effective ways to protect against serious and preventable diseases.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a href="tel:+919603911911">
-                <button className="w-[153px] h-[39px] border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors">
-                  Call Now
-                </button>
-              </a>
-              <button
-                onClick={() => setIsPopupOpen(true)}
-                className="w-[271px] h-[41px] bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
-              >
-                Book an Appointment
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+    {/* Right Content */}
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+      className="px-6 lg:px-16 py-14 lg:py-0 flex flex-col justify-center"
+    >
+      <h1 className="text-[34px] font-bold text-white leading-[138%] mb-3">Vaccination</h1>
+      <h2 className="text-[24px] font-semibold text-white leading-[149%] mb-4 max-w-[341px]">
+        Protect yourself. Protect your loved ones.
+      </h2>
+      <p className="text-[16px] font-semibold text-white leading-[149%] mb-8 max-w-[434px]">
+        Vaccination is one of the most effective ways to protect against serious and preventable diseases.
+      </p>
+      
+      {/* Buttons */}
+      <div className="flex flex-wrap gap-[54px]">
+        {/* Call Now */}
+        <a 
+          href="tel:+919603911911"
+          className="w-[153px] h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
+        >
+          Call Now
+        </a>
+        
+        {/* Book an Appointment */}
+        <button
+          onClick={() => setIsPopupOpen(true)}
+          className="w-[271px] h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
+        >
+          Book an Appointment
+        </button>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       {/* --- 2. VACCINES AVAILABLE FOR --- */}
-      <motion.section
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeUp}
-        className="py-16 max-w-[1453px] w-full mx-auto px-6 lg:px-12"
-      >
-        <h2 className="text-2xl md:text-[26px] font-semibold text-[#663399] text-center mb-10">Vaccines available for</h2>
-        <div className="bg-[rgba(245,235,255,0.28)] rounded-2xl py-10 px-6">
-          <div className="flex flex-wrap justify-center divide-x divide-[#663399]/[0.38]">
-            {VACCINES_AVAILABLE_FOR.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="flex flex-col items-center gap-3 px-6 md:px-8 w-1/2 sm:w-1/3 lg:w-auto mb-8 lg:mb-0">
-                  <Icon className="w-10 h-10 text-[#663399]" strokeWidth={1.5} />
-                  <p className="text-[16px] font-medium text-[#663399] text-center leading-[149%]">
-                    {item.title}{item.subtitle && <><br />{item.subtitle}</>}
-                  </p>
-                </div>
-              );
-            })}
+<motion.section
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.1 }}
+  variants={fadeUp} 
+  className="py-16 w-full font-['Inter']"
+>
+  <div className="max-w-[1453px] mx-auto px-6 lg:px-12 flex flex-col items-center">
+    
+    {/* Heading */}
+    <h2 className="text-[26px] font-semibold text-[#663399] leading-[149%] text-center mb-[27px]">
+      Vaccines available for
+    </h2>
+    
+    {/* Inner Card (Matches exact 1274x191 dimensions on Desktop) */}
+    <div className="w-full max-w-[1453px] lg:h-[191px] bg-[rgba(245,235,255,0.28)] rounded-[16px] py-8 lg:py-0 flex items-center justify-center px-4 md:px-6">
+      
+      {/* Items Container with exactly 133px tall dividers on desktop */}
+      <div className="flex flex-col lg:flex-row w-full justify-center items-center divide-[#663399]/[0.38] divide-y lg:divide-y-0 lg:divide-x">
+        {VACCINES_AVAILABLE_FOR.map((item, idx) => (
+          <div 
+            key={idx} 
+            className="flex flex-col items-center justify-center gap-2 py-8 lg:py-0 lg:h-[133px] flex-1 min-w-[150px] w-full lg:w-auto"
+          >
+            {/* Icon - Sized exactly to 66x52 based on CSS */}
+            <div className="w-[66px] h-[52px] flex items-center justify-center mb-1">
+              <img 
+                src={item.icon} 
+                alt={`${item.title} icon`}
+                className="w-full h-full object-contain" 
+              />
+            </div>
+            
+            {/* Text */}
+            <p className="text-[16px] font-medium text-[#663399] text-center leading-[149%] whitespace-nowrap">
+              {item.title}
+              {item.subtitle && (
+                <>
+                  <br />
+                  <span className="text-[16px]">{item.subtitle}</span>
+                </>
+              )}
+            </p>
           </div>
-        </div>
-      </motion.section>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</motion.section>
 
       {/* --- 3. OUR VACCINATION SERVICES --- */}
       <motion.section
@@ -138,7 +179,7 @@ export default function VaccinationsPage() {
         variants={fadeUp}
         className="py-16 bg-[#F5FBFF]"
       >
-        <div className="max-w-[1131px] w-full mx-auto px-6 lg:px-0">
+        <div className="max-w-[1453px] w-full mx-auto px-6 lg:px-0">
           <h2 className="text-2xl md:text-[26px] font-semibold text-[#663399] text-center mb-10">Our vaccination services</h2>
           <div className="bg-white rounded-[36px] grid grid-cols-1 md:grid-cols-3 shadow-sm overflow-hidden">
             {VACCINATION_SERVICES.map((service, idx) => (
@@ -155,84 +196,131 @@ export default function VaccinationsPage() {
       </motion.section>
 
       {/* --- 4. TYPES OF VACCINES (dynamic) --- */}
-      <motion.section
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeUp}
-        className="py-20 max-w-[1453px] w-full mx-auto px-6 lg:px-12"
-      >
-        <h2 className="text-2xl md:text-[26px] font-semibold text-[#663399] text-center mb-4">Types of vaccines</h2>
-        <p className="text-center text-black text-[18px] font-medium max-w-[856px] mx-auto mb-14">
-          Explore commonly recommended vaccines and learn who may need them and when they are generally advised.
-        </p>
+<motion.section
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.1 }}
+  variants={fadeUp}
+  className="py-20 w-full font-['Inter']"
+>
+  <div className="max-w-[1453px] mx-auto">
+    
+    
+    <h2 className="text-[26px] font-semibold text-[#663399] leading-[149%] text-center mb-[13px]">
+      Types of vaccines
+    </h2>
+    <p className="text-center text-black text-[18px] font-medium leading-[149%] max-w-[856px] mx-auto mb-[36px]">
+      Explore commonly recommended vaccines and learn who may need them and when they are generally advised.
+    </p>
 
-        {loadingVaccines ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-[#663399]" />
-          </div>
-        ) : vaccines.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">Vaccine information will be available here soon.</div>
-        ) : (
-          <div className="flex flex-col lg:flex-row bg-[rgba(231,216,245,0.21)] rounded-2xl overflow-hidden max-w-[1140px] mx-auto">
-            <div className="lg:w-[300px] shrink-0 flex flex-col">
-              {vaccines.map((v, idx) => (
-                <button
-                  key={v.vaccineId}
-                  onClick={() => setSelectedIdx(idx)}
-                  className={`text-left px-6 py-4 font-semibold text-[18px] leading-[149%] transition-colors border-b border-white/40 last:border-b-0 ${
-                    idx === selectedIdx ? "bg-[#663399] text-white" : "text-[#663399] hover:bg-[#663399]/10"
-                  }`}
-                >
-                  {v.title}
-                </button>
-              ))}
-            </div>
-            <div className="flex-1 p-8 lg:p-10">
-              {selectedVaccine && (
-                <div
-                  className="prose max-w-none text-[#0A0013] leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: (selectedVaccine.description || "").replace(/&nbsp;/g, " ") }}
-                />
-              )}
-            </div>
-          </div>
-        )}
-      </motion.section>
+    {loadingVaccines ? (
+      <div className="flex justify-center py-16">
+        <Loader2 className="w-8 h-8 animate-spin text-[#663399]" />
+      </div>
+    ) : vaccines.length === 0 ? (
+      <div className="text-center py-16 text-gray-500">
+        Vaccine information will be available here soon.
+      </div>
+    ) : (
+      
+      
+      <div className="flex flex-col lg:flex-row justify-center max-w-[1204px] mx-auto gap-[15px]">
+        
+        {/* Sidebar (Individual Tabs) */}
+        <div className="w-full lg:w-[274px] shrink-0 flex flex-col gap-[14px]">
+          {vaccines.map((v, idx) => {
+            const isActive = idx === selectedIdx;
+            return (
+              <button
+                key={v.vaccineId || idx}
+                onClick={() => setSelectedIdx(idx)}
+                className={`w-full h-[45px] px-6 flex items-center text-left text-[18px] leading-[149%] transition-colors ${
+                  isActive 
+                    ? "bg-[#663399] text-white font-bold" 
+                    : "bg-[rgba(231,216,245,0.21)] text-[#663399] font-medium hover:bg-[#663399]/10"
+                }`}
+              >
+                {v.title}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 w-full lg:max-w-[915px] lg:min-h-[462px] bg-[rgba(231,216,245,0.21)] p-8 md:p-10">
+          {selectedVaccine && (
+            <div
+              className="prose max-w-none text-black leading-relaxed"
+              dangerouslySetInnerHTML={{ 
+                __html: (selectedVaccine.description || "").replace(/&nbsp;/g, " ") 
+              }}
+            />
+          )}
+        </div>
+        
+      </div>
+    )}
+  </div>
+</motion.section>
 
       {/* --- 5. BOTTOM CTA --- */}
-      <section className="relative w-full h-[400px] md:h-[318px] bg-[#663399] overflow-hidden font-['Inter']">
-        <div className="absolute right-0 top-0 h-full w-full md:w-[55%]">
-          <img src="/assets/vaccination-cta.jpg" alt="Vaccination vial" className="w-full h-full object-cover" />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(90deg, #663399 0%, rgba(102, 51, 153, 0) 55%)' }}
-          />
-        </div>
+<section className="relative w-full h-[450px] lg:h-[318px] bg-[#663399] overflow-hidden font-['Inter']">
+  
+  {/* Background Image */}
+  <div className="absolute right-0 top-0 h-full w-full lg:w-[50%]">
+    <img 
+      src="/assets/vaccination-cta.png" 
+      alt="Vaccination vial and syringes" 
+      className="w-full h-full object-fit object-right" 
+    />
+  </div>
 
-        <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col justify-center px-6 lg:px-16 py-10 md:py-0">
-          <div className="max-w-[553px]">
-            <h2 className="text-[26px] font-bold text-white leading-[149%] mb-3">Walk in or pre-book your vaccination</h2>
-            <p className="text-[21px] font-medium text-white leading-[149%] mb-5">Planning a vaccination for yourself or your family?</p>
-            <p className="text-[16px] md:text-[18px] font-medium text-white leading-[149%] mb-8 max-w-[500px]">
-              Walk in for available vaccination services or pre-book your appointment for a convenient experience.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a href="tel:+919603911911">
-                <button className="w-[153px] h-[39px] border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors">
-                  Call Now
-                </button>
-              </a>
-              <button
-                onClick={() => setIsPopupOpen(true)}
-                className="w-[271px] h-[41px] bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
-              >
-                Book an Appointment
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+  {/* Exact Gradient Overlay from CSS */}
+  <div
+    className="absolute inset-0 z-0"
+    style={{ 
+      background: 'linear-gradient(90deg, #663399 52.71%, rgba(102, 51, 153, 0) 80.45%)' 
+    }}
+  />
+
+  {/* Content Container */}
+  <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col justify-center px-6 lg:px-16 py-10 lg:py-0">
+    
+    <div className="flex flex-col max-w-[741px]">
+      <h2 className="text-[26px] font-bold text-white leading-[149%] mb-[13px] max-w-[553px]">
+        Walk in or pre-book your vaccination
+      </h2>
+      
+      <p className="text-[21px] font-medium text-white leading-[149%] mb-[13px] max-w-[553px]">
+        Planning a vaccination for yourself or your family?
+      </p>
+      
+      <p className="text-[21px] font-medium text-white leading-[149%] mb-[30px]">
+        Walk in for available vaccination services or pre-book your appointment for a convenient experience.
+      </p>
+      
+      {/* Buttons Container */}
+      <div className="flex flex-wrap gap-[54px]">
+        {/* Call Now Button */}
+        <a 
+          href="tel:+919603911911"
+          className="w-[153px] h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
+        >
+          Call Now
+        </a>
+        
+        {/* Book an Appointment Button */}
+        <button
+          onClick={() => setIsPopupOpen(true)}
+          className="w-[271px] h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
+        >
+          Book an Appointment
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       <AppointmentPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </div>
