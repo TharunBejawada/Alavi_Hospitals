@@ -18,6 +18,7 @@ import * as secondOpinionController from "./controllers/secondOpinionController.
 import * as vaccineController from "./controllers/vaccineController.js";
 import * as insurancePartnerController from "./controllers/insurancePartnerController.js";
 import * as insuranceProcessController from "./controllers/insuranceProcessController.js";
+import * as healthPackageController from "./controllers/healthPackageController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -127,6 +128,16 @@ app.get("/api/insurance-process/getById/:id", insuranceProcessController.getInsu
 app.put("/api/insurance-process/update/:id", insuranceProcessController.updateInsuranceProcessInfo);
 app.put("/api/insurance-process/:id/toggle", insuranceProcessController.toggleInsuranceProcessInfoStatus);
 app.delete("/api/insurance-process/delete/:id", insuranceProcessController.deleteInsuranceProcessInfo);
+
+app.post("/api/health-packages/add", healthPackageController.addHealthPackage);
+app.get("/api/health-packages/getAll", healthPackageController.getAllHealthPackages);
+app.get("/api/health-packages/getAllEnabled", healthPackageController.getAllEnabledHealthPackages);
+app.get("/api/health-packages/getById/:id", healthPackageController.getHealthPackageById);
+app.get("/api/health-packages/getByUrl/:url", healthPackageController.getHealthPackageByUrl);
+app.put("/api/health-packages/update/:id", healthPackageController.updateHealthPackage);
+app.put("/api/health-packages/:id/toggle", healthPackageController.toggleHealthPackageStatus);
+app.delete("/api/health-packages/delete/:id", healthPackageController.deleteHealthPackage);
+app.post("/api/health-packages/uploadImage", upload.single("image"), healthPackageController.uploadHealthPackageImage);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

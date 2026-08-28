@@ -364,3 +364,73 @@ export interface InsuranceProcessInfo {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// A named group of tests within a Health Package (e.g. "General Health",
+// "Core Health Screening") — reused both as the condensed "Tests Included"
+// list on the overview card and as the full illustrated cards in the
+// detail page's "What Does This Package Include?" section.
+export interface HealthPackageTestGroup {
+  id?: string;
+  title: string;
+  image?: string; // background photo for the detail-page card (optional)
+  tests: string[];
+}
+
+// One entry in the detail page's "What Does It Help Assess?" grid
+// (e.g. "Blood Health").
+export interface HealthPackageAssessmentItem {
+  id?: string;
+  icon?: string;
+  title: string;
+  description: string;
+}
+
+// A health checkup package — one overview card on the public
+// /health-packages listing, linking to its own /health-packages/[slug]
+// detail landing page. Independent entries, sorted by priorityOrder.
+export interface HealthPackage {
+  healthPackageId: string;
+  priorityOrder?: number; // lower shows first, missing/falsy treated as last
+
+  // --- Overview card (public /health-packages list) ---
+  cardImage: string;
+  cardTitle: string; // e.g. "ESSENTIAL HEALTH CHECKUP"
+  diseasesScreened: string; // e.g. "40+ diseases"
+  testsCountLabel: string; // e.g. "75 Tests"
+  recommendedFor: string; // e.g. "Men & Women"
+  cardDescription: string;
+
+  // --- Pricing (shared between card and detail hero) ---
+  originalPrice: number;
+  discountedPrice: number;
+
+  // --- Tests included (shared: condensed on card, full cards on detail page) ---
+  testGroups: HealthPackageTestGroup[];
+
+  // --- Detail page hero ---
+  pageTitle: string; // e.g. "ALAVI ESSENTIAL WELLNESS PROFILE"
+  pageSubtitle: string;
+  heroDescription: string;
+  heroImage: string;
+
+  // "Who Is This Package For?"
+  whoIsThisFor: {
+    intro: string; // e.g. "Ideal for adults looking for:"
+    list: string[];
+  };
+
+  detailSummary: string; // paragraph shown under the price box on the detail page
+
+  // "What Does It Help Assess?"
+  assessmentItems: HealthPackageAssessmentItem[];
+
+  seoConfig: {
+    title: string;
+    url: string; // unique URL slug
+    metaDescription: string;
+    metaKeywords: string;
+  };
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}

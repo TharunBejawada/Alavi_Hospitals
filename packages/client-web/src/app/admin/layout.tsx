@@ -19,7 +19,8 @@ import {
   Stethoscope,
   MessageCircleQuestionMark,
   Syringe,
-  Umbrella
+  Umbrella,
+  PackageCheck
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -66,6 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Second Opinion", href: "/admin/second-opinions", icon: MessageCircleQuestionMark },
     { name: "Vaccinations", href: "/admin/vaccinations", icon: Syringe },
     { name: "Insurance & TPA", href: "/admin/insurance", icon: Umbrella },
+    { name: "Health Packages", href: "/admin/health-packages", icon: PackageCheck },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
