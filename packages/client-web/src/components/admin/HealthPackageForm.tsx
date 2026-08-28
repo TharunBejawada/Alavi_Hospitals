@@ -368,7 +368,7 @@ export default function HealthPackageForm({ editId = null }: { editId?: string |
           {/* SECTION 6: Detail Summary */}
           <div>
             <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-2">6. Detail Summary</h2>
-            <textarea value={detailSummary} onChange={(e) => setDetailSummary(e.target.value)} placeholder="Paragraph shown under the price box on the detail page" rows={3} className={inputClass} />
+            <textarea value={detailSummary} onChange={(e) => setDetailSummary(e.target.value)} placeholder="What Does It Help Assess short description" rows={3} className={inputClass} />
           </div>
 
           {/* SECTION 7: What Does It Help Assess */}
