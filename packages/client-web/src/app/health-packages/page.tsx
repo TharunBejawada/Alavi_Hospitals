@@ -9,6 +9,7 @@ import { Loader2, ShieldCheck, ClipboardList, Search, UserCheck } from "lucide-r
 import { API_URL } from "../../config";
 import type { HealthPackage } from "../../../../core/src/types";
 import AppointmentPopup from "../../components/AppointmentPopup";
+import HealthPackageBookingModal from "../../components/health-packages/HealthPackageBookingModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -24,7 +25,7 @@ const WHY_CHOOSE_ITEMS = [
 
 const formatCurrency = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 
-function PackageCard({ pkg }: { pkg: HealthPackage }) {
+function PackageCard({ pkg, onBookNow }: { pkg: HealthPackage; onBookNow: () => void }) {
   const savedAmount = Math.max(0, (pkg.originalPrice || 0) - (pkg.discountedPrice || 0));
   const savedPercent = pkg.originalPrice ? Math.round((savedAmount / pkg.originalPrice) * 100) : 0;
 
@@ -123,11 +124,13 @@ function PackageCard({ pkg }: { pkg: HealthPackage }) {
 
         {/* Action Buttons */}
         <div className="flex justify-center gap-[19px] mt-auto shrink-0">
-          <a href="tel:+919603911911" className="block">
-            <button className="w-[124px] h-[35px] bg-[#663399] rounded-[6px] text-white font-['Poppins'] font-semibold text-[14px] flex items-center justify-center hover:opacity-90 transition-opacity">
-              Book Now
-            </button>
-          </a>
+          <button
+            type="button"
+            onClick={onBookNow}
+            className="w-[124px] h-[35px] bg-[#663399] rounded-[6px] text-white font-['Poppins'] font-semibold text-[14px] flex items-center justify-center hover:opacity-90 transition-opacity"
+          >
+            Book Now
+          </button>
           <Link href={`/health-packages/${pkg.seoConfig?.url}`} className="block">
             <button className="w-[124px] h-[35px] border border-[#663399] rounded-[6px] text-black font-['Poppins'] font-semibold text-[14px] flex items-center justify-center hover:bg-[#F3E8FF] transition-colors">
               Know More
@@ -144,6 +147,7 @@ export default function HealthPackagesPage() {
   const [packages, setPackages] = useState<HealthPackage[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [bookingPackage, setBookingPackage] = useState<HealthPackage | null>(null);
 
   useEffect(() => {
     async function fetchPackages() {
@@ -248,7 +252,7 @@ export default function HealthPackagesPage() {
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center"
     >
       {packages.map((pkg) => (
-        <PackageCard key={pkg.healthPackageId} pkg={pkg} />
+        <PackageCard key={pkg.healthPackageId} pkg={pkg} onBookNow={() => setBookingPackage(pkg)} />
       ))}
     </motion.div>
   )}
@@ -345,6 +349,11 @@ export default function HealthPackagesPage() {
 </section>
 
       <AppointmentPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <HealthPackageBookingModal
+        isOpen={!!bookingPackage}
+        onClose={() => setBookingPackage(null)}
+        packageTitle={bookingPackage?.pageTitle || bookingPackage?.cardTitle || ""}
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import axios from "axios";
 import { Loader2, Phone } from "lucide-react";
 import { API_URL } from "../../config";
 import type { HealthPackage } from "../../../../core/src/types";
+import HealthPackageBookingModal from "./HealthPackageBookingModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -486,70 +487,33 @@ export default function HealthPackageDetailClient({ healthPackage }: { healthPac
         </a>
 
         {/* Book Now Button */}
-        <a href="#top" className="block">
-          <button className="w-[159px] h-[45px] bg-[#663399] border-2 border-white rounded-[9px] shadow-[3px_0px_7.6px_1px_rgba(75,31,126,0.9)] flex items-center justify-center gap-2 hover:bg-[#582a87] transition-colors">
-            <svg className="w-5 h-5 stroke-white shrink-0" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-              <path d="M9 16l2 2 4-4"></path>
-            </svg>
-            <span className="font-['Poppins'] font-semibold text-[18px] text-white">
-              Book Now
-            </span>
-          </button>
-        </a>
+        <button
+          type="button"
+          onClick={() => setIsPopupOpen(true)}
+          className="w-[159px] h-[45px] bg-[#663399] border-2 border-white rounded-[9px] shadow-[3px_0px_7.6px_1px_rgba(75,31,126,0.9)] flex items-center justify-center gap-2 hover:bg-[#582a87] transition-colors"
+        >
+          <svg className="w-5 h-5 stroke-white shrink-0" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <path d="M9 16l2 2 4-4"></path>
+          </svg>
+          <span className="font-['Poppins'] font-semibold text-[18px] text-white">
+            Book Now
+          </span>
+        </button>
 
       </div>
 
     </div>
   </div>
 </section>
-{/* --- BOOKING POPUP MODAL --- */}
-      {isPopupOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          
-          {/* Modal Container */}
-          <div className="relative w-full max-w-[400px] bg-white rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
-            
-            {/* Close Button */}
-            <button 
-              onClick={() => setIsPopupOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* Modal Header */}
-            <h3 className="text-xl font-bold text-[#663399] mb-4">
-              Book Your Appointment
-            </h3>
-            
-            {/* Quick Form */}
-            <form className="flex flex-col gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-black mb-1">Name</label>
-                <input type="text" required className="w-full h-10 border border-gray-300 rounded-md px-3 text-sm outline-none focus:border-[#663399]" />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-black mb-1">Mobile Number</label>
-                <input type="tel" required className="w-full h-10 border border-gray-300 rounded-md px-3 text-sm outline-none focus:border-[#663399]" />
-              </div>
-              
-              <button 
-                type="submit" 
-                className="w-full h-11 bg-[#663399] text-white font-semibold rounded-md mt-2 hover:opacity-90 transition-opacity"
-              >
-                Submit Request
-              </button>
-            </form>
-
-          </div>
-        </div>
-      )}
+      <HealthPackageBookingModal
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        packageTitle={pkg.pageTitle}
+      />
     </div>
   );
 }
