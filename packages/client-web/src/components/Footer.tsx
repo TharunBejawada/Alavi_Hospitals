@@ -78,7 +78,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* COLUMN 2: Dynamic Specialities */}
+          {/* COLUMN 2: Dynamic Specialities & Quick Links */}
           <div className="lg:pl-8 xl:pl-10">
             <h3 className="text-xl font-bold border-b border-purple-500/30 pb-2 mb-6 lg:mb-8">
               Our Specialities
@@ -90,19 +90,10 @@ const Footer = () => {
                 <span className="text-sm">Loading...</span>
               </div>
             ) : (
-              <>
-                {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
-                  {specialities.slice(0, 8).map((spec) => (
-                    <li key={spec.specialityId || spec.specialityName} className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
-                      <Link href={`/specialities/${spec.url || spec.specialityId}`} className="w-full">
-                        {spec.specialityName}
-                      </Link>
-                    </li>
-                  ))}
-                </ul> */}
-                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
-                  {specialities.slice(0, 8).map((spec) => {
-                    // Get the mapped URL slug, fallback to specialityId if no landing page exists yet
+              <div className="flex flex-col h-full">
+                {/* Reduced to 5 specialities to make room for other links */}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300 mb-4">
+                  {specialities.slice(0, 5).map((spec) => {
                     const targetUrl = urlMap[spec.specialityId] 
                       ? `${urlMap[spec.specialityId]}` 
                       : `/specialities/${spec.specialityId}`;
@@ -117,17 +108,35 @@ const Footer = () => {
                   })}
                 </ul>
                 
-                {/* View More Link (Shows only if there are more than 8 specialities) */}
-                {specialities.length > 8 && (
+                {specialities.length > 5 && (
                   <Link 
                     href="/specialities" 
-                    className="inline-block mt-6 text-[14px] font-semibold text-[#E59A1D] hover:text-white transition-colors group"
+                    className="inline-block text-[14px] font-semibold text-[#E59A1D] hover:text-white transition-colors group mb-10"
                   >
                     View All Specialities 
                     <span className="inline-block ml-1 group-hover:translate-x-1 transition-transform">&rarr;</span>
                   </Link>
                 )}
-              </>
+
+                {/* --- NEW SECTION: QUICK LINKS --- */}
+                <div>
+                  <h3 className="text-xl font-bold border-b border-purple-500/30 pb-2 mb-6">
+                    Quick Links
+                  </h3>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300">
+                    <li className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
+                      <Link href="/vaccinations" className="w-full">
+                        Vaccinations
+                      </Link>
+                    </li>
+                    <li className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
+                      <Link href="/insurance" className="w-full">
+                        Insurance & TPA
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             )}
           </div>
 
