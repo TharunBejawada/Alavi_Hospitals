@@ -16,6 +16,8 @@ import * as specialityPageController from "./controllers/specialityPageControlle
 import * as treatmentController from "./controllers/treatmentController.js";
 import * as secondOpinionController from "./controllers/secondOpinionController.js";
 import * as vaccineController from "./controllers/vaccineController.js";
+import * as insurancePartnerController from "./controllers/insurancePartnerController.js";
+import * as insuranceProcessController from "./controllers/insuranceProcessController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -108,6 +110,23 @@ app.get("/api/vaccines/getById/:id", vaccineController.getVaccineById);
 app.put("/api/vaccines/update/:id", vaccineController.updateVaccine);
 app.put("/api/vaccines/:id/toggle", vaccineController.toggleVaccineStatus);
 app.delete("/api/vaccines/delete/:id", vaccineController.deleteVaccine);
+
+app.post("/api/insurance-partners/add", insurancePartnerController.addInsurancePartner);
+app.get("/api/insurance-partners/getAll", insurancePartnerController.getAllInsurancePartners);
+app.get("/api/insurance-partners/getAllEnabled", insurancePartnerController.getAllEnabledInsurancePartners);
+app.get("/api/insurance-partners/getById/:id", insurancePartnerController.getInsurancePartnerById);
+app.put("/api/insurance-partners/update/:id", insurancePartnerController.updateInsurancePartner);
+app.put("/api/insurance-partners/:id/toggle", insurancePartnerController.toggleInsurancePartnerStatus);
+app.delete("/api/insurance-partners/delete/:id", insurancePartnerController.deleteInsurancePartner);
+app.post("/api/insurance-partners/uploadImage", upload.single("image"), insurancePartnerController.uploadInsurancePartnerImage);
+
+app.post("/api/insurance-process/add", insuranceProcessController.addInsuranceProcessInfo);
+app.get("/api/insurance-process/getAll", insuranceProcessController.getAllInsuranceProcessInfo);
+app.get("/api/insurance-process/getAllEnabled", insuranceProcessController.getAllEnabledInsuranceProcessInfo);
+app.get("/api/insurance-process/getById/:id", insuranceProcessController.getInsuranceProcessInfoById);
+app.put("/api/insurance-process/update/:id", insuranceProcessController.updateInsuranceProcessInfo);
+app.put("/api/insurance-process/:id/toggle", insuranceProcessController.toggleInsuranceProcessInfoStatus);
+app.delete("/api/insurance-process/delete/:id", insuranceProcessController.deleteInsuranceProcessInfo);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

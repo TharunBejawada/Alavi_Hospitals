@@ -331,3 +331,36 @@ export interface VaccineInfo {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type InsurancePartnerType = "government" | "private";
+
+// One insurer/TPA logo on the public Insurance page's "Our Insurance & TPA
+// Partners" section. Government-linked partners render as highlighted cards
+// with a description; private partners render as plain logo tiles — both
+// share this shape, sorted by priorityOrder (lower shows first).
+export interface InsurancePartner {
+  partnerId: string;
+  type: InsurancePartnerType;
+  priorityOrder?: number;
+  title: string;
+  description?: string; // RTE — government-linked partners only
+  image: string; // logo
+  websiteUrl?: string; // optional link-out when the logo is clicked
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// One tab in the "Get hassle-free cashless hospitalization..." process
+// section at the bottom of the Insurance page (e.g. "Pre-Authorization
+// Procedure") — a standalone list managed from the Insurance admin page,
+// independent of the partner entries, sorted by priorityOrder.
+export interface InsuranceProcessInfo {
+  processId: string;
+  priorityOrder?: number;
+  title: string; // tab label, e.g. "Pre-Authorization Procedure"
+  content: string; // RTE
+  enabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}

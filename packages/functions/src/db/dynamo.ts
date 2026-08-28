@@ -19,6 +19,8 @@ export const TABLE_NAME_SPECIALITY_PAGES = "SpecialityPages";
 export const TABLE_NAME_TREATMENTS = "Treatments";
 export const TABLE_NAME_SECOND_OPINIONS = "SecondOpinions";
 export const TABLE_NAME_VACCINES = "Vaccines";
+export const TABLE_NAME_INSURANCE_PARTNERS = "InsurancePartners";
+export const TABLE_NAME_INSURANCE_PROCESS = "InsuranceProcessInfo";
 export const TABLE_NAME_FORM = "Forms";
 
 // S3 Configuration

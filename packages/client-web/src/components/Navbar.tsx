@@ -15,6 +15,7 @@ const navLinks = [
   { name: "DOCTORS", href: "/doctors" },
   { name: "SECOND OPINION", href: "/second-opinion" },
   // { name: "VACCINATION", href: "/vaccinations" },
+  // { name: "INSURANCE", href: "/insurance" },
   { name: "HEALTH PACKAGES", href: "/health-packages" },
   { name: "BLOG", href: "/blog" },
   { name: "FOR PATIENTS", href: "/patients" },
