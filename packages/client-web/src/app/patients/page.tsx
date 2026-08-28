@@ -91,26 +91,40 @@ export default function PatientInformationPage() {
     <div className="min-h-screen bg-white font-['Poppins']">
 
       {/* --- 1. HERO --- */}
-      <section className="relative w-full min-h-[300px] flex items-center overflow-hidden bg-[#663399] font-['Inter']">
-        <div className="max-w-[1453px] w-full mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-8 px-6 lg:px-16 py-12">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-            <p className="text-[13px] font-semibold text-white/80 tracking-wide uppercase mb-2">Patient Information</p>
-            <h1 className="text-[30px] md:text-[42px] font-bold text-white leading-tight mb-4 max-w-[440px]">
-              Patients&rsquo; Rights &amp; Responsibilities
-            </h1>
-            <p className="text-[15px] md:text-[16px] font-medium text-white/90 max-w-[420px] leading-relaxed">
-              At Alavi Hospitals, we are committed to providing safe, respectful, transparent and compassionate care to every patient.
-            </p>
-          </motion.div>
-          <div className="relative w-full h-[200px] md:h-[280px]">
-            <img
-              src="/assets/patient-info-hero.png"
-              alt="Doctor examining a patient"
-              className="w-full h-full object-contain"
-            />
-          </div>
-        </div>
-      </section>
+<section className="relative w-full h-[500px] lg:h-[448px] flex items-center overflow-hidden bg-[#663399] font-['Inter']">
+  
+  {/* Right Side Image Asset */}
+  <div className="absolute top-0 right-0 w-full lg:w-[90%] h-full z-0 opacity-20 lg:opacity-100">
+    <img
+      src="/assets/patient-info-hero.png"
+      alt="Doctor examining a patient"
+      className="w-full h-full object-cover object-left"
+    />
+  </div>
+
+  {/* Content Container */}
+  <div className="max-w-[1453px] w-full mx-auto px-6 lg:px-16 relative z-10">
+    <motion.div 
+      initial={{ opacity: 0, x: -20 }} 
+      animate={{ opacity: 1, x: 0 }} 
+      transition={{ duration: 0.6 }}
+      className="max-w-[496px] flex flex-col"
+    >
+      <p className="text-[18px] md:text-[21px] font-semibold text-white uppercase leading-[138%] mb-[8px]">
+        PATIENT INFORMATION
+      </p>
+      
+      <h1 className="text-[36px] md:text-[48px] font-bold text-white leading-[138%] mb-[20px] max-w-[418px]">
+        Patients&rsquo; Rights &amp; Responsibilities
+      </h1>
+      
+      <p className="text-[16px] md:text-[18px] font-medium text-white leading-[138%]">
+        At Alavi Hospitals, we are committed to providing safe, respectful, transparent and compassionate care to every patient.
+      </p>
+    </motion.div>
+  </div>
+  
+</section>
 
       {/* --- 2. PATIENT RIGHTS --- */}
       <motion.section
@@ -118,7 +132,7 @@ export default function PatientInformationPage() {
         whileInView="show"
         viewport={{ once: true, amount: 0.05 }}
         variants={fadeUp}
-        className="py-16 max-w-[1200px] w-full mx-auto px-6 lg:px-12"
+        className="py-16 max-w-[1453px] w-full mx-auto px-6 lg:px-12"
       >
         <div className="flex justify-center mb-12">
           <span className="bg-[#663399] text-white font-semibold text-lg px-10 py-3 rounded-full border-2 border-white shadow-md">
@@ -147,7 +161,7 @@ export default function PatientInformationPage() {
         variants={fadeUp}
         className="py-16 bg-[#663399]"
       >
-        <div className="max-w-[1140px] w-full mx-auto px-6 lg:px-12">
+        <div className="max-w-[1453px] w-full mx-auto px-6 lg:px-12">
           <div className="flex justify-center mb-12">
             <span className="bg-transparent text-white font-semibold text-lg px-10 py-3 rounded-full border-2 border-white">
               Patient Responsibilities
