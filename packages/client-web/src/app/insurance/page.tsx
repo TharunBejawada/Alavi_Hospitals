@@ -57,25 +57,39 @@ export default function InsurancePage() {
     <div className="min-h-screen bg-white font-['Poppins']">
 
       {/* --- 1. HERO --- */}
-      <section
-        className="relative w-full min-h-[300px] flex items-center overflow-hidden font-['Inter']"
-        style={{ background: "linear-gradient(90deg, #F1E9FA 0%, #FFFFFF 100%)" }}
-      >
-        <div className="max-w-[1453px] w-full mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-8 px-6 lg:px-16 py-12">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-[26px] md:text-[32px] font-bold text-[#663399] leading-tight mb-3">
-              Medical Insurance &amp; TPA Partners
-            </h1>
-            <p className="text-[16px] font-bold text-black mb-3">Your insurance. Your care. Your support.</p>
-            <p className="text-[14px] md:text-[15px] font-medium text-black max-w-[420px] leading-relaxed">
-              Explore our empanelled insurance companies and TPA partners for cashless hospitalization.
-            </p>
-          </motion.div>
-          <div className="relative w-full h-[180px] md:h-[220px]">
-            <img src="/assets/insurance-hero.png" alt="Medical insurance for your family" className="w-full h-full object-contain" />
-          </div>
-        </div>
-      </section>
+<section className="relative w-full h-[440px] flex items-center overflow-hidden font-['Inter'] bg-[#F1E9FA]">
+  
+  {/* Background Banner Image */}
+  <div className="absolute inset-0 z-0">
+    <img 
+      src="/assets/insurance-hero.png" 
+      alt="Medical insurance for your family" 
+      className="w-full h-full md:object-right object-center" 
+    />
+  </div>
+
+  {/* Content Container */}
+  <div className="max-w-[1453px] w-full mx-auto px-6 lg:px-16 relative z-10">
+    <motion.div 
+      initial={{ opacity: 0, x: -20 }} 
+      animate={{ opacity: 1, x: 0 }} 
+      transition={{ duration: 0.6 }}
+      className="max-w-[531px] flex flex-col"
+    >
+      <h1 className="text-[36px] md:text-[48px] font-bold text-[#663399] leading-[138%] mb-[16px] uppercase">
+        MEDICAL INSURANCE & TPA PARTNERS
+      </h1>
+      
+      <p className="text-[18px] md:text-[21px] font-semibold text-black leading-[138%] mb-[14px]">
+        Your insurance. Your care. Our support.
+      </p>
+      
+      <p className="text-[16px] md:text-[18px] font-medium text-black leading-[138%] max-w-[478px]">
+        Explore our empanelled insurance companies and TPA partners for cashless hospitalization.
+      </p>
+    </motion.div>
+  </div>
+</section>
 
       {isLoading ? (
         <div className="flex justify-center py-24">
@@ -99,12 +113,16 @@ export default function InsurancePage() {
                 {govtPartners.map((p) => (
                   <div
                     key={p.partnerId}
-                    className="flex items-center gap-4 bg-[#663399] rounded-2xl p-5 w-full md:w-[calc(50%-12px)] max-w-[560px]"
+                    className="flex items-center gap-4 bg-[#663399] rounded-2xl p-5 w-full md:w-[calc(50%-12px)] max-w-[720px]"
                   >
-                    <div className="relative w-16 h-16 rounded-full bg-white shrink-0 overflow-hidden">
+                    <div className="relative w-24 h-24 rounded-full bg-white shrink-0 overflow-hidden">
                       {p.image && <Image src={p.image} alt={p.title} fill className="object-contain p-1.5" />}
                     </div>
                     <div className="text-white">
+                      <div
+                        className="text-xl leading-snug [&_strong]:font-bold"
+                        dangerouslySetInnerHTML={{ __html: (p.title || "").replace(/&nbsp;/g, " ") }}
+                      />
                       <div
                         className="text-sm leading-snug [&_strong]:font-bold"
                         dangerouslySetInnerHTML={{ __html: (p.description || "").replace(/&nbsp;/g, " ") }}
@@ -121,7 +139,7 @@ export default function InsurancePage() {
                 {privatePartners.map((p) => (
                   <div
                     key={p.partnerId}
-                    className="flex flex-col items-center justify-center gap-2 border border-gray-200 rounded-xl p-5 w-[190px] h-[130px]"
+                    className="flex flex-col items-center justify-center gap-2 border border-gray-200 rounded-xl p-5 w-[254px] h-[130px]"
                   >
                     {renderPartnerLogo(p, "relative w-full h-14")}
                     <p className="text-xs font-medium text-gray-600 text-center">{p.title}</p>
@@ -144,17 +162,17 @@ export default function InsurancePage() {
               variants={fadeUp}
               className="py-16 bg-[#F5F1FA]"
             >
-              <div className="max-w-[1140px] w-full mx-auto px-6 lg:px-0">
-                <h2 className="text-xl md:text-2xl font-bold text-[#663399] text-center mb-10 max-w-[700px] mx-auto">
+              <div className="max-w-[1340px] w-full mx-auto px-6 lg:px-0">
+                <h2 className="text-xl md:text-2xl font-bold text-[#663399] text-center mb-10 max-w-[900px] mx-auto">
                   Get hassle-free cashless hospitalization with our empanelled insurance &amp; TPA partners.
                 </h2>
 
-                <div className="flex flex-wrap gap-2 justify-center mb-8">
+                <div className="flex flex-col lg:flex-row w-full gap-3 mb-8">
                   {processInfo.map((tab, idx) => (
                     <button
                       key={tab.processId}
                       onClick={() => setSelectedTabIdx(idx)}
-                      className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+                      className={`flex-1 px-4 py-3.5 rounded-full text-xl font-semibold transition-colors ${
                         idx === selectedTabIdx ? "bg-white text-[#663399] shadow-sm" : "text-gray-600 hover:text-[#663399]"
                       }`}
                     >
