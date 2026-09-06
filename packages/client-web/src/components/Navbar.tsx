@@ -8,23 +8,39 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiMenuAlt3, HiX, HiChevronDown } from "react-icons/hi";
 import { FaPhoneAlt } from "react-icons/fa";
 
-const navLinks = [
+const navLinks: {
+  name: string;
+  href: string;
+  children?: { name: string; href: string }[];
+}[] = [
   { name: "HOME", href: "/" },
   { name: "ABOUT US", href: "/about" },
   { name: "SPECIALITIES", href: "/specialities" },
   { name: "DOCTORS", href: "/doctors" },
   { name: "SECOND OPINION", href: "/second-opinion" },
-  // { name: "VACCINATION", href: "/vaccinations" },
-  // { name: "INSURANCE", href: "/insurance" },
   { name: "HEALTH PACKAGES", href: "/health-packages" },
   { name: "BLOG", href: "/blog" },
-  { name: "FOR PATIENTS", href: "/patients" },
+  {
+    name: "FOR PATIENTS",
+    href: "/patients",
+    children: [
+      { name: "Patient Rights & Responsibilities", href: "/patients" },
+      { name: "Insurance & TPA", href: "/insurance" },
+      { name: "Vaccination", href: "/vaccinations" },
+      { name: "Patient and Visitor Guidelines", href: "/patient-visitor-guidelines" },
+      { name: "News & Media", href: "/news-media" },
+      { name: "Gallery", href: "/gallery" },
+      { name: "Virtual Tour", href: "/virtual-tour" },
+    ],
+  },
   { name: "CONTACT US", href: "/contact" },
 ];
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -87,19 +103,76 @@ const Header = () => {
         {/* Increased padding: px-8 md:px-12 xl:px-16 */}
         <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
           <ul className="flex justify-center items-center gap-4 lg:gap-6 xl:gap-10 py-4">
-            {navLinks.map((link) => (
-              <li key={link.name}>
-                <Link 
-                  href={link.href}
-                  className={`text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
-                    pathname === link.href ? "text-[#5B328C]" : "text-gray-800"
-                  }`}
-                >
-                  {link.name}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#5B328C] transition-all duration-300 group-hover:w-full ${pathname === link.href ? "w-full" : ""}`}></span>
-                </Link>
-              </li>
-            ))}
+            {navLinks.map((link) => {
+              const isChildActive = link.children?.some((child) => child.href === pathname);
+              const isActive = pathname === link.href || isChildActive;
+
+              if (link.children) {
+                return (
+                  <li
+                    key={link.name}
+                    className="relative"
+                    onMouseEnter={() => setOpenDropdown(link.name)}
+                    onMouseLeave={() => setOpenDropdown(null)}
+                  >
+                    <button
+                      type="button"
+                      className={`flex items-center gap-1 text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
+                        isActive ? "text-[#5B328C]" : "text-gray-800"
+                      }`}
+                    >
+                      {link.name}
+                      <HiChevronDown
+                        size={14}
+                        className={`transition-transform duration-200 ${openDropdown === link.name ? "rotate-180" : ""}`}
+                      />
+                      <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#5B328C] transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : ""}`}></span>
+                    </button>
+
+                    <AnimatePresence>
+                      {openDropdown === link.name && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50"
+                        >
+                          <ul className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 w-[260px]">
+                            {link.children.map((child) => (
+                              <li key={child.name}>
+                                <Link
+                                  href={child.href}
+                                  className={`block px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
+                                    pathname === child.href ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                                  }`}
+                                >
+                                  {child.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className={`text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
+                      isActive ? "text-[#5B328C]" : "text-gray-800"
+                    }`}
+                  >
+                    {link.name}
+                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#5B328C] transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : ""}`}></span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </nav>
@@ -124,17 +197,60 @@ const Header = () => {
               </div>
 
               <ul className="flex flex-col gap-6 overflow-y-auto flex-grow">
-                {navLinks.map((link) => (
-                  <li key={link.name} className="border-b border-gray-50 pb-3">
-                    <Link 
-                      href={link.href} 
-                      onClick={() => setIsOpen(false)}
-                      className={`text-[16px] font-bold ${pathname === link.href ? "text-[#5B328C]" : "text-gray-700"}`}
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
+                {navLinks.map((link) => {
+                  if (link.children) {
+                    const isExpanded = mobileExpanded === link.name;
+                    return (
+                      <li key={link.name} className="border-b border-gray-50 pb-3">
+                        <button
+                          type="button"
+                          onClick={() => setMobileExpanded(isExpanded ? null : link.name)}
+                          className={`flex items-center justify-between w-full text-[16px] font-bold ${
+                            isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#5B328C]" : "text-gray-700"
+                          }`}
+                        >
+                          {link.name}
+                          <HiChevronDown size={18} className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                        </button>
+                        <AnimatePresence>
+                          {isExpanded && (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden flex flex-col gap-4 pt-4 pl-4"
+                            >
+                              {link.children.map((child) => (
+                                <li key={child.name}>
+                                  <Link
+                                    href={child.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className={`text-[14px] font-semibold ${pathname === child.href ? "text-[#5B328C]" : "text-gray-600"}`}
+                                  >
+                                    {child.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </li>
+                    );
+                  }
+
+                  return (
+                    <li key={link.name} className="border-b border-gray-50 pb-3">
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`text-[16px] font-bold ${pathname === link.href ? "text-[#5B328C]" : "text-gray-700"}`}
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
 
               <div className="mt-auto p-5 bg-purple-50 rounded-2xl space-y-4">
