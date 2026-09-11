@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   verification: {
-    google: "pW4_Pe0n4ElheXJSj5w1E3gdH52nCcnb5RjIIJ00W5Q",
+    google: "Knxl7w2G3xxLiE3Tw4OrLQoEKVxfTCM-5xZiCoUsVXk",
   },
 };
 
@@ -43,6 +43,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <Script id="google-tag-manager-2" strategy="beforeInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-MZR4WVL2');
+          `}
+        </Script>
         <CanonicalTag />
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`
@@ -68,10 +77,18 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-white flex flex-col min-h-screen`}>
         <noscript>
-          <iframe 
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-MZR4WVL2"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        <noscript>
+          <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-FVTSWDVH"
-            height="0" 
-            width="0" 
+            height="0"
+            width="0"
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
