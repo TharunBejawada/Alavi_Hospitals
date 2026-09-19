@@ -129,7 +129,7 @@ export default function WelcomePopup() {
                 alt="Alavi Hospitals"
                 width={176}
                 height={118}
-                className="mb-4 h-auto w-[140px] md:w-[160px] object-contain"
+                className="mb-4 h-auto w-[140px] md:w-[160px] object-contain origin-left scale-x-125"
               />
 
               <h2 className="text-[32px] md:text-[38px] leading-[1.15] font-bold mb-3">
@@ -215,8 +215,8 @@ export default function WelcomePopup() {
             {/* RIGHT: Doctor photo over a soft brand-gradient backdrop */}
             <div className="hidden md:block relative bg-[#FAFAFA] overflow-hidden">
               <div
-                className="absolute -right-16 top-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full"
-                style={{ background: "radial-gradient(circle, rgba(102,51,153,0.35) 0%, rgba(102,51,153,0) 70%)" }}
+                className="absolute -right-[350px] top-1/2 -translate-y-1/2 w-[827.12px] h-[827.12px] rounded-full"
+                style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, #663399 147.98%)" }}
               />
               <Image
                 src="/welcome-popup-doctor.webp"
