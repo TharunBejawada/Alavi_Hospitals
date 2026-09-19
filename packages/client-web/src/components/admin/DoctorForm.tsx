@@ -15,9 +15,9 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
 
   const [doctor, setDoctor] = useState({
     name: "", qualification: "", experience: "",
-    location: "", department: "", priorityOrder: "", 
+    location: "", department: "", priorityOrder: "",
     image: "", seoTitle: "", metaDescription: "", metaKeywords: "", url: "",
-    enabled: true
+    enabled: true, isManagement: false
   });
   
   const [extraFields, setExtraFields] = useState([{ heading: "", description: "" }]);
@@ -57,7 +57,8 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
             metaDescription: data.metaDescription || "",
             metaKeywords: data.metaKeywords || "",
             url: data.url || "",
-            enabled: data.enabled ?? true
+            enabled: data.enabled ?? true,
+            isManagement: data.isManagement ?? false
           });
 
           setExtraFields(data.extraFields?.length ? data.extraFields : [{ heading: "", description: "" }]);
@@ -236,6 +237,18 @@ export default function DoctorForm({ editId = null }: { editId?: string | null }
                 <input type="number" name="priorityOrder" value={doctor.priorityOrder} onChange={handleChange} placeholder="Priority Order (Lower shows first)" className={inputClass} min="1" step="1" />
               </div>
             </div>
+
+            <label className="flex items-center gap-3 cursor-pointer bg-[#F8F6FA] px-5 py-3.5 rounded-xl w-fit mt-5">
+              <input
+                type="checkbox"
+                checked={doctor.isManagement}
+                onChange={(e) => setDoctor({ ...doctor, isManagement: e.target.checked })}
+                className="w-5 h-5 rounded border-gray-300 text-[#5B328C] focus:ring-[#5B328C] cursor-pointer accent-[#5B328C]"
+              />
+              <span className="text-sm font-bold text-gray-700">
+                Management / Board of Directors (always shown first, ahead of Priority Order)
+              </span>
+            </label>
           </div>
 
           {/* SECTION 2: Extra Fields (Dynamic) */}

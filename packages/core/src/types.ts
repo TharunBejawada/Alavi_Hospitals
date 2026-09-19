@@ -52,6 +52,9 @@ export interface Doctor {
   experience?: string;
   location?: string;
   priorityOrder?: number;
+  // When true, this doctor is shown ahead of all non-management doctors on
+  // the Home page and Doctors listing, mirroring the About page's Leadership order.
+  isManagement?: boolean;
   image?: string;
   seoTitle?: string;
   metaDescription?: string;

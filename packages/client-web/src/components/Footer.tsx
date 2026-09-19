@@ -16,9 +16,16 @@ const socialLinks = [
   { icon: <FaWhatsapp />, href: "https://wa.me/9603911911" },
 ];
 
+const googleSearchUrl = (query: string) =>
+  `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+
 const BRANCH_MAP_URLS = {
-  idpl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.321!2d78.435!3d17.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1sen!2sin!4v1",
-  chinthal: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.321!2d78.435!3d17.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1sen!2sin!4v2",
+  idpl: googleSearchUrl(
+    "Alavi Multi Speciality Hospital IDPL, 12-234, Adarsh Nagar, Opp. IDPL Colony, Balanagar, Secunderabad, Hyderabad, Telangana 500037"
+  ),
+  chinthal: googleSearchUrl(
+    "Alavi Multi Speciality Hospital Chinthal, 5-120/2, Jeedimetla Main Road, Shiva Nagar, Chinthal, Hyderabad, Telangana 500054"
+  ),
 };
 
 const Footer = () => {
@@ -89,6 +96,19 @@ const Footer = () => {
                 is committed to delivering expert and compassionate healthcare. We specialize in
                 women's health, pediatrics and a wide range of medical conditions.
               </p>
+            </div>
+            <div className="flex items-center gap-4 text-white text-base">
+              {socialLinks.map((social, index) => (
+                <Link
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#E59A1D] hover:scale-110 transition-all duration-300"
+                >
+                  {social.icon}
+                </Link>
+              ))}
             </div>
           </div>
 
@@ -211,36 +231,16 @@ const Footer = () => {
       </div>
 
       {/* --- BOTTOM COPYRIGHT BAR --- */}
-      <div className="bg-[#5B328C] py-5 px-4 border-t border-white/10">
-        <div className="max-w-[1440px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-white text-base order-2 md:order-1">
-            {socialLinks.map((social, index) => (
-              <Link
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[#E59A1D] hover:scale-110 transition-all duration-300"
-              >
-                {social.icon}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex flex-col items-center order-1 md:order-2">
-            <p className="text-[12px] md:text-[13px] font-bold tracking-[0.1em] uppercase text-center">
-              Copyright © {currentYear} . ALAVI HOSPITALS . All Rights Reserved
-            </p>
-            <Link className="text-sm font-medium justify-center hover:text-[#E59A1D] transition-colors flex gap-1.5 mt-3" title="Admin Dashboard Login" href="/admin/login">
-              <svg className="w-4 h-4 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-              </svg>
-              Admin Portal
-            </Link>
-          </div>
-
-          <div className="hidden md:block md:w-[100px] order-3" />
-        </div>
+      <div className="bg-[#5B328C] py-5 text-center border-t border-white/10">
+        <p className="text-[12px] md:text-[13px] font-bold tracking-[0.1em] uppercase px-4">
+          Copyright © {currentYear} . ALAVI HOSPITALS . All Rights Reserved
+        </p>
+        <Link className="text-sm font-medium justify-center hover:text-[#E59A1D] transition-colors flex gap-1.5 mt-3" title="Admin Dashboard Login" href="/admin/login">
+          <svg className="w-4 h-4 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+          Admin Portal
+        </Link>
       </div>
     </footer>
   );

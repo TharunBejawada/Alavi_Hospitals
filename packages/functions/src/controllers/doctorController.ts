@@ -6,22 +6,14 @@ import { v4 as uuidv4 } from "uuid";
 // Initialize S3 Client
 const s3 = new S3Client({ region: AWS_REGION });
 
-// Board of Directors / Management, in the same order they appear on the
-// About page's Leadership section — shown ahead of all other doctors.
-const MANAGEMENT_NAMES = [
-  "Dr. M. Chandra Sekhar",
-  "Dr. M. Pradeep Reddy",
-  "Dr. B. Kalyani",
-  "Dr. Srinivasa Rao Mallampati",
-];
-
+// Doctors flagged as Management (via the admin form's "isManagement" toggle)
+// are shown ahead of all other doctors, matching the About page's Leadership
+// section. Within each group, doctors are ordered by priorityOrder.
 const sortDoctors = (doctors: any[]) => {
   doctors.sort((a, b) => {
-    const aRank = MANAGEMENT_NAMES.indexOf(a.name);
-    const bRank = MANAGEMENT_NAMES.indexOf(b.name);
-    if (aRank !== -1 || bRank !== -1) {
-      return (aRank === -1 ? MANAGEMENT_NAMES.length : aRank) - (bRank === -1 ? MANAGEMENT_NAMES.length : bRank);
-    }
+    const aIsMgmt = a.isManagement ? 0 : 1;
+    const bIsMgmt = b.isManagement ? 0 : 1;
+    if (aIsMgmt !== bIsMgmt) return aIsMgmt - bIsMgmt;
     return (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99);
   });
   return doctors;
