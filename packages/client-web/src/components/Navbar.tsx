@@ -57,6 +57,7 @@ const Header = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
   const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -64,8 +65,21 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- Google Translate Setup ---
+  // Admin pages should never be translated — force English and clear the
+  // cookie so a translation picked on the public site doesn't carry over.
   useEffect(() => {
+    if (!isAdminRoute) return;
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+    if (select && select.value !== "en") {
+      select.value = "en";
+      select.dispatchEvent(new Event("change"));
+    }
+  }, [isAdminRoute]);
+
+  // --- Google Translate Setup (skipped entirely on admin pages) ---
+  useEffect(() => {
+    if (isAdminRoute) return;
     if (document.getElementById("google-translate-script")) return;
 
     window.googleTranslateElementInit = () => {
@@ -84,7 +98,7 @@ const Header = () => {
     // Restore previously selected language (Google stores it in a cookie).
     const match = document.cookie.match(/googtrans=\/en\/(\w+)/);
     if (match) setCurrentLang(match[1]);
-  }, []);
+  }, [isAdminRoute]);
 
   const changeLanguage = (langCode: string) => {
     setCurrentLang(langCode);
@@ -142,49 +156,51 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Language Selector */}
-          <div
-            className="relative notranslate"
-            onMouseEnter={() => setIsLangOpen(true)}
-            onMouseLeave={() => setIsLangOpen(false)}
-          >
-            <button className="flex items-center gap-2 bg-[#5B328C] text-white px-5 xl:px-6 py-3 rounded-full text-[13px] xl:text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
-              {LANGUAGES.find((l) => l.code === currentLang)?.label || "English"}
-              <HiChevronDown size={18} className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
-            </button>
+          {/* Language Selector (not shown on admin pages) */}
+          {!isAdminRoute && (
+            <div
+              className="relative notranslate"
+              onMouseEnter={() => setIsLangOpen(true)}
+              onMouseLeave={() => setIsLangOpen(false)}
+            >
+              <button className="flex items-center gap-2 bg-[#5B328C] text-white px-5 xl:px-6 py-3 rounded-full text-[13px] xl:text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
+                {LANGUAGES.find((l) => l.code === currentLang)?.label || "English"}
+                <HiChevronDown size={18} className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
+              </button>
 
-            <AnimatePresence>
-              {isLangOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 pt-3 z-50"
-                >
-                  <ul className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 w-[160px]">
-                    {LANGUAGES.map((lang) => (
-                      <li key={lang.code}>
-                        <button
-                          type="button"
-                          onClick={() => changeLanguage(lang.code)}
-                          className={`block w-full text-left px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
-                            currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
-                          }`}
-                        >
-                          {lang.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              <AnimatePresence>
+                {isLangOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full right-0 pt-3 z-50"
+                  >
+                    <ul className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 w-[160px]">
+                      {LANGUAGES.map((lang) => (
+                        <li key={lang.code}>
+                          <button
+                            type="button"
+                            onClick={() => changeLanguage(lang.code)}
+                            className={`block w-full text-left px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
+                              currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                            }`}
+                          >
+                            {lang.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
 
         {/* Hidden container required by the Google Website Translator widget */}
-        <div id="google_translate_element" className="hidden" />
+        {!isAdminRoute && <div id="google_translate_element" className="hidden" />}
 
 
         {/* Mobile Toggle Button */}
