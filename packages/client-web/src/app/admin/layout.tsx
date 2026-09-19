@@ -53,7 +53,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isAuthorized) return null;
 
   if (pathname === "/admin/login") {
-    return <>{children}</>;
+    // notranslate + translate="no" stop Google Translate from touching this
+    // subtree at all — if a translation from the public site is still active
+    // when this page paints, Google's DOM rewriting fights with React's own
+    // updates (e.g. the Sign In button's loading state) and throws.
+    return (
+      <div className="notranslate" translate="no">
+        {children}
+      </div>
+    );
   }
 
   const menu = [
@@ -73,8 +81,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
-      
+    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900 notranslate" translate="no">
+
       {/* MOBILE HEADER (Visible only on small screens) */}
       <div className="md:hidden fixed top-0 left-0 w-full bg-[#0F172A] text-white z-50 p-4 flex justify-between items-center">
         <span className="font-bold">Alavi Hospitals Admin</span>

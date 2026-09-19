@@ -65,19 +65,10 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Admin pages should never be translated — force English and clear the
-  // cookie so a translation picked on the public site doesn't carry over.
-  useEffect(() => {
-    if (!isAdminRoute) return;
-    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-    if (select && select.value !== "en") {
-      select.value = "en";
-      select.dispatchEvent(new Event("change"));
-    }
-  }, [isAdminRoute]);
-
   // --- Google Translate Setup (skipped entirely on admin pages) ---
+  // Admin pages are additionally wrapped in a `notranslate` element
+  // (see app/admin/layout.tsx) so Google's script never touches that DOM
+  // even if a translation from the public site is already active.
   useEffect(() => {
     if (isAdminRoute) return;
     if (document.getElementById("google-translate-script")) return;
