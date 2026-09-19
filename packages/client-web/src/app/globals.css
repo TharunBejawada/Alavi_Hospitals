@@ -28,3 +28,19 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Google Website Translator: hide its default UI (banner iframe, highlighted
+   spans) so only our custom language dropdown in the Navbar is visible. */
+.goog-te-banner-frame,
+.skiptranslate > iframe {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}

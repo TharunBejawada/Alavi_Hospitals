@@ -197,7 +197,6 @@ function BlogsContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: i * 0.05, duration: 0.4 }}
-                    className={i === 0 ? "md:col-span-2 lg:col-span-2" : ""}
                   >
                     <Link 
                       href={`/blog/${post.url || post.blogId}`} 
