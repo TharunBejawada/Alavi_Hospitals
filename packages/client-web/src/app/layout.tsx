@@ -10,6 +10,7 @@ import FloatingContact from "../components/FloatingContact";
 import FloatingSideNav from "../components/FloatingSideNav";
 import CanonicalTag from "../components/CanonicalTag";
 import MobileBottomNav from '../components/MobileBottomNav';
+import WelcomePopup from "../components/WelcomePopup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -98,6 +99,7 @@ export default function RootLayout({
         <Footer /> 
         <FloatingContact />
         <MobileBottomNav />
+        <WelcomePopup />
         <ToastContainer 
           position="bottom-right" 
           autoClose={3000} 
