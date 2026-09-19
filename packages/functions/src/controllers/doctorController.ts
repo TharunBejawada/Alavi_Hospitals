@@ -6,6 +6,27 @@ import { v4 as uuidv4 } from "uuid";
 // Initialize S3 Client
 const s3 = new S3Client({ region: AWS_REGION });
 
+// Board of Directors / Management, in the same order they appear on the
+// About page's Leadership section — shown ahead of all other doctors.
+const MANAGEMENT_NAMES = [
+  "Dr. M. Chandra Sekhar",
+  "Dr. M. Pradeep Reddy",
+  "Dr. B. Kalyani",
+  "Dr. Srinivasa Rao Mallampati",
+];
+
+const sortDoctors = (doctors: any[]) => {
+  doctors.sort((a, b) => {
+    const aRank = MANAGEMENT_NAMES.indexOf(a.name);
+    const bRank = MANAGEMENT_NAMES.indexOf(b.name);
+    if (aRank !== -1 || bRank !== -1) {
+      return (aRank === -1 ? MANAGEMENT_NAMES.length : aRank) - (bRank === -1 ? MANAGEMENT_NAMES.length : bRank);
+    }
+    return (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99);
+  });
+  return doctors;
+};
+
 // --- 1. CREATE DOCTOR ---
 export const addDoctor = async (req: any, res: any) => {
   try {
@@ -49,9 +70,7 @@ export const getAllDoctors = async (req: any, res: any) => {
   try {
     const result = await db.send(new ScanCommand({ TableName: TABLE_NAME_DOCTORS }));
     
-    // Sort by priorityOrder (lowest number first), defaulting to 99 if missing
-    let doctors = result.Items || [];
-    doctors.sort((a, b) => (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99));
+    let doctors = sortDoctors(result.Items || []);
 
     res.status(200).json({ Items: doctors });
   } catch (error) {
@@ -208,9 +227,7 @@ export const getAllEnabledDoctors = async (req: any, res: any) => {
       }
     }));
     
-    // Sort by priorityOrder (lowest number first), defaulting to 99 if missing
-    let doctors = result.Items || [];
-    doctors.sort((a, b) => (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99));
+    let doctors = sortDoctors(result.Items || []);
 
     res.status(200).json({ Items: doctors });
   } catch (error) {
@@ -237,9 +254,7 @@ export const getDoctorsByDepartment = async (req: any, res: any) => {
       }
     }));
 
-    // Sort by priorityOrder
-    let doctors = result.Items || [];
-    doctors.sort((a, b) => (Number(a.priorityOrder) || 99) - (Number(b.priorityOrder) || 99));
+    let doctors = sortDoctors(result.Items || []);
 
     res.status(200).json({ Items: doctors });
   } catch (error) {

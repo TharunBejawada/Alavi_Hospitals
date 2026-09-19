@@ -36,11 +36,26 @@ const navLinks: {
   { name: "CONTACT US", href: "/contact" },
 ];
 
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "te", label: "Telugu" },
+  { code: "hi", label: "Hindi" },
+];
+
+declare global {
+  interface Window {
+    googleTranslateElementInit?: () => void;
+    google?: any;
+  }
+}
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState("en");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -48,6 +63,47 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // --- Google Translate Setup ---
+  useEffect(() => {
+    if (document.getElementById("google-translate-script")) return;
+
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        { pageLanguage: "en", includedLanguages: "en,te,hi", autoDisplay: false },
+        "google_translate_element"
+      );
+    };
+
+    const script = document.createElement("script");
+    script.id = "google-translate-script";
+    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Restore previously selected language (Google stores it in a cookie).
+    const match = document.cookie.match(/googtrans=\/en\/(\w+)/);
+    if (match) setCurrentLang(match[1]);
+  }, []);
+
+  const changeLanguage = (langCode: string) => {
+    setCurrentLang(langCode);
+    setIsLangOpen(false);
+
+    if (langCode === "en") {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } else {
+      document.cookie = `googtrans=/en/${langCode}; path=/;`;
+    }
+
+    const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+    if (select) {
+      select.value = langCode;
+      select.dispatchEvent(new Event("change"));
+    } else {
+      window.location.reload();
+    }
+  };
 
   return (
     <header className={`w-full z-50 transition-all duration-300 ${isScrolled ? "fixed top-0 bg-white shadow-lg" : "relative bg-white"}`}>
@@ -87,10 +143,49 @@ const Header = () => {
           </div>
 
           {/* Language Selector */}
-          <button className="flex items-center gap-2 bg-[#5B328C] text-white px-5 xl:px-6 py-3 rounded-full text-[13px] xl:text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
-            English <HiChevronDown size={18} />
-          </button>
+          <div
+            className="relative notranslate"
+            onMouseEnter={() => setIsLangOpen(true)}
+            onMouseLeave={() => setIsLangOpen(false)}
+          >
+            <button className="flex items-center gap-2 bg-[#5B328C] text-white px-5 xl:px-6 py-3 rounded-full text-[13px] xl:text-[14px] font-semibold hover:bg-[#4a2873] transition-all">
+              {LANGUAGES.find((l) => l.code === currentLang)?.label || "English"}
+              <HiChevronDown size={18} className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {isLangOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full right-0 pt-3 z-50"
+                >
+                  <ul className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 w-[160px]">
+                    {LANGUAGES.map((lang) => (
+                      <li key={lang.code}>
+                        <button
+                          type="button"
+                          onClick={() => changeLanguage(lang.code)}
+                          className={`block w-full text-left px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
+                            currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                          }`}
+                        >
+                          {lang.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
+
+        {/* Hidden container required by the Google Website Translator widget */}
+        <div id="google_translate_element" className="hidden" />
+
 
         {/* Mobile Toggle Button */}
         <button className="lg:hidden text-[#5B328C] p-2" onClick={() => setIsOpen(!isOpen)}>

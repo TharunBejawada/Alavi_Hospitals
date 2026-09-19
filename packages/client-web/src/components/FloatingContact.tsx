@@ -1,6 +1,7 @@
 "use client";
 
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 export default function FloatingContact() {
@@ -23,7 +24,7 @@ export default function FloatingContact() {
         className="flex items-center justify-center w-12 h-12 bg-green-500 rounded-full text-white shadow-lg hover:bg-green-600 transition-colors"
         aria-label="Chat on WhatsApp"
       >
-        <MessageCircle className="w-7 h-7 fill-current" />
+        <FaWhatsapp className="w-7 h-7" />
       </motion.a>
 
       {/* Call Button */}

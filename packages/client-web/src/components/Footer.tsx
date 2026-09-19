@@ -4,8 +4,22 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa6";
 import { Loader2 } from "lucide-react";
 import { API_URL } from "../config"; // Adjust path as needed
+
+const socialLinks = [
+  { icon: <FaFacebookF />, href: "https://www.facebook.com/alavihosp?rdid=7zrQqR1vGfCsB0U1&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17VZsRjRx6%2F#" },
+  { icon: <FaInstagram />, href: "https://www.instagram.com/alavihospitals_?igsh=OTYxb3llZmZ4OXh5" },
+  { icon: <FaXTwitter />, href: "https://x.com/alavihospitals" },
+  { icon: <FaYoutube />, href: "https://www.youtube.com/@alavihospitals" },
+  { icon: <FaWhatsapp />, href: "https://wa.me/9603911911" },
+];
+
+const BRANCH_MAP_URLS = {
+  idpl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.321!2d78.435!3d17.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1sen!2sin!4v1",
+  chinthal: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.321!2d78.435!3d17.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1sen!2sin!4v2",
+};
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -58,12 +72,12 @@ const Footer = () => {
           {/* COLUMN 1: About */}
           <div className="space-y-6 lg:space-y-8">
             <div>
-              <Image 
-                src="/logo-alavi-old.png" 
-                alt="Alavi Hospitals" 
-                width={280} 
-                height={90} 
-                className="brightness-100 object-contain max-w-full h-auto" 
+              <Image
+                src="/alavi-logo-white.png"
+                alt="Alavi Hospitals"
+                width={280}
+                height={90}
+                className="brightness-100 object-contain max-w-full h-auto"
               />
             </div>
             <div className="space-y-4">
@@ -71,8 +85,8 @@ const Footer = () => {
                 About Alavi Multi Speciality Hospital
               </h3>
               <p className="text-[14px] xl:text-[15px] leading-relaxed text-gray-300 text-justify">
-                Established in March 2024, Alavi Multi Speciality Hospital (formerly Kodali Hospital) 
-                is committed to delivering expert and compassionate healthcare. We specialize in 
+                Established in March 2024, Alavi Multi Speciality Hospital
+                is committed to delivering expert and compassionate healthcare. We specialize in
                 women's health, pediatrics and a wide range of medical conditions.
               </p>
             </div>
@@ -165,18 +179,28 @@ const Footer = () => {
               <div className="space-y-6 pt-2">
                 <div className="flex items-start gap-4">
                   <FaMapMarkerAlt className="text-red-500 mt-1 shrink-0 text-lg" />
-                  <p className="text-[13px] xl:text-[14px] text-gray-300 leading-snug">
+                  <a
+                    href={BRANCH_MAP_URLS.idpl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[13px] xl:text-[14px] text-gray-300 leading-snug hover:text-white transition-colors"
+                  >
                     <span className="font-bold text-white block text-base mb-1">IDPL</span>
                     Branch 1: 12, 234, Adarsh Nagar, Adjeetpura Nagar, Opp: IDPL Colony, Balanagar, Secunderabad, Hyderabad, Telangana - 500037
-                  </p>
+                  </a>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <FaMapMarkerAlt className="text-red-500 mt-1 shrink-0 text-lg" />
-                  <p className="text-[13px] xl:text-[14px] text-gray-300 leading-snug">
+                  <a
+                    href={BRANCH_MAP_URLS.chinthal}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[13px] xl:text-[14px] text-gray-300 leading-snug hover:text-white transition-colors"
+                  >
                     <span className="font-bold text-white block text-base mb-1">Chinthal</span>
                     Branch 2: 5-120/2, Jeedimetla Main Road, HMT Road, Opp: Asian Sha Theater, Shiva Nagar, Chinthal, Hyderabad, Telangana -500054
-                  </p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -187,16 +211,36 @@ const Footer = () => {
       </div>
 
       {/* --- BOTTOM COPYRIGHT BAR --- */}
-      <div className="bg-[#5B328C] py-5 text-center border-t border-white/10">
-        <p className="text-[12px] md:text-[13px] font-bold tracking-[0.1em] uppercase px-4">
-          Copyright © {currentYear} . ALAVI HOSPITALS . All Rights Reserved
-        </p>
-        <Link className="text-sm font-medium justify-center hover:text-[#E59A1D] transition-colors flex gap-1.5 mt-3" title="Admin Dashboard Login" href="/admin/login">
-          <svg className="w-4 h-4 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-          </svg>
-          Admin Portal
-        </Link>
+      <div className="bg-[#5B328C] py-5 px-4 border-t border-white/10">
+        <div className="max-w-[1440px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4 text-white text-base order-2 md:order-1">
+            {socialLinks.map((social, index) => (
+              <Link
+                key={index}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#E59A1D] hover:scale-110 transition-all duration-300"
+              >
+                {social.icon}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-center order-1 md:order-2">
+            <p className="text-[12px] md:text-[13px] font-bold tracking-[0.1em] uppercase text-center">
+              Copyright © {currentYear} . ALAVI HOSPITALS . All Rights Reserved
+            </p>
+            <Link className="text-sm font-medium justify-center hover:text-[#E59A1D] transition-colors flex gap-1.5 mt-3" title="Admin Dashboard Login" href="/admin/login">
+              <svg className="w-4 h-4 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+              Admin Portal
+            </Link>
+          </div>
+
+          <div className="hidden md:block md:w-[100px] order-3" />
+        </div>
       </div>
     </footer>
   );
