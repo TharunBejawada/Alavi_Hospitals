@@ -18,7 +18,8 @@ const CallToAction = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          style={{ background: 'linear-gradient(90deg, #0066A9 -128.06%, #663399 51.87%)' }}
+          // style={{ background: 'linear-gradient(90deg, #0066A9 -128.06%, #663399 51.87%)' }}
+          style={{ background: '#5B328C' }}
           className="rounded-[24px] lg:rounded-[32px] shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch p-8 lg:p-14"
         >
           
