@@ -19,14 +19,17 @@ export const submit: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // 2. CONTEXTUAL VALIDATION: If it's an appointment, demand specific fields
-    const isAppointment = page === "Appointment Popup Window" || speciality || date;
-    if (isAppointment && (!speciality || !date)) {
+    // 2. CONTEXTUAL VALIDATION: only the full appointment form collects a
+    // preferred date, so only it should require one. Lighter-weight lead
+    // forms (e.g. the welcome popup) may include a department without a date.
+    const isFullAppointmentForm = page === "Appointment Popup Window";
+    if (isFullAppointmentForm && (!speciality || !date)) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "Department and Preferred Date are required for appointments." }),
       };
     }
+    const isAppointment = Boolean(speciality || date || doctor);
 
     const id = uuidv4();
     const timestamp = new Date().toISOString();
@@ -68,9 +71,9 @@ export const submit: APIGatewayProxyHandler = async (event) => {
 
     if (isAppointment) {
       emailHtml += `
-        <p><strong>Department/Specialty:</strong> ${speciality}</p>
+        <p><strong>Department/Specialty:</strong> ${speciality || "Not specified"}</p>
         <p><strong>Preferred Doctor:</strong> ${doctor || "Any Available Doctor"}</p>
-        <p><strong>Preferred Date:</strong> ${date}</p>
+        ${date ? `<p><strong>Preferred Date:</strong> ${date}</p>` : ""}
         <p><strong>Reason for Visit:</strong><br/>${reason || "Not provided."}</p>
       `;
     }
