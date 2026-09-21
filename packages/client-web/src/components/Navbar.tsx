@@ -28,6 +28,7 @@ const navLinks: {
       { name: "Insurance & TPA", href: "/insurance" },
       { name: "Vaccination", href: "/vaccinations" },
       { name: "Patient and Visitor Guidelines", href: "/patient-visitor-guidelines" },
+      { name: "Admission Guidelines", href: "/admission-guidelines" },
       { name: "News & Media", href: "/news-media" },
       { name: "Gallery", href: "/gallery" },
       { name: "Virtual Tour", href: "/virtual-tour" },

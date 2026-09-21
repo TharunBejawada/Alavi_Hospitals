@@ -111,7 +111,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[1000px] max-h-[90vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
+            className="relative w-full max-w-[800px] max-h-[60vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
           >
             <button
               onClick={handleClose}
@@ -124,13 +124,13 @@ export default function WelcomePopup() {
 
             {/* LEFT: Logo, copy, form */}
             <div className="p-6 md:p-10 overflow-y-auto custom-scrollbar">
-              <Image
+              {/* <Image
                 src="/welcome-popup-logo.png"
                 alt="Alavi Hospitals"
                 width={176}
                 height={118}
                 className="mb-4 h-auto w-[140px] md:w-[160px] object-contain origin-left scale-x-125"
-              />
+              /> */}
 
               <h2 className="text-[32px] md:text-[38px] leading-[1.15] font-bold mb-3">
                 <span className="text-black">Book Your </span>
@@ -215,7 +215,7 @@ export default function WelcomePopup() {
             {/* RIGHT: Doctor photo over a soft brand-gradient backdrop */}
             <div className="hidden md:block relative bg-[#FAFAFA] overflow-hidden">
               <div
-                className="absolute -right-[350px] top-1/2 -translate-y-1/2 w-[827.12px] h-[827.12px] rounded-full"
+                className="absolute -right-[350px] top-1/20 -translate-y-1/2 w-[678.12px] h-[778.12px] rounded-full"
                 style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, #663399 147.98%)" }}
               />
               <Image
