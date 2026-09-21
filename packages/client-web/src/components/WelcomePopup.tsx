@@ -100,7 +100,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={!isSubmitting ? handleClose : undefined}
-            className="absolute inset-0 bg-black/10"
+            className="absolute inset-0 bg-black/30"
           />
 
           <motion.div
@@ -108,7 +108,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[720px] max-h-[54vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
+            className="relative w-full max-w-[880px] max-h-[92vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
           >
             <button
               onClick={handleClose}
