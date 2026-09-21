@@ -99,8 +99,7 @@ export default function WelcomePopup() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={!isSubmitting ? handleClose : undefined}
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-black/50"
           />
 
           <motion.div
@@ -108,7 +107,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[880px] max-h-[92vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
+            className="relative w-full max-w-[780px] max-h-[92vh] bg-[#FAFAFA] rounded-[20px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
           >
             <button
               onClick={handleClose}
@@ -120,7 +119,7 @@ export default function WelcomePopup() {
             </button>
 
             {/* LEFT: Logo, copy, form */}
-            <div className="p-6 md:p-10 overflow-y-auto custom-scrollbar">
+            <div className="p-5 md:p-8 overflow-y-auto custom-scrollbar">
               {/* <Image
                 src="/welcome-popup-logo.png"
                 alt="Alavi Hospitals"
@@ -129,23 +128,23 @@ export default function WelcomePopup() {
                 className="mb-4 h-auto w-[140px] md:w-[160px] object-contain origin-left scale-x-125"
               /> */}
 
-              <h2 className="text-[32px] md:text-[38px] leading-[1.15] font-bold mb-3">
+              <h2 className="text-[26px] md:text-[30px] leading-[1.15] font-bold mb-2">
                 <span className="text-black">Book Your </span>
                 <br />
                 <span className="text-[#663399]">Appointment</span>
               </h2>
-              <p className="text-[16px] md:text-[18px] font-medium text-black mb-6">
+              <p className="text-[14px] md:text-[16px] font-medium text-black mb-4">
                 Get expert care from our specialists.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your name"
                   required
-                  className="w-full h-[52px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black placeholder:text-black/40"
+                  className="w-full h-[44px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black placeholder:text-black/40"
                 />
                 <input
                   type="tel"
@@ -153,7 +152,7 @@ export default function WelcomePopup() {
                   onChange={(e) => setMobile(e.target.value)}
                   placeholder="Phone Number"
                   required
-                  className="w-full h-[52px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black placeholder:text-black/40"
+                  className="w-full h-[44px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black placeholder:text-black/40"
                 />
                 <select
                   value={speciality}
@@ -161,7 +160,7 @@ export default function WelcomePopup() {
                     setSpeciality(e.target.value);
                     setSelectedDoctor("");
                   }}
-                  className="w-full h-[52px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black/40 focus:text-black"
+                  className="w-full h-[44px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black/40 focus:text-black"
                 >
                   <option value="">Department / Specialty</option>
                   {specialities.map((spec) => (
@@ -173,7 +172,7 @@ export default function WelcomePopup() {
                 <select
                   value={selectedDoctor}
                   onChange={(e) => setSelectedDoctor(e.target.value)}
-                  className="w-full h-[52px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black/40 focus:text-black"
+                  className="w-full h-[44px] bg-white border border-[#663399]/40 rounded-[8px] px-5 outline-none focus:ring-2 focus:ring-[#663399]/50 transition-all text-black/40 focus:text-black"
                 >
                   <option value="">Select Doctor</option>
                   {filteredDoctors.map((doc) => (
@@ -186,7 +185,7 @@ export default function WelcomePopup() {
                 <button
                   type="submit"
                   disabled={!isFormValid || isSubmitting}
-                  className={`w-full h-[52px] bg-[#663399] rounded-[8px] text-white font-semibold text-[18px] flex items-center justify-center gap-3 transition-all shadow-md tracking-wide ${
+                  className={`w-full h-[44px] bg-[#663399] rounded-[8px] text-white font-semibold text-[18px] flex items-center justify-center gap-3 transition-all shadow-md tracking-wide ${
                     isFormValid && !isSubmitting ? "hover:opacity-90" : "opacity-50 cursor-not-allowed"
                   }`}
                 >
@@ -204,7 +203,7 @@ export default function WelcomePopup() {
                 </button>
               </form>
 
-              <p className="text-[14px] md:text-[15px] font-medium text-black mt-4">
+              <p className="text-[13px] md:text-[14px] font-medium text-black mt-3">
                 Our team will contact you shortly to confirm your appointment.
               </p>
             </div>
