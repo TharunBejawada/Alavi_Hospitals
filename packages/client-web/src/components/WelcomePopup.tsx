@@ -44,21 +44,18 @@ export default function WelcomePopup() {
     return () => clearTimeout(timer);
   }, [isAdminRoute]);
 
+  // Deliberately doesn't lock body scroll: the page should stay fully
+  // scrollable/visible behind the popup. Closing (X, or a click outside the
+  // card) is still required before interacting with the page underneath.
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
       axios.get(`${API_URL}/api/specialities/getAllEnabledSpecialities`)
         .then((res) => setSpecialities(res.data.Items || []))
         .catch((err) => console.error("Failed to load specialities:", err));
       axios.get(`${API_URL}/api/doctors/getAllEnabledDoctors`)
         .then((res) => setDoctors(res.data.Items || []))
         .catch((err) => console.error("Failed to load doctors:", err));
-    } else {
-      document.body.style.overflow = "unset";
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
   }, [isOpen]);
 
   const filteredDoctors = speciality
@@ -103,7 +100,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={!isSubmitting ? handleClose : undefined}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/10"
           />
 
           <motion.div
@@ -111,7 +108,7 @@ export default function WelcomePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[800px] max-h-[60vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
+            className="relative w-full max-w-[720px] max-h-[54vh] bg-[#FAFAFA] rounded-[24px] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
           >
             <button
               onClick={handleClose}
@@ -215,7 +212,7 @@ export default function WelcomePopup() {
             {/* RIGHT: Doctor photo over a soft brand-gradient backdrop */}
             <div className="hidden md:block relative bg-[#FAFAFA] overflow-hidden">
               <div
-                className="absolute -right-[350px] top-1/20 -translate-y-1/2 w-[678.12px] h-[778.12px] rounded-full"
+                className="absolute -right-[350px] top-1/2 -translate-y-1/2 w-[678.12px] h-[778.12px] rounded-full"
                 style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, #663399 147.98%)" }}
               />
               <Image
