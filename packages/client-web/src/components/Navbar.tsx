@@ -13,29 +13,29 @@ const navLinks: {
   href: string;
   children?: { name: string; href: string }[];
 }[] = [
-  { name: "HOME", href: "/" },
-  { name: "ABOUT US", href: "/about" },
-  { name: "SPECIALITIES", href: "/specialities" },
-  { name: "DOCTORS", href: "/doctors" },
-  { name: "SECOND OPINION", href: "/second-opinion" },
-  { name: "HEALTH PACKAGES", href: "/health-packages" },
-  { name: "BLOG", href: "/blog" },
-  {
-    name: "FOR PATIENTS",
-    href: "/patients",
-    children: [
-      { name: "Patient Rights & Responsibilities", href: "/patients" },
-      { name: "Insurance & TPA", href: "/insurance" },
-      { name: "Vaccination", href: "/vaccinations" },
-      { name: "Patient and Visitor Guidelines", href: "/patient-visitor-guidelines" },
-      { name: "Admission Guidelines", href: "/admission-guidelines" },
-      { name: "News & Media", href: "/news-media" },
-      { name: "Gallery", href: "/gallery" },
-      { name: "Virtual Tour", href: "/virtual-tour" },
-    ],
-  },
-  { name: "CONTACT US", href: "/contact" },
-];
+    { name: "HOME", href: "/" },
+    { name: "ABOUT US", href: "/about" },
+    { name: "SPECIALITIES", href: "/specialities" },
+    { name: "DOCTORS", href: "/doctors" },
+    { name: "SECOND OPINION", href: "/second-opinion" },
+    { name: "HEALTH PACKAGES", href: "/health-packages" },
+    { name: "BLOG", href: "/blog" },
+    {
+      name: "FOR PATIENTS",
+      href: "/patients",
+      children: [
+        { name: "Patient Rights & Responsibilities", href: "/patients" },
+        { name: "Insurance & TPA", href: "/insurance" },
+        { name: "Vaccination", href: "/vaccinations" },
+        { name: "Patient and Visitor Guidelines", href: "/patient-visitor-guidelines" },
+        { name: "Admission Guidelines", href: "/admission-guidelines" },
+        { name: "News & Media", href: "/news-media" },
+        { name: "Gallery", href: "/gallery" },
+        { name: "Virtual Tour", href: "/virtual-tour" },
+      ],
+    },
+    { name: "CONTACT US", href: "/contact" },
+  ];
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -112,20 +112,20 @@ const Header = () => {
   };
 
   return (
-    <header className={`w-full z-50 transition-all duration-300 ${isScrolled ? "fixed top-0 bg-white shadow-lg" : "relative bg-white"}`}>
-      
+    <header className={`w-full z-50 sticky top-0 bg-white transition-shadow duration-300 ${isScrolled ? "shadow-lg" : ""}`}>
+
       {/* --- TOP SECTION (Logo & Purple Contact Pill) --- */}
       {/* Increased padding: px-8 md:px-12 xl:px-16 and py-5 */}
       <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16 py-5 flex justify-between items-center">
-        
+
         {/* Added min-w-[220px] to strictly prevent logo shrinking */}
         <Link href="/" className="flex-shrink-0 min-w-[220px] mr-4">
-          <Image 
-            src="/logo-alavi.png" 
-            alt="Alavi Hospitals" 
-            width={220} 
-            height={65} 
-            priority 
+          <Image
+            src="/logo-alavi.png"
+            alt="Alavi Hospitals"
+            width={220}
+            height={65}
+            priority
           />
         </Link>
 
@@ -135,7 +135,7 @@ const Header = () => {
             <div className="flex items-center gap-2 border-r border-purple-400/50 pr-4 xl:pr-6">
               <span className="text-purple-200 font-normal">IDPL :</span>
               <a href="tel:9603911911" className="flex items-center gap-2 hover:text-purple-200">
-                <FaPhoneAlt size={12} className="text-white" /> 
+                <FaPhoneAlt size={12} className="text-white" />
                 9603 911 911
               </a>
             </div>
@@ -175,9 +175,8 @@ const Header = () => {
                           <button
                             type="button"
                             onClick={() => changeLanguage(lang.code)}
-                            className={`block w-full text-left px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
-                              currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
-                            }`}
+                            className={`block w-full text-left px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                              }`}
                           >
                             {lang.label}
                           </button>
@@ -220,9 +219,8 @@ const Header = () => {
                   >
                     <button
                       type="button"
-                      className={`flex items-center gap-1 text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
-                        isActive ? "text-[#5B328C]" : "text-gray-800"
-                      }`}
+                      className={`flex items-center gap-1 text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${isActive ? "text-[#5B328C]" : "text-gray-800"
+                        }`}
                     >
                       {link.name}
                       <HiChevronDown
@@ -246,9 +244,8 @@ const Header = () => {
                               <li key={child.name}>
                                 <Link
                                   href={child.href}
-                                  className={`block px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${
-                                    pathname === child.href ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
-                                  }`}
+                                  className={`block px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${pathname === child.href ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                                    }`}
                                 >
                                   {child.name}
                                 </Link>
@@ -266,9 +263,8 @@ const Header = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className={`text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${
-                      isActive ? "text-[#5B328C]" : "text-gray-800"
-                    }`}
+                    className={`text-[11px] lg:text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-300 hover:text-[#5B328C] relative group whitespace-nowrap ${isActive ? "text-[#5B328C]" : "text-gray-800"
+                      }`}
                   >
                     {link.name}
                     <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#5B328C] transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : ""}`}></span>
@@ -284,12 +280,12 @@ const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-black/60 z-[60] lg:hidden backdrop-blur-sm"
             />
-            <motion.div 
+            <motion.div
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed right-0 top-0 h-full w-[300px] bg-white z-[70] shadow-2xl p-6 lg:hidden flex flex-col"
@@ -308,9 +304,8 @@ const Header = () => {
                         <button
                           type="button"
                           onClick={() => setMobileExpanded(isExpanded ? null : link.name)}
-                          className={`flex items-center justify-between w-full text-[16px] font-bold ${
-                            isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#5B328C]" : "text-gray-700"
-                          }`}
+                          className={`flex items-center justify-between w-full text-[16px] font-bold ${isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#5B328C]" : "text-gray-700"
+                            }`}
                         >
                           {link.name}
                           <HiChevronDown size={18} className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />

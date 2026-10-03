@@ -1,78 +1,49 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
-const AboutConclusion = () => {
+const AboutConclusion: React.FC = () => {
   return (
-    <section className="py-16 pb-24 bg-[#FAFAFA] px-4 lg:px-12">
-      <div className="container mx-auto max-w-6xl">
-        
-        {/* Commitment to Community Health Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 bg-[#E7D8F5]/20 w-full p-4 lg:p-8 rounded-[8px]">
-          
-          {/* Left Text */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-[#5B328C] text-2xl lg:text-3xl font-bold mb-6">
-              Commitment to Community Health
-            </h2>
-            <p className="text-gray-800 leading-relaxed text-[15px] lg:text-[16px] mb-6">
-              At Alavi Hospitals, our responsibility extends beyond hospital walls. We actively contribute to the health and well-being of the community through regular health awareness programs and medical camps.
-            </p>
-            <p className="text-gray-800 leading-relaxed text-[15px] lg:text-[16px]">
-              Through these initiatives, we strive to ensure that quality healthcare remains accessible and beneficial to the broader community.
-            </p>
-          </motion.div>
-
-          {/* Right Cards */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6"
-          >
-            <div className="bg-white p-6 lg:p-8 rounded-[16px] shadow-sm border border-purple-50">
-              <h3 className="text-[#5B328C] font-bold text-[17px] mb-2">Free Gynecology Camp</h3>
-              <p className="text-gray-600 text-[14px] leading-relaxed">
-                Conducted on the 9th of every month, providing accessible women's healthcare.
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 lg:p-8 rounded-[16px] shadow-sm border border-purple-50">
-              <h3 className="text-[#5B328C] font-bold text-[17px] mb-2">Multi-Specialty Health Camps</h3>
-              <p className="text-gray-600 text-[14px] leading-relaxed">
-                Regular community camps promoting preventive healthcare and early diagnosis.
-              </p>
-            </div>
-          </motion.div>
-          
-        </div>
-
-        {/* Building a Healthier Future Together Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+    <section className="py-12 sm:py-16 bg-white px-4 sm:px-6 lg:px-12 overflow-hidden">
+      <div className="max-w-[1240px] mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto bg-[#F6FBFF] w-full p-4 lg:p-8 rounded-[8px]"
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative w-full rounded-[24px] sm:rounded-[32px] overflow-hidden bg-[#FAFCFF] border border-[#E9F2FA] shadow-sm flex flex-col lg:flex-row items-center min-h-[340px] lg:min-h-[380px]"
         >
-          <h2 className="text-[#5B328C] text-2xl lg:text-3xl font-bold mb-6">
-            Building a Healthier Future Together
-          </h2>
-          <p className="text-gray-800 leading-relaxed text-[15px] lg:text-[16px] mb-6">
-            At Alavi Hospitals, we believe healthcare is about more than treatment, it is about building trust, improving lives, and creating healthier communities. With experienced doctors, modern facilities and a strong commitment to patient care, we continue to grow as a reliable healthcare partner for families and individuals.
-          </p>
-          <p className="text-gray-800 leading-relaxed text-[15px] lg:text-[16px]">
-            As we look toward the future, Alavi Hospitals remains dedicated to expanding its services, advancing medical technologies and strengthening its commitment to delivering exceptional healthcare for every patient who walks through our doors.
-          </p>
-        </motion.div>
+          {/* Left Text Content Area */}
+          <div className="w-full lg:w-[56%] p-6 sm:p-10 lg:p-12 z-20 flex flex-col justify-center">
+            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#5B328C] leading-tight mb-4 sm:mb-5">
+              Caring Beyond Hospital Walls
+            </h2>
 
+            <p className="text-gray-800 text-sm sm:text-base lg:text-[16px] leading-relaxed font-medium mb-4">
+              Through regular health camps, awareness programs, and preventive healthcare initiatives, we strive to build healthier communities.
+            </p>
+
+            <p className="text-gray-600 text-sm sm:text-base lg:text-[16px] leading-relaxed">
+              At Alavi Hospitals, we believe healthcare is about more than treatment. It is about building trust, improving lives, and caring for every patient with dedication and compassion.
+            </p>
+          </div>
+
+          {/* Right Image Area using high-res caring_beyond_image.png */}
+          <div className="relative w-full lg:w-[48%] h-[260px] sm:h-[320px] lg:h-[380px] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 z-10 overflow-hidden">
+            {/* Soft left gradient fade for seamless integration */}
+            <div className="hidden lg:block absolute inset-y-0 left-0 w-36 bg-gradient-to-r from-[#FAFCFF] via-[#FAFCFF]/80 to-transparent z-10 pointer-events-none" />
+
+            <Image
+              src="/caring_beyond_image.png"
+              alt="Caring Beyond Hospital Walls - Alavi Hospitals Nurse caring for senior patient"
+              fill
+              className="object-cover object-center lg:object-right"
+              priority
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );

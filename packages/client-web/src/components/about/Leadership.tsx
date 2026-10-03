@@ -3,169 +3,163 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
 
-const leaders = [
-  {
-    name: "Dr. M. Chandra Sekhar",
-    role: "Managing Director",
-    image: "/dr-chandra-sekhar.jpg",
-    alignment: "left",
-    content: (
-      <>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          <strong className="text-[#5B328C]">Dr. M. Chandra Sekhar</strong>, the Managing Director, is an experienced General Physician and Diabetologist with over 19 years of medical expertise.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          Holding qualifications including MBBS, PGDHSc, PG Diploma in Clinical Endocrinology & Diabetes, and Post Graduation in Diabetology, he has dedicated his career to advancing patient care and managing complex medical conditions.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
-          His philosophy, <span className="text-[#5B328C] font-semibold">“Redefining Care, Inspiring Wellness,”</span> reflects his commitment to improving patient outcomes and promoting healthier lifestyles through quality medical care.
-        </p>
-      </>
-    ),
-  },
+interface BottomDoctor {
+  name: string;
+  role: string;
+  image: string;
+  experience: string;
+  intro: string;
+  detail: string;
+}
+
+const bottomDoctors: BottomDoctor[] = [
   {
     name: "Dr. M. Pradeep Reddy",
     role: "Director",
     image: "/dr-pradeep.jpg",
-    alignment: "right",
-    content: (
-      <>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          <strong className="text-[#5B328C]">Dr. M. Pradeep Reddy</strong>, Director, is a specialist in Pediatrics and Neonatology with 16 years of experience in child healthcare.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          Holding qualifications of MBBS and MD in Pediatrics, he is dedicated to ensuring the healthy growth and development of infants and children.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
-          His commitment to pediatric care ensures that young patients receive specialized treatment in a safe and supportive environment.
-        </p>
-      </>
-    ),
+    experience: "19+",
+    intro: "Director, is a specialist in Pediatrics and Neonatology with 16 years of experience in child healthcare.",
+    detail: "Holding qualifications of MBBS and MD in Pediatrics, he is dedicated to ensuring the healthy growth and development of infants and children.",
   },
   {
     name: "Dr. B. Kalyani",
     role: "Director",
-    image: "/dr-kalyani.jpg",
-    alignment: "left",
-    content: (
-      <>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          <strong className="text-[#5B328C]">Dr. B. Kalyani</strong>, Director at Alavi Hospitals, is a renowned Obstetrician, Gynecologist, and Infertility Specialist with 19 years of experience in women’s healthcare.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          She holds qualifications including MBBS, DGO, DRM (Germany), Fellowship in Reproductive Medicine (IMA), and Fellowship in Laparoscopy. Dr. Kalyani is widely respected for her dedication to maternal health and fertility care.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
-          Her motto, <span className="text-[#5B328C] font-semibold">“Compassionate Care for Every Stage of Womanhood,”</span> reflects her commitment to supporting women’s health at every stage of life.
-        </p>
-      </>
-    ),
+    image: "/doctors/kalyani.png",
+    experience: "19+",
+    intro: "Director at Alavi Hospitals, is a renowned Obstetrician, Gynecologist, and Infertility Specialist with 19 years of experience in women's healthcare.",
+    detail: "She holds qualifications including MBBS, DGO, DRM (Germany), Fellowship in Reproductive Medicine (IMA), and Fellowship in Laparoscopy. Dr. Kalyani is widely respected for her dedication to maternal health and fertility care.",
   },
   {
     name: "Dr. Srinivasa Rao Mallampati",
     role: "Director",
     image: "/dr-srinivasa.jpg",
-    alignment: "right",
-    content: (
-      <>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          <strong className="text-[#5B328C]">Dr. Srinivasa Rao Mallampati</strong>, Director, specializes in Functional Medicine and Rheumatology and brings 18 years of clinical experience to the institution.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px] mb-4">
-          With qualifications including MBBS and PGDHSc, he focuses on improving metabolic health and managing complex chronic conditions.
-        </p>
-        <p className="text-gray-800 leading-relaxed text-[14px] lg:text-[15px]">
-          His guiding principle, <span className="text-[#5B328C] font-semibold">“Optimising Metabolism... For Good Health,”</span> reflects his holistic approach to long-term wellness and disease management.
-        </p>
-      </>
-    ),
+    experience: "18+",
+    intro: "Director, specializes in Functional Medicine and Rheumatology and brings 18 years of clinical experience to the institution.",
+    detail: "With qualifications including MBBS and PGDHSc, he focuses on improving metabolic health and managing complex chronic conditions.",
   },
 ];
 
-const Leadership = () => {
+const Leadership: React.FC = () => {
   return (
-    <section className="py-20 bg-white px-4 lg:px-12 overflow-hidden">
-      <div className="container mx-auto max-w-[1100px]">
-        
+    <section className="py-12 sm:py-16 bg-white px-4 sm:px-6 lg:px-12 overflow-hidden">
+      <div className="max-w-[1240px] mx-auto">
+
         {/* Section Header */}
-        <div className="mb-16">
-          <h2 className="text-[#5B328C] text-2xl lg:text-3xl font-bold mb-4">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#5B328C] mb-3 leading-tight">
             Expert Leadership Driving Excellence
           </h2>
-          <p className="text-gray-800 leading-relaxed text-[15px] lg:text-[16px]">
+          <p className="text-gray-700 text-sm sm:text-base leading-relaxed font-medium">
             The foundation of Alavi Hospitals is built on the expertise and vision of its Board of Directors, who bring decades of medical experience and leadership to the institution.
           </p>
         </div>
 
-        {/* Leadership Cards */}
-        <div className="space-y-10 lg:space-y-12">
-          {leaders.map((leader, index) => (
+        {/* Top Main Featured Doctor Card (Dr. M. Chandra Sekhar) */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="w-full bg-[#FAF8FE] rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 mb-8 sm:mb-10 border border-[#F0E8FA] shadow-sm flex flex-col lg:flex-row items-center gap-6 lg:gap-10"
+        >
+          {/* Left: Doctor Photo with curved backdrop */}
+          <div className="relative w-full lg:w-[320px] shrink-0 aspect-[4/3] lg:aspect-[4/4] rounded-[20px] bg-[#EFE8FC] overflow-hidden flex items-end justify-center">
+            {/* Soft backdrop circle */}
+            <div className="absolute inset-x-4 bottom-0 top-6 bg-[#E3D6F8] rounded-t-full z-0" />
+            <Image
+              src="/dr-chandra-sekhar.jpg"
+              alt="Dr. M. Chandra Sekhar"
+              fill
+              className="object-cover object-top z-10"
+              priority
+            />
+          </div>
+
+          {/* Center: Content & Details */}
+          <div className="flex-1 text-left">
+            <h3 className="text-2xl sm:text-3xl font-bold text-[#5B328C] mb-2">
+              Dr. M. Chandra Sekhar
+            </h3>
+            <span className="inline-block bg-[#0066A9] text-white text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+              Managing Director
+            </span>
+
+            <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+              <strong className="text-[#5B328C]">Dr. M. Chandra Sekhar</strong>, the Managing Director, is an experienced General Physician and Diabetologist with over 19 years of medical expertise.
+            </p>
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+              Holding qualifications including MBBS, PGDHSc, PG Diploma in Clinical Endocrinology &amp; Diabetes, and Post Graduation in Diabetology, he has dedicated his career to advancing patient care and managing complex medical conditions.
+            </p>
+          </div>
+
+          {/* Right: Years of Experience Badge */}
+          <div className="w-full lg:w-auto flex lg:flex-col items-center justify-between lg:justify-center pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-purple-200/60 lg:pl-8 min-w-[160px]">
+            <div className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#5B328C] leading-none mb-1 lg:mb-2">
+              19+
+            </div>
+            <div className="text-xs font-bold text-[#5B328C] tracking-wider text-right lg:text-center uppercase leading-tight max-w-[130px]">
+              YEARS OF MEDICAL EXPERIENCE
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Bottom Row: 3 Equal Doctor Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {bottomDoctors.map((doc, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: leader.alignment === "left" ? -40 : 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className={`flex flex-col ${
-                leader.alignment === "right" ? "lg:flex-row-reverse" : "lg:flex-row"
-              } items-center gap-8 lg:gap-14 bg-[#FCFAFF] p-8 lg:p-10 rounded-[20px] shadow-[0_4px_20px_rgba(91,50,140,0.06)]`}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="bg-[#FAF8FE] rounded-[24px] p-5 sm:p-6 flex flex-col border border-[#F0E8FA] shadow-sm hover:shadow-md transition-shadow duration-300"
             >
-              
-              {/* Image Section */}
-              <div className="flex flex-col items-center shrink-0 w-full max-w-[220px]">
-                {/* Fixed aspect ratio box perfectly matches the portrait style in the design */}
-                <div className="relative w-full aspect-[4/5] rounded-[16px] overflow-hidden border border-[#5B328C] mb-4 bg-white">
-                  <Image
-                    src={leader.image}
-                    alt={leader.name}
-                    fill
-                    className="object-cover object-top"
-                  />
+              {/* Image Container with Callout */}
+              <div className="relative w-full aspect-[4/3] rounded-[20px] bg-[#EFE8FC] overflow-hidden mb-5 flex items-end justify-center">
+                {/* Soft backdrop shape */}
+                <div className="absolute inset-x-4 bottom-0 top-6 bg-[#E3D6F8] rounded-t-full z-0" />
+
+                {/* Doctor Cutout Photo */}
+                <Image
+                  src={doc.image}
+                  alt={doc.name}
+                  fill
+                  className="object-cover object-top z-10"
+                />
+
+                {/* Experience Callout on Top Right */}
+                <div className="absolute top-3 right-3 z-20 flex flex-col items-end text-right">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#5B328C] leading-none">
+                    {doc.experience}
+                  </span>
+                  <span className="text-[9px] font-extrabold text-[#5B328C] tracking-wider uppercase leading-tight text-right max-w-[90px]">
+                    YEARS OF MEDICAL EXPERIENCE
+                  </span>
                 </div>
-                <h3 className="text-[#5B328C] font-bold text-[15px] text-center">{leader.name}</h3>
-                <p className="text-gray-600 text-[13px] font-medium text-center">{leader.role}</p>
               </div>
 
-              {/* Text Section */}
-              <div className="flex-grow w-full">
-                
-                {/* Top Quote & Line */}
-                <div className="flex items-center gap-4 mb-6">
-                  <FaQuoteLeft className="text-[#5B328C] text-2xl lg:text-3xl shrink-0" />
-                  <div className="h-[2px] bg-[#5B328C] flex-grow" />
-                </div>
-                
-                {/* Formatted Content */}
-                <div className="px-2 lg:px-4">
-                  {leader.content}
-                </div>
+              {/* Doctor Details */}
+              <h3 className="text-xl font-bold text-[#5B328C] mb-2">
+                {doc.name}
+              </h3>
 
-                {/* Bottom Line & Quote */}
-                <div className="flex items-center gap-4 mt-6">
-                  <div className="h-[2px] bg-[#5B328C] flex-grow" />
-                  <FaQuoteRight className="text-[#5B328C] text-2xl lg:text-3xl shrink-0" />
-                </div>
-
+              <div className="mb-3">
+                <span className="inline-block bg-[#E8DCF8] text-[#5B328C] text-xs font-semibold px-3 py-1 rounded-full">
+                  {doc.role}
+                </span>
               </div>
-              
+
+              <p className="text-gray-700 text-xs sm:text-sm leading-relaxed mb-3">
+                <strong className="text-[#5B328C]">{doc.name}</strong>, {doc.intro}
+              </p>
+
+              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mt-auto">
+                {doc.detail}
+              </p>
             </motion.div>
           ))}
         </div>
-
-        {/* Closing Vision Text */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="mt-16 max-w-5xl mx-auto"
-        >
-          <p className="text-gray-800 font-medium text-[15px] lg:text-[16px] leading-relaxed">
-            Together, the leadership team of Alavi Hospitals works with a shared vision to create a healthcare environment where expertise, compassion and innovation come together to deliver the best outcomes for patients.
-          </p>
-        </motion.div>
 
       </div>
     </section>

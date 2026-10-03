@@ -1,5 +1,5 @@
 import AboutHero from "../../components/about/AboutHero";
-import AboutIntro from "../../components/about/AboutIntro";
+import ImpactAtAGlance from "../../components/about/ImpactAtAGlance";
 import Leadership from "../../components/about/Leadership";
 import VisionMission from "../../components/about/VisionMission";
 import CoreValues from "../../components/about/CoreValues";
@@ -28,12 +28,12 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="flex flex-col min-h-screen">
-      <AboutHero/>
-      <AboutIntro/>
-      <Leadership/>
-      <VisionMission/>
-      <CoreValues/>
-      <AboutConclusion/>
+      <AboutHero />
+      <ImpactAtAGlance />
+      <Leadership />
+      <VisionMission />
+      <CoreValues />
+      <AboutConclusion />
     </main>
   );
 }
