@@ -110,8 +110,8 @@ const Header = () => {
   return (
     <header className={`w-full z-50 sticky top-0 bg-white transition-shadow duration-300 ${isScrolled ? "shadow-md" : ""}`}>
 
-      {/* --- TOP LIGHT GREY BAR (Logo & Phone / Language Pills) --- */}
-      <div className="w-full bg-[#EFEFEF] border-b border-gray-200">
+      {/* --- TOP BAR (Same White Background as Navbar) --- */}
+      <div className="w-full bg-white border-b border-gray-100">
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16 py-3 flex justify-between items-center">
 
           {/* Alavi Logo */}
@@ -119,31 +119,40 @@ const Header = () => {
             <Image
               src="/logo-alavi.png"
               alt="Alavi Hospitals"
-              width={210}
-              height={60}
+              width={220}
+              height={62}
               priority
             />
           </Link>
 
-          {/* Right Action Area (Phone Call Pill & Language Selector) */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-6">
+          {/* Right Action Area (Enlarged Emergency Siren Call Pill & Language Selector) */}
+          <div className="hidden lg:flex items-center gap-5 xl:gap-7">
 
-            {/* Siren + Single Mobile Number Badge Pill */}
+            {/* Enlarged Siren + Mobile Number Badge Pill */}
             <div className="flex items-center">
-              {/* Flashing Light / Siren Circle */}
-              <div className="w-10 h-10 rounded-full bg-[#663399] text-white flex items-center justify-center border-2 border-white shadow-sm z-10 shrink-0">
-                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C11.45 2 11 2.45 11 3V4C11 4.55 11.45 5 12 5C12.55 5 13 4.55 13 4V3C13 2.45 12.55 2 12 2ZM5.64 5.64C5.25 5.25 4.62 5.25 4.23 5.64C3.84 6.03 3.84 6.66 4.23 7.05L4.94 7.76C5.33 8.15 5.96 8.15 6.35 7.76C6.74 7.37 6.74 6.74 6.35 6.35L5.64 5.64ZM18.36 5.64L17.65 6.35C17.26 6.74 17.26 7.37 17.65 7.76C18.04 8.15 18.67 8.15 19.06 7.76L19.77 7.05C20.16 6.66 20.16 6.03 19.77 5.64C19.38 5.25 18.75 5.25 18.36 5.64ZM12 7C9.24 7 7 9.24 7 12V15H17V12C17 9.24 14.76 7 12 7ZM5 16V18H19V16H5ZM8 19V21C8 21.55 8.45 22 9 22H15C15.55 22 16 21.55 16 21V19H8Z" />
+              {/* White ringed circle around Siren Icon (Enlarged) */}
+              <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#663399] text-white flex items-center justify-center border-[3px] border-white shadow-md z-10 shrink-0">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white" viewBox="0 0 24 24" fill="none">
+                  {/* Radiating Rays */}
+                  <line x1="12" y1="3.5" x2="12" y2="6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="5.5" y1="6.5" x2="7.5" y2="8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="18.5" y1="6.5" x2="16.5" y2="8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="3" y1="15" x2="5.8" y2="15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="21" y1="15" x2="18.2" y2="15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  {/* Siren Dome Light */}
+                  <path d="M7 17.5 C7 11, 17 11, 17 17.5 Z" fill="currentColor" />
+                  {/* Base Bar */}
+                  <rect x="5.5" y="17.5" width="13" height="3" rx="1" fill="currentColor" />
                 </svg>
               </div>
 
-              {/* Connected Purple Pill */}
+              {/* Connected Purple Pill (Enlarged Text & Spacing) */}
               <a
                 href="tel:9603911911"
-                className="bg-[#663399] text-white rounded-r-full rounded-l-full pl-6 pr-6 py-2 -ml-4 flex items-center gap-2.5 font-extrabold text-sm xl:text-[15px] hover:bg-[#542982] transition-colors shadow-sm"
+                className="bg-[#663399] text-white rounded-r-full rounded-l-full pl-8 pr-7 py-2.5 sm:py-3 -ml-6 flex items-center gap-3 font-bold text-base xl:text-lg hover:bg-[#542982] transition-colors shadow-md"
               >
-                <FaPhoneAlt size={13} className="text-white" />
-                <span className="tracking-wide">9603 911 911</span>
+                <FaPhoneAlt size={16} className="text-white transform -rotate-12" />
+                <span className="tracking-wide font-extrabold">9603 911 911</span>
               </a>
             </div>
 
@@ -154,7 +163,7 @@ const Header = () => {
                 onMouseEnter={() => setIsLangOpen(true)}
                 onMouseLeave={() => setIsLangOpen(false)}
               >
-                <button className="flex items-center gap-2 bg-[#663399] text-white px-5 py-2 rounded-full text-xs sm:text-sm font-bold hover:bg-[#542982] transition-all shadow-sm">
+                <button className="flex items-center gap-2 bg-[#663399] text-white px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#542982] transition-all shadow-sm">
                   <HiChevronDown size={16} className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
                   <span>{LANGUAGES.find((l) => l.code === currentLang)?.label || "English"}</span>
                   <svg className="w-4 h-4 text-white ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +186,7 @@ const Header = () => {
                             <button
                               type="button"
                               onClick={() => changeLanguage(lang.code)}
-                              className={`block w-full text-left px-5 py-2 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
+                              className={`block w-full text-left px-5 py-2 text-[13px] font-medium hover:bg-[#F3E8FF] hover:text-[#5B328C] transition-colors whitespace-nowrap ${currentLang === lang.code ? "text-[#5B328C] bg-[#F3E8FF]" : "text-gray-700"
                                 }`}
                             >
                               {lang.label}
@@ -202,7 +211,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* --- MAIN DESKTOP NAVIGATION BAR --- */}
+      {/* --- MAIN DESKTOP NAVIGATION BAR (Matching White Background) --- */}
       <nav className="hidden lg:block bg-white py-3.5 border-b border-gray-100">
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16">
           <ul className="flex justify-center items-center gap-5 lg:gap-7 xl:gap-9">
@@ -220,7 +229,7 @@ const Header = () => {
                   >
                     <button
                       type="button"
-                      className={`flex items-center gap-1 text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-800"
+                      className={`flex items-center gap-1 text-[13px] xl:text-[14px] font-medium transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
                         }`}
                     >
                       {link.name}
@@ -245,7 +254,7 @@ const Header = () => {
                               <li key={child.name}>
                                 <Link
                                   href={child.href}
-                                  className={`block px-5 py-2.5 text-[13px] font-semibold hover:bg-[#F3E8FF] hover:text-[#663399] transition-colors whitespace-nowrap ${pathname === child.href ? "text-[#663399] bg-[#F3E8FF]" : "text-gray-700"
+                                  className={`block px-5 py-2.5 text-[13px] font-medium hover:bg-[#F3E8FF] hover:text-[#663399] transition-colors whitespace-nowrap ${pathname === child.href ? "text-[#663399] bg-[#F3E8FF]" : "text-gray-700"
                                     }`}
                                 >
                                   {child.name}
@@ -264,7 +273,7 @@ const Header = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className={`text-[12px] xl:text-[13px] font-extrabold tracking-wider transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-800"
+                    className={`text-[13px] xl:text-[14px] font-medium transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
                       }`}
                   >
                     {link.name}
@@ -311,7 +320,7 @@ const Header = () => {
                         <button
                           type="button"
                           onClick={() => setMobileExpanded(isExpanded ? null : link.name)}
-                          className={`flex items-center justify-between w-full text-[15px] font-bold ${isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#663399]" : "text-gray-700"
+                          className={`flex items-center justify-between w-full text-[15px] font-medium ${isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#663399]" : "text-gray-700"
                             }`}
                         >
                           {link.name}
@@ -331,7 +340,7 @@ const Header = () => {
                                   <Link
                                     href={child.href}
                                     onClick={() => setIsOpen(false)}
-                                    className={`text-[13px] font-semibold ${pathname === child.href ? "text-[#663399]" : "text-gray-600"}`}
+                                    className={`text-[13px] font-medium ${pathname === child.href ? "text-[#663399]" : "text-gray-600"}`}
                                   >
                                     {child.name}
                                   </Link>
@@ -349,7 +358,7 @@ const Header = () => {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className={`text-[15px] font-bold ${pathname === link.href ? "text-[#663399]" : "text-gray-700"}`}
+                        className={`text-[15px] font-medium ${pathname === link.href ? "text-[#663399]" : "text-gray-700"}`}
                       >
                         {link.name}
                       </Link>
@@ -359,7 +368,7 @@ const Header = () => {
               </ul>
 
               <div className="mt-auto p-4 bg-purple-50 rounded-2xl space-y-3">
-                <p className="text-[#663399] font-extrabold text-xs tracking-wider uppercase">Emergency Contact</p>
+                <p className="text-[#663399] font-bold text-xs tracking-wider uppercase">Emergency Contact</p>
                 <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-bold text-gray-800">
                   <FaPhoneAlt className="text-[#663399]" /> 9603 911 911
                 </a>
