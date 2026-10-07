@@ -240,7 +240,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
           style={{ background: 'linear-gradient(90deg, #663399 48.93%, rgba(0, 102, 169, 0) 77.09%)' }}
         ></div>
 
-        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 relative z-20">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 relative z-20">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="max-w-xl text-white">
             <h1 className="text-3xl md:text-4xl lg:text-[46px] font-bold leading-tight mb-4">
               {pageData.title}
@@ -271,7 +271,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       {/* --- 2. CONDITIONS TREATED --- */}
       {pageData.conditionsTreated?.list?.length > 0 && (
         <section className="py-20 bg-[#FAFAFA]">
-          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
             {/* Section Title */}
             <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
@@ -333,7 +333,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       {/* --- 3. DOCTORS SECTION --- */}
       {doctors.length > 0 && (
         <section className="py-20 bg-white">
-          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
             <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
               {pageData.specialityDoctors?.title || "Our Specialists"}
@@ -350,8 +350,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                 ref={doctorsScrollRef}
                 onScroll={handleDoctorScroll}
                 className={`flex ${doctors.length <= 3
-                    ? "flex-wrap justify-center"
-                    : "overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
+                  ? "flex-wrap justify-center"
+                  : "overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
                   } gap-8`}
               >
                 {doctors.map((doc, idx) => {
@@ -363,8 +363,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                     <div
                       key={doc.doctorId || idx}
                       className={`${doctors.length <= 3
-                          ? "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-[420px]"
-                          : "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
+                        ? "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-[420px]"
+                        : "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
                         } bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300`}
                     >
 
@@ -421,8 +421,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                       key={idx}
                       onClick={() => scrollToDoctor(idx)}
                       className={`rounded-full transition-all duration-300 ${activeDoctorIndex === idx
-                          ? "w-4 h-4 bg-[#663399]"
-                          : "w-3 h-3 bg-gray-300 hover:bg-[#7E57A8]"
+                        ? "w-4 h-4 bg-[#663399]"
+                        : "w-3 h-3 bg-gray-300 hover:bg-[#7E57A8]"
                         }`}
                       aria-label={`Go to doctor ${idx + 1}`}
                     />
@@ -439,7 +439,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       {/* --- 4. TREATMENTS & PROCEDURES --- */}
       {(pageData.treatmentsProcedures?.list?.length || 0) > 0 && (
         <section className="py-20 bg-[#F5F8FC]">
-          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
             {/* Section Title */}
             <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
@@ -459,8 +459,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                 const cardInner = (
                   <div
                     className={`p-8 rounded-2xl flex flex-col justify-center h-full ${index === 0
-                        ? 'bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] shadow-md'
-                        : 'bg-[#EEF8FF] shadow-[0px_0px_4px_0px_#00000040]'
+                      ? 'bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] shadow-md'
+                      : 'bg-[#EEF8FF] shadow-[0px_0px_4px_0px_#00000040]'
                       }`}
                   >
                     {/* Card Title */}
@@ -496,7 +496,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       {/* --- 5. BLOGS SECTION --- */}
       {blogs.length > 0 && (
         <section className="py-20 bg-white">
-          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
             {/* Header */}
             <div className="text-center mb-12">
@@ -595,7 +595,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
       {/* --- 6. APPOINTMENT CTA SECTION --- */}
       <section className="py-20 bg-white">
-        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
           <div className="flex flex-col lg:flex-row shadow-xl rounded-[32px] overflow-hidden border-0 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)]">
 
             {/* Left Purple Side */}
@@ -694,7 +694,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       {/* --- 7. FAQS --- */}
       {(pageData.faqs?.length || 0) > 0 && (
         <section className="py-20 bg-[#FAFAFA]">
-          <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 lg:pl-28 xl:px-16 xl:pl-32">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
             {/* Section Heading */}
             <h2 className="text-[32px] font-semibold leading-none text-center text-[#663399] mb-12">
