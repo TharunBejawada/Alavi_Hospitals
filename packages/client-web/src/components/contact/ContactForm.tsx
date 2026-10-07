@@ -10,7 +10,7 @@ import { API_URL } from "../../config"; // Adjust the path based on your folder 
 
 const ContactForm = () => {
   const router = useRouter();
-  
+
   // --- STATE ---
   const [doctors, setDoctors] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +62,7 @@ const ContactForm = () => {
       }).toString();
 
       router.push(`/thank-you?${query}`);
-      
+
     } catch (error) {
       console.error("Failed to submit form:", error);
       alert("Something went wrong while sending your message. Please try again.");
@@ -72,29 +72,29 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="py-4 lg:py-8 bg-[#FAFAFA] px-4 lg:px-12 flex justify-center font-[Poppins]">
-      <div className="container mx-auto max-w-7xl">
-        
+    <section className="py-4 lg:py-8 bg-[#FAFAFA] flex justify-center font-[Poppins]">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
+
         {/* Main Card Container */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="bg-white rounded-[32px] shadow-[0_10px_40px_rgb(0,0,0,0.06)] p-8 lg:p-14"
+          className="bg-white rounded-[24px] sm:rounded-[32px] shadow-[0_10px_40px_rgb(0,0,0,0.06)] p-5 sm:p-8 lg:p-14"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+
             {/* LEFT SIDE: Text and Image */}
             <div className="flex flex-col items-center text-center max-w-md mx-auto lg:mx-0">
-              <h2 className="text-3xl lg:text-4xl font-bold text-[#5B328C] mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5B328C] mb-3 sm:mb-4">
                 Send Us a Message
               </h2>
-              <p className="text-gray-500 text-[15px] lg:text-[16px] leading-relaxed mb-10">
+              <p className="text-gray-500 text-[14px] sm:text-[15px] lg:text-[16px] leading-relaxed mb-6 sm:mb-10">
                 If you have any questions about our services, doctors or appointments, please fill out the form below. Our team will get back to you as soon as possible.
               </p>
-              
-              <div className="relative w-full max-w-[320px] aspect-square rounded-[24px] overflow-hidden shadow-2xl">
+
+              <div className="relative w-full max-w-[260px] sm:max-w-[320px] aspect-square rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-2xl">
                 <Image
                   src="/contact-reception.png" // Replace with your actual image path
                   alt="Customer Support Representative"
@@ -107,56 +107,55 @@ const ContactForm = () => {
             {/* RIGHT SIDE: The Form */}
             <div className="w-full">
               <form className="flex flex-col gap-4 lg:gap-6" onSubmit={handleSubmit}>
-                
+
                 {/* Full Name */}
                 <div>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Full Name*" 
+                    placeholder="Full Name*"
                     className="w-full bg-[#F8F6FA] text-gray-800 placeholder-gray-400 px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300"
                   />
                 </div>
 
                 {/* Email & Phone */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="Email Address" 
+                    placeholder="Email Address"
                     className="w-full bg-[#F8F6FA] text-gray-800 placeholder-gray-400 px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300"
                   />
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     required
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                    placeholder="Phone Number*" 
+                    placeholder="Phone Number*"
                     className="w-full bg-[#F8F6FA] text-gray-800 placeholder-gray-400 px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300"
                   />
                 </div>
 
                 {/* Location & Doctor */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="Preferred Location" 
+                    placeholder="Preferred Location"
                     className="w-full bg-[#F8F6FA] text-gray-800 placeholder-gray-400 px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300"
                   />
-                  
+
                   {/* Dynamic Doctor Dropdown */}
                   <div className="relative">
                     <select
                       value={formData.doctor}
                       onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
-                      className={`w-full bg-[#F8F6FA] px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300 appearance-none cursor-pointer ${
-                        formData.doctor ? "text-gray-800" : "text-gray-400"
-                      }`}
+                      className={`w-full bg-[#F8F6FA] px-6 py-4 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300 appearance-none cursor-pointer ${formData.doctor ? "text-gray-800" : "text-gray-400"
+                        }`}
                     >
                       <option value="" disabled>Select a Doctor</option>
                       {doctors.map((doc) => (
@@ -176,10 +175,10 @@ const ContactForm = () => {
 
                 {/* Message Textarea */}
                 <div>
-                  <textarea 
+                  <textarea
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Enter Your Message*" 
+                    placeholder="Enter Your Message*"
                     rows={5}
                     required
                     className="w-full bg-[#F8F6FA] text-gray-800 placeholder-gray-400 px-6 py-5 rounded-xl outline-none border-2 border-transparent focus:border-[#5B328C]/30 focus:bg-white transition-all duration-300 resize-none"
@@ -187,7 +186,7 @@ const ContactForm = () => {
                 </div>
 
                 {/* Submit Button */}
-                <button 
+                <button
                   type="submit"
                   disabled={isSubmitting || !formData.name || !formData.mobile || !formData.message}
                   className="w-full flex justify-center items-center gap-2 bg-[#5B328C] text-white font-semibold text-[16px] py-4 rounded-xl shadow-md hover:bg-[#4a2873] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 mt-2"
@@ -207,7 +206,7 @@ const ContactForm = () => {
 
           </div>
         </motion.div>
-        
+
       </div>
     </section>
   );

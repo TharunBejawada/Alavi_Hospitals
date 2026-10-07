@@ -16,19 +16,19 @@ const socialLinks = [
 const ContactHero = () => {
   return (
     <section style={{ background: 'linear-gradient(90deg, #663399 0%, #0066A9 100%)' }} className="relative w-full pt-24 pb-32 lg:pt-32 lg:pb-40 overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-12 relative z-10">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 relative z-10">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-          
+
           {/* Social Icons Row */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="flex items-center gap-6 mb-8 text-white text-xl"
           >
             {socialLinks.map((social, index) => (
-              <Link 
-                key={index} 
+              <Link
+                key={index}
                 href={social.href}
                 target="_blank"
                 className="hover:text-purple-300 hover:scale-110 transition-all duration-300"
@@ -65,18 +65,18 @@ const ContactHero = () => {
 
       {/* One Perfect Mathematical Sine Wave */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0">
-        <svg 
-          className="relative block w-full h-[60px] md:h-[90px] lg:h-[120px]" 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 1440 320" 
+        <svg
+          className="relative block w-full h-[60px] md:h-[90px] lg:h-[120px]"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
           preserveAspectRatio="none"
         >
           {/* M0,192: Starts low on the left.
             Q360,0 720,192: Sweeps smoothly UP to a peak, then DOWN to the center.
             T1440,192: Symmetrically sweeps DOWN to a trough, then UP to the right edge.
           */}
-          <path 
-            fill="#ffffff" 
+          <path
+            fill="#ffffff"
             d="M0,192 Q360,0 720,192 T1440,192 L1440,320 L0,320 Z"
           ></path>
         </svg>

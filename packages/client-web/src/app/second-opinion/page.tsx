@@ -207,7 +207,7 @@ export default function SecondOpinionHubPage() {
 
       {/* --- 1. HERO --- */}
       <section className="relative w-full min-h-[622px] flex items-center overflow-hidden bg-[#F5FBFF]">
-        <div className="max-w-[1453px] w-full mx-auto px-6 lg:px-16 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
 
           {/* Left Content */}
           <motion.div
@@ -315,7 +315,7 @@ export default function SecondOpinionHubPage() {
       </section>
 
       {/* --- 2. WHY SEEK / WHEN TO CONSIDER --- */}
-      <section className="py-16 w-full max-w-[1453px] mx-auto px-6 lg:px-12 font-['Poppins'] flex justify-center">
+      <section className="py-16 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 font-['Poppins'] flex justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[52px] w-full max-w-[1453px]">
 
           {/* Left Card: Why Seek a Second Opinion? */}
@@ -389,7 +389,7 @@ export default function SecondOpinionHubPage() {
 
       {/* --- 3. CONDITIONS COMMONLY REVIEWED (dynamic, from admin topics) --- */}
       <section className="py-16 bg-[#EBF7FF]">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-10 text-center">
             Conditions Commonly Reviewed
           </h2>
@@ -432,7 +432,7 @@ export default function SecondOpinionHubPage() {
 
       {/* --- 4. HOW OUR PROCESS WORKS --- */}
       <section className="relative w-full py-20 bg-[#F5FBFF] font-['Poppins'] overflow-hidden">
-        <div className="max-w-[1453px] mx-auto px-6">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
           {/* Section Heading */}
           <motion.h2
@@ -514,7 +514,7 @@ export default function SecondOpinionHubPage() {
         className="py-16 bg-white overflow-hidden"
         style={{ fontFamily: "'Poppins', sans-serif" }}
       >
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
           {/* Header */}
           <div className="text-center mb-14">
@@ -531,19 +531,40 @@ export default function SecondOpinionHubPage() {
           {/* Content Wrapper */}
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch">
 
-            {/* Left Column: Image Area */}
-            <div className="w-full lg:w-[40%] flex justify-center">
-              <div className="relative w-full max-w-[400px] lg:max-w-none rounded-[13px] border-[8px] border-[#663399] overflow-hidden shadow-lg h-[350px] lg:h-auto lg:min-h-[466px]">
-                <img
-                  src="/hospital-idpl.jpg"
-                  alt="Alavi Hospitals Building"
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
+            {/* Left Column: Image Area (Both Hospital Branches: IDPL and Chintal - Matched to Homepage) */}
+            <div className="w-full lg:w-[45%] flex justify-center">
+              <div className="grid grid-cols-2 gap-4 w-full h-[350px] lg:h-auto lg:min-h-[440px]">
+                <div className="relative w-full h-full shadow-md rounded-[12px] overflow-hidden group border-2 border-[#663399]">
+                  <Image
+                    src="/hospital-idpl.jpg"
+                    alt="IDPL Branch"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute bottom-0 w-full bg-[#5B328C] py-2.5 text-center z-10">
+                    <h3 className="text-white text-base font-bold tracking-wider">
+                      IDPL
+                    </h3>
+                  </div>
+                </div>
+                <div className="relative w-full h-full shadow-md rounded-[12px] overflow-hidden group border-2 border-[#663399]">
+                  <Image
+                    src="/hospital-chintal.jpg"
+                    alt="Chintal Branch"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute bottom-0 w-full bg-[#5B328C] py-2.5 text-center z-10">
+                    <h3 className="text-white text-base font-bold tracking-wider">
+                      Chintal
+                    </h3>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Right Column: Features List */}
-            <div className="w-full lg:w-[60%] flex flex-col justify-between gap-6">
+            <div className="w-full lg:w-[55%] flex flex-col justify-between gap-6">
               {WHY_CHOOSE_ITEMS.map((feature) => (
                 <div
                   key={feature.id}
@@ -590,7 +611,7 @@ export default function SecondOpinionHubPage() {
           variants={fadeUp}
           className="py-20 bg-[#FAFAFA]"
         >
-          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-10">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-[#663399] mb-12">
               Frequently Asked Questions
             </h2>

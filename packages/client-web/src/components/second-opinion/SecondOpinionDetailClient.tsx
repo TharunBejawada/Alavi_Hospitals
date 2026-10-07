@@ -123,7 +123,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
         />
 
         {/* Content Container */}
-        <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col md:flex-row items-center justify-end px-6 lg:px-[120px] gap-12 lg:gap-[100px]">
+        <div className="relative z-10 max-w-[1440px] w-full h-full mx-auto flex flex-col md:flex-row items-center justify-end px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 gap-12 lg:gap-[100px]">
 
           {/* Left/Middle Content: Text and Button */}
           <div className="w-full max-w-[285px]">
@@ -234,7 +234,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
 
       {/* --- 2. OVERVIEW --- */}
       {topic.overview?.title && (
-        <section className="py-16 max-w-[1400px] mx-auto px-6 lg:px-12">
+        <section className="py-16 max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-6">{topic.overview.title}</h2>
@@ -255,7 +255,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       {/* --- 3. SURGERY RECOMMENDATION --- */}
       {topic.surgeryRecommendation?.title && (
         <section className="py-16 bg-[#F5FBFF]">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
             <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-6">{topic.surgeryRecommendation.title}</h2>
             {topic.surgeryRecommendation.description && (
               <div
@@ -301,7 +301,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
           </div>
 
           {/* Content Area */}
-          <div className="relative z-10 w-full h-full flex flex-col justify-center px-6 md:px-0 md:pl-[170.81px]">
+          <div className="relative z-10 w-full h-full flex flex-col justify-center px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
             <h2 className="text-[#FFFFFF] font-semibold text-[24px] md:text-[30px] leading-[146%] w-full max-w-[507.13px] mb-[28px]">
               Get Your Second Medical Opinion<br className="hidden md:block" /> with our Specialists
@@ -340,7 +340,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       {/* --- 5. RISKS TIMELINE --- */}
       {risksList.length > 0 && (
         <section className="py-16 bg-[#EBF7FF]">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
             <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-4 text-center lowercase first-letter:uppercase">{topic.risks.title}</h2>
             {topic.risks.description && (
               <div
@@ -372,7 +372,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       {/* --- 6. BENEFITS BAND --- */}
       {(topic.benefits?.list?.length || 0) > 0 && (
         <section className="py-16 bg-[#663399]">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 uppercase">{topic.benefits.title}</h2>
             {topic.benefits.description && (
               <div
@@ -398,7 +398,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       {/* --- 7. STEPS TIMELINE --- */}
       {stepsList.length > 0 && (
         <section className="py-16 bg-[#EEF8FF]">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
             <h2 className="text-xl md:text-2xl font-bold text-[#663399] mb-3">HOW WE REVIEW YOUR CASE</h2>
             <p className="text-2xl md:text-[30px] font-bold text-[#663399] mb-14">A second opinion, step by step.</p>
 
@@ -421,7 +421,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
 
       {/* --- 8. REQUEST SECTION --- */}
       <section className="py-16 bg-[rgba(231,222,240,0.3)]">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#663399] mb-8 text-center">REQUEST A SECOND OPINION</h2>
           <div className="flex flex-col lg:flex-row rounded-[20px] overflow-hidden shadow-lg">
             <div className="lg:w-1/2 bg-[#663399] p-10 lg:p-14 flex flex-col justify-center text-white relative overflow-hidden">
@@ -490,7 +490,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
       {/* --- 9. FAQS --- */}
       {topic.faqs?.length > 0 && (
         <section className="py-20 bg-[#FAFAFA]">
-          <div className="max-w-[1000px] w-full mx-auto px-6 lg:px-12">
+          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-[#663399] mb-12">
               Frequently Asked Questions
             </h2>

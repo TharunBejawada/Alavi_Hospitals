@@ -15,6 +15,17 @@ import DoctorTalks from "./DoctorTalks";
 import PatientSuccessStories from "./PatientSuccessStories";
 import AppointmentPopup from "../../components/AppointmentPopup"; // Ensure this path is correct for your structure
 
+function formatExperience(exp: string | undefined | null): string {
+  if (!exp) return "";
+  const cleaned = exp.trim();
+  if (!cleaned) return "";
+
+  const numMatch = cleaned.match(/\d+/);
+  if (!numMatch) return cleaned;
+
+  return `${numMatch[0]}+ Years`;
+}
+
 export default function DoctorProfileClient({ doctor }: { doctor: any }) {
   const [activeTab, setActiveTab] = useState("qualifications");
   const [activeNav, setActiveNav] = useState("about");
@@ -79,7 +90,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
 
       {/* HERO SECTION (Purple Gradient) */}
       <section className="bg-[linear-gradient(90.69deg,#0066A9_-139.87%,#663399_81.46%)] py-12 lg:py-20">
-        <div className="container mx-auto max-w-[1200px] px-4">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
           <motion.div
             initial="hidden" animate="visible" variants={fadeInUp}
             className="flex flex-col md:flex-row items-center gap-8 lg:gap-12 w-full"
@@ -112,7 +123,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
               {doctor?.experience && (
                 <div className="bg-[#8D61BA] border border-white/30 backdrop-blur-sm px-5 py-2 rounded-md inline-flex justify-center md:justify-start w-fit mb-8 mx-auto md:mx-0 shadow-sm">
                   <p className="text-2xl font-semibold break-words">
-                    Experience : {doctor.experience}
+                    Experience : {formatExperience(doctor.experience)}
                   </p>
                 </div>
               )}
@@ -142,7 +153,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
       </section>
 
       {/* FLOATING CTA BANNER */}
-      <div className="container mx-auto max-w-[1200px] px-4 mt-8 relative z-20">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 mt-8 relative z-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] rounded-xl py-4 px-6 md:px-10 flex flex-col md:flex-row items-center justify-center text-white shadow-xl border border-white/10 gap-24"
@@ -157,7 +168,7 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
         </motion.div>
       </div>
 
-      <div className="container mx-auto max-w-[1200px] px-4 py-12 space-y-10">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 py-12 space-y-10">
 
         {/* NAVIGATION PILLS */}
         <div className="flex flex-wrap justify-center gap-3 pb-4">
@@ -166,8 +177,8 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
               key={nav.id}
               onClick={() => scrollToSection(nav.id)}
               className={`px-5 py-2 rounded-full text-[20px] font-medium border transition-colors ${activeNav === nav.id
-                  ? "bg-[#5B328C] border-[#5B328C] text-white shadow-sm"
-                  : "bg-transparent border-[#5B328C] text-[#5B328C] hover:bg-[#F3E8FF]"
+                ? "bg-[#5B328C] border-[#5B328C] text-white shadow-sm"
+                : "bg-transparent border-[#5B328C] text-[#5B328C] hover:bg-[#F3E8FF]"
                 }`}
             >
               {nav.label}
@@ -253,8 +264,8 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   setActiveNav(tab.id);
                 }}
                 className={`cursor-pointer flex-1 py-3 px-4 text-[26px] font-semibold border transition-colors duration-300 break-words rounded-sm ${activeTab === tab.id
-                    ? "bg-[#5B328C] border-[#5B328C] text-white"
-                    : "bg-white border-[#5B328C]/30 text-[#5B328C] hover:bg-[#F3E8FF]"
+                  ? "bg-[#5B328C] border-[#5B328C] text-white"
+                  : "bg-white border-[#5B328C]/30 text-[#5B328C] hover:bg-[#F3E8FF]"
                   }`}
               >
                 {tab.label}
@@ -306,8 +317,8 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
                   <div
                     key={idx}
                     className={`border border-[#663399] rounded-xl overflow-hidden transition-all duration-300 w-full ${isOpen
-                        ? "bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] text-white shadow-md"
-                        : "bg-white text-gray-800 hover:bg-[#F9F7FD]"
+                      ? "bg-[linear-gradient(90.69deg,#0066A9_-174.27%,#663399_99.41%)] text-white shadow-md"
+                      : "bg-white text-gray-800 hover:bg-[#F9F7FD]"
                       }`}
                   >
                     <button

@@ -1,0 +1,58 @@
+# Alavi Hospitals
+
+> Alavi Hospitals is a premier multi-speciality healthcare network in Hyderabad, Telangana, providing patient-centric medical care, advanced diagnostic facilities, emergency support, and specialized clinical treatments across multiple locations.
+
+## Hospital Locations
+
+- **IDPL Branch**: 12-234, Adarsh Nagar Main Road, Opp. IDPL Colony, Balanagar, Secunderabad, Hyderabad, Telangana 500037
+- **Chintal Branch**: 5-120/2, Jeedimetla Main Road, Opp. Asian Sha Theater, Shiva Nagar, Chintal, Hyderabad, Telangana 500054
+
+## Contact Information
+
+- **Appointments & Support**: +91 9603 911 911
+- **General Enquiries**: +91 95331 21257
+- **Hospital Landline**: 040-49 99 49 49
+- **Email**: info@alavihospitals.com
+- **Website**: https://alavihospitals.in
+
+## Core Specialities & Clinical Departments
+
+- **General Medicine & Diabetology**: Comprehensive care for chronic metabolic conditions, diabetes management, and infectious diseases.
+- **Pediatrics & NICU**: Neonatal intensive care unit, premature baby care, pediatric viral infection treatments, and child vaccination programs.
+- **Obstetrics & Gynecology**: High-risk pregnancy management, normal and operative deliveries, and comprehensive women's healthcare.
+- **Cardiology**: Preventive cardiac care, diagnostic cardiology, and heart disease management.
+- **Orthopedics**: Joint care, fracture management, and orthopedic surgeries.
+- **Neurology**: Treatment for neurological conditions, stroke care, and nerve disorders.
+- **Oncology**: Cancer screenings, specialized consultations, and oncological treatments.
+- **General & Laparoscopic Surgery**: Minimally invasive surgical procedures and acute emergency surgeries.
+- **Physiotherapy & Rehabilitation**: Post-surgical rehabilitation, joint mobility, and physical therapy.
+
+## Key Medical Leadership & Specialists
+
+- **Dr. M. Chandra Shekar**: Senior Consultant in General Medicine & Diabetology
+- **Dr. Pradeep Reddy**: Senior Pediatrician & Neonatologist (NICU Specialist)
+- **Dr. Kalyani**: Senior Gynecologist & Obstetrician
+- **Dr. Rabbani**: General Medicine Specialist
+
+## Primary Website Pages & Documentation
+
+- [Homepage](https://alavihospitals.in/): Overview of hospital services, emergency care, specialities, and quick appointment booking.
+- [About Us](https://alavihospitals.in/about): Hospital mission, values, medical excellence, healthcare milestones, and leadership team.
+- [Specialities](https://alavihospitals.in/specialities): Complete directory of medical departments and clinical services.
+- [Doctors](https://alavihospitals.in/doctors): Profiles, qualifications, experience, and consultation schedules of consultant doctors.
+- [Second Opinion](https://alavihospitals.in/second-opinion): Specialist medical second opinion services for complex diagnoses and treatment plans.
+- [Health Packages](https://alavihospitals.in/health-packages): Preventive health checkup packages tailored for individuals, seniors, and families.
+- [Vaccinations](https://alavihospitals.in/vaccinations): Pediatric immunization schedules and adult vaccination services.
+- [Insurance & TPA](https://alavihospitals.in/insurance): Cashless hospitalization, empanelled insurance partners, and TPA support.
+- [Health Library & Blog](https://alavihospitals.in/blog): Medical articles, health advice, disease prevention tips, and patient stories.
+- [Patient & Visitor Guidelines](https://alavihospitals.in/patients): Admission procedures, visiting hours, patient rights, and visitor rules.
+- [Contact Us](https://alavihospitals.in/contact): Branch addresses, interactive Google Maps location guides, contact numbers, and appointment query forms.
+
+## API & System Endpoints (Internal Integration)
+
+- **Submit Appointment / Contact Query**: `POST /api/forms/submit`
+- **Get All Active Doctors**: `GET /api/doctors/getAllEnabledDoctors`
+- **Get Specialities Directory**: `GET /api/speciality-pages/getAll`
+- **Get Health Checkup Packages**: `GET /api/health-packages/getAllEnabled`
+- **Get Second Opinion Services**: `GET /api/second-opinions/getAllEnabled`
+- **Get Published Blogs**: `GET /api/blogs/getAllBlogs`
