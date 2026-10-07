@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
     Building2,
     BedDouble,
@@ -46,6 +46,59 @@ const stats: StatItem[] = [
     },
 ];
 
+const AnimatedCounter: React.FC<{ value: string }> = ({ value }) => {
+    const ref = useRef<HTMLSpanElement>(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    // Parse prefix, number, and suffix (e.g. "200K+")
+    const match = value.match(/^([^\d]*)([\d,.]+)([^\d]*)$/);
+
+    if (!match) {
+        return <span>{value}</span>;
+    }
+
+    const prefix = match[1] || "";
+    const targetValue = parseFloat(match[2].replace(/,/g, ""));
+    const suffix = match[3] || "";
+
+    const [currentCount, setCurrentCount] = useState(0);
+
+    useEffect(() => {
+        if (!isInView) return;
+
+        let startTime: number | null = null;
+        const duration = 2000; // 2 seconds animation
+
+        const step = (timestamp: number) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Easing curve (easeOutCubic) for smooth slowdown towards the end
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const val = Math.floor(easeOut * targetValue);
+
+            setCurrentCount(val);
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                setCurrentCount(targetValue);
+            }
+        };
+
+        requestAnimationFrame(step);
+    }, [isInView, targetValue]);
+
+    return (
+        <span ref={ref}>
+            {prefix}
+            {currentCount.toLocaleString()}
+            {suffix}
+        </span>
+    );
+};
+
 const ImpactAtAGlance: React.FC = () => {
     return (
         <section className="w-full bg-white py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
@@ -80,9 +133,9 @@ const ImpactAtAGlance: React.FC = () => {
                                         <IconComponent className="w-7 h-7 sm:w-9 sm:h-9 stroke-[1.5]" />
                                     </div>
 
-                                    {/* Value */}
+                                    {/* Value with Count Animation */}
                                     <div className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-white leading-tight mb-0.5 tracking-tight">
-                                        {item.value}
+                                        <AnimatedCounter value={item.value} />
                                     </div>
 
                                     {/* Label */}
