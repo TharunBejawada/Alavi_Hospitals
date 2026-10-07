@@ -55,7 +55,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [treatmentUrlByItemId, setTreatmentUrlByItemId] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
-  const [openFaq, setOpenFaq] = useState<number | null>(0); // First FAQ open by default
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const router = useRouter();
@@ -137,9 +137,9 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
           // 2. Raw slug match ("orthopaedics" === "orthopaedics")
           // 3. Fallback ID match
           return savedUrl === `/specialities/${slug}` ||
-                 savedUrl === `/${slug}` ||
-                 savedUrl === slug ||
-                 p.pageId === slug;
+            savedUrl === `/${slug}` ||
+            savedUrl === slug ||
+            p.pageId === slug;
         });
 
         if (matchedPage) {
@@ -251,13 +251,13 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
             />
             <div className="flex flex-wrap gap-8">
               <button
-  onClick={() => {
-    setIsPopupOpen(true);
-  }}
-  className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors"
->
-  <Calendar className="w-8 h-8" /> Book an Appointment
-</button>
+                onClick={() => {
+                  setIsPopupOpen(true);
+                }}
+                className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors"
+              >
+                <Calendar className="w-8 h-8" /> Book an Appointment
+              </button>
               <a href="tel:+919603911911">
                 <button className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors">
                   <Phone className="w-8 h-8" /> +91 9603 911 911
@@ -292,11 +292,11 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                   <div className="group p-8 rounded-2xl border border-[#7E57A8] bg-[#EEF8FF] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:bg-[linear-gradient(97.66deg,#0066A9_-66.74%,#7E57A8_128.58%)]">
 
                     <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm bg-[#DCF1FF] group-hover:bg-[#EEF8FF] transition-colors duration-300">
-                       {item.icon ? (
-                         <Image src={item.icon} alt={item.title} width={32} height={32} className="object-contain" />
-                       ) : (
-                         <div className="w-8 h-8 bg-[#5B328C]/30 rounded-full"></div>
-                       )}
+                      {item.icon ? (
+                        <Image src={item.icon} alt={item.title} width={32} height={32} className="object-contain" />
+                      ) : (
+                        <div className="w-8 h-8 bg-[#5B328C]/30 rounded-full"></div>
+                      )}
                     </div>
 
                     <h3 className="text-[21px] font-semibold leading-[156%] text-[#663399] group-hover:text-white transition-colors duration-300 mb-3">
@@ -349,11 +349,10 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               <div
                 ref={doctorsScrollRef}
                 onScroll={handleDoctorScroll}
-                className={`flex ${
-                  doctors.length <= 3
+                className={`flex ${doctors.length <= 3
                     ? "flex-wrap justify-center"
                     : "overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
-                } gap-8`}
+                  } gap-8`}
               >
                 {doctors.map((doc, idx) => {
                   const designationText = doc.designations && doc.designations.length > 0
@@ -363,30 +362,29 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                   return (
                     <div
                       key={doc.doctorId || idx}
-                      className={`${
-                        doctors.length <= 3
+                      className={`${doctors.length <= 3
                           ? "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-[420px]"
                           : "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
-                      } bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300`}
+                        } bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300`}
                     >
 
                       {/* Image Container */}
                       <div className="relative w-full aspect-[4/3] bg-[#E8F4FA] rounded-[19px] border-2 border-[#663399] overflow-hidden mb-6 flex items-center justify-center">
-                         {doc.experience && (
-                           <div className="absolute top-4 left-4 bg-[#0066A9] shadow-[0px_1px_1.8px_#C3C3C3] rounded-[9px] px-3 py-1 z-10 flex items-center gap-1.5">
-                             <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience.replace(/years?|experience/gi, "").trim()}</span>
-                             <div className="flex flex-col items-start justify-center">
-                               <span className="font-semibold text-[10px] leading-[100%] text-white mb-0.5">Years</span>
-                               <span className="font-semibold text-[8px] leading-[100%] text-white">Experience</span>
-                             </div>
-                           </div>
-                         )}
+                        {doc.experience && (
+                          <div className="absolute top-4 left-4 bg-[#0066A9] shadow-[0px_1px_1.8px_#C3C3C3] rounded-[9px] px-3 py-1 z-10 flex items-center gap-1.5">
+                            <span className="font-bold text-[24px] leading-[160%] text-white">{doc.experience.replace(/years?|experience/gi, "").trim()}</span>
+                            <div className="flex flex-col items-start justify-center">
+                              <span className="font-semibold text-[10px] leading-[100%] text-white mb-0.5">Years</span>
+                              <span className="font-semibold text-[8px] leading-[100%] text-white">Experience</span>
+                            </div>
+                          </div>
+                        )}
 
-                         {doc.image ? (
-                           <Image src={doc.image} alt={doc.name} fill className="object-cover object-top" />
-                         ) : (
-                           <span className="text-[#5B328C] font-semibold opacity-50 text-lg">No Image</span>
-                         )}
+                        {doc.image ? (
+                          <Image src={doc.image} alt={doc.name} fill className="object-cover object-top" />
+                        ) : (
+                          <span className="text-[#5B328C] font-semibold opacity-50 text-lg">No Image</span>
+                        )}
                       </div>
 
                       <div className="flex-grow flex flex-col items-center text-center">
@@ -422,11 +420,10 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                     <button
                       key={idx}
                       onClick={() => scrollToDoctor(idx)}
-                      className={`rounded-full transition-all duration-300 ${
-                        activeDoctorIndex === idx
+                      className={`rounded-full transition-all duration-300 ${activeDoctorIndex === idx
                           ? "w-4 h-4 bg-[#663399]"
                           : "w-3 h-3 bg-gray-300 hover:bg-[#7E57A8]"
-                      }`}
+                        }`}
                       aria-label={`Go to doctor ${idx + 1}`}
                     />
                   ))}
@@ -461,23 +458,20 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
                 const cardInner = (
                   <div
-                    className={`p-8 rounded-2xl flex flex-col justify-center h-full ${
-                      index === 0
+                    className={`p-8 rounded-2xl flex flex-col justify-center h-full ${index === 0
                         ? 'bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] shadow-md'
                         : 'bg-[#EEF8FF] shadow-[0px_0px_4px_0px_#00000040]'
-                    }`}
+                      }`}
                   >
                     {/* Card Title */}
-                    <h3 className={`font-semibold leading-[156%] mb-3 ${
-                      index === 0 ? 'text-[26px] text-white' : 'text-[21px] text-[#663399]'
-                    }`}>
+                    <h3 className={`font-semibold leading-[156%] mb-3 ${index === 0 ? 'text-[26px] text-white' : 'text-[21px] text-[#663399]'
+                      }`}>
                       {item.title}
                     </h3>
 
                     {/* Card Description */}
-                    <p className={`font-normal leading-[156%] ${
-                      index === 0 ? 'text-[18px] text-white' : 'text-[16px] text-[#000000]'
-                    }`}>
+                    <p className={`font-normal leading-[156%] ${index === 0 ? 'text-[18px] text-white' : 'text-[16px] text-[#000000]'
+                      }`}>
                       {item.description}
                     </p>
                   </div>
@@ -523,75 +517,75 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               >
                 {/* Featured Image Container */}
                 <div className="relative w-auto aspect-[11/5] bg-[#D9D9D9] overflow-hidden m-6 mb-0 rounded-[16px] w-[calc(100%-48px)] flex items-center justify-center">
-                   {blogs[0].blogImage ? (
-                     <Image
-                       src={blogs[0].blogImage}
-                       alt={blogs[0].blogTitle || "Featured Blog"}
-                       fill
-                       className="object-cover group-hover:scale-105 transition-transform duration-700"
-                     />
-                   ) : (
-                     <span className="text-[#663399] font-medium opacity-50">No Image</span>
-                   )}
+                  {blogs[0].blogImage ? (
+                    <Image
+                      src={blogs[0].blogImage}
+                      alt={blogs[0].blogTitle || "Featured Blog"}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <span className="text-[#663399] font-medium opacity-50">No Image</span>
+                  )}
                 </div>
 
                 {/* Featured Content */}
                 <div className="p-6 md:p-8 text-white flex flex-col flex-grow justify-center">
-                   <h3 className="font-bold text-[24px] leading-[150%] mb-3 group-hover:text-[#EEF8FF] transition-colors line-clamp-2">
-                     {blogs[0].blogTitle}
-                   </h3>
-                   {/* Uses metaDescription first, falls back to stripping HTML from extraFields */}
-                   <p className="font-normal text-[16px] leading-[160%] text-white/90 line-clamp-3">
-                     {blogs[0].metaDescription || blogs[0].extraFields?.[0]?.description?.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ') || "Click to read more about this topic."}
-                   </p>
+                  <h3 className="font-bold text-[24px] leading-[150%] mb-3 group-hover:text-[#EEF8FF] transition-colors line-clamp-2">
+                    {blogs[0].blogTitle}
+                  </h3>
+                  {/* Uses metaDescription first, falls back to stripping HTML from extraFields */}
+                  <p className="font-normal text-[16px] leading-[160%] text-white/90 line-clamp-3">
+                    {blogs[0].metaDescription || blogs[0].extraFields?.[0]?.description?.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ') || "Click to read more about this topic."}
+                  </p>
                 </div>
               </Link>
 
               {/* List Blogs (Right Side) -> Takes blogs.slice(1) */}
               <div className="w-full lg:w-[44%] bg-[rgba(217,217,217,0.25)] rounded-[24px] p-6 lg:p-8 flex flex-col h-full relative">
 
-                 {/* View All Button */}
-                 <div className="absolute top-6 right-6 z-10">
-                   <Link href="/blog">
-                     <button className="bg-[#663399] text-white text-[14px] font-semibold px-6 py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
-                       View All
-                     </button>
-                   </Link>
-                 </div>
+                {/* View All Button */}
+                <div className="absolute top-6 right-6 z-10">
+                  <Link href="/blog">
+                    <button className="bg-[#663399] text-white text-[14px] font-semibold px-6 py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+                      View All
+                    </button>
+                  </Link>
+                </div>
 
-                 {/* Scrollable List OR Empty State */}
-                 {blogs.length > 1 ? (
-                   <div className="flex flex-col gap-6 pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
-                      {blogs.slice(1).map((blog, idx) => (
-                        <Link
-                          href={`/blog/${blog.url || blog.blogId}`}
-                          key={blog.blogId || idx}
-                          className="flex gap-5 items-center group cursor-pointer"
-                        >
-                           {/* Blog Thumbnail Box */}
-                           <div className="w-[120px] h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm flex items-center justify-center">
-                              {blog.blogImage ? (
-                                <Image src={blog.blogImage} alt={blog.blogTitle || "Blog thumbnail"} fill className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-                              ) : (
-                                <span className="text-white text-[10px] opacity-50">No Image</span>
-                              )}
-                           </div>
+                {/* Scrollable List OR Empty State */}
+                {blogs.length > 1 ? (
+                  <div className="flex flex-col gap-6 pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
+                    {blogs.slice(1).map((blog, idx) => (
+                      <Link
+                        href={`/blog/${blog.url || blog.blogId}`}
+                        key={blog.blogId || idx}
+                        className="flex gap-5 items-center group cursor-pointer"
+                      >
+                        {/* Blog Thumbnail Box */}
+                        <div className="w-[120px] h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm flex items-center justify-center">
+                          {blog.blogImage ? (
+                            <Image src={blog.blogImage} alt={blog.blogTitle || "Blog thumbnail"} fill className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                          ) : (
+                            <span className="text-white text-[10px] opacity-50">No Image</span>
+                          )}
+                        </div>
 
-                           {/* Blog Title */}
-                           <div>
-                             <h4 className="font-semibold text-[16px] leading-[150%] text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
-                               {blog.blogTitle}
-                             </h4>
-                           </div>
-                        </Link>
-                      ))}
-                   </div>
-                 ) : (
-                   /* Fallback when only 1 blog exists to maintain the 56/44 structural layout */
-                   <div className="flex flex-col items-center justify-center h-full pt-14 text-[#663399]/60 font-medium text-center px-4">
-                      <p>More expert articles for this specialty are coming soon.</p>
-                   </div>
-                 )}
+                        {/* Blog Title */}
+                        <div>
+                          <h4 className="font-semibold text-[16px] leading-[150%] text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
+                            {blog.blogTitle}
+                          </h4>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  /* Fallback when only 1 blog exists to maintain the 56/44 structural layout */
+                  <div className="flex flex-col items-center justify-center h-full pt-14 text-[#663399]/60 font-medium text-center px-4">
+                    <p>More expert articles for this specialty are coming soon.</p>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -607,90 +601,90 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
             {/* Left Purple Side */}
             <div className="lg:w-1/2 p-10 lg:p-16 flex flex-col justify-center text-white relative">
 
-               {/* Badge */}
-               <div className="bg-[rgba(231,216,245,0.21)] w-fit px-5 py-2.5 rounded-[22px] flex items-center gap-2 mb-8">
-                 <Calendar className="w-4 h-4 text-white" />
-                 <span className="font-semibold text-[14px] leading-[21px] text-white">Book an Appointment</span>
-               </div>
+              {/* Badge */}
+              <div className="bg-[rgba(231,216,245,0.21)] w-fit px-5 py-2.5 rounded-[22px] flex items-center gap-2 mb-8">
+                <Calendar className="w-4 h-4 text-white" />
+                <span className="font-semibold text-[14px] leading-[21px] text-white">Book an Appointment</span>
+              </div>
 
-               <h2 className="font-semibold text-[32px] leading-[48px] text-white mb-6">
-                 Take the first step toward<br/>a pain-free life.
-               </h2>
+              <h2 className="font-semibold text-[32px] leading-[48px] text-white mb-6">
+                Take the first step toward<br />a pain-free life.
+              </h2>
 
-               <p className="font-medium text-[16px] leading-[170%] text-white mb-10 max-w-md">
-                 Share your details and our care team will reach out to confirm your consultation with a specialist.
-               </p>
+              <p className="font-medium text-[16px] leading-[170%] text-white mb-10 max-w-md">
+                Share your details and our care team will reach out to confirm your consultation with a specialist.
+              </p>
 
-               <ul className="space-y-5 mb-8">
-                 {['Same-day appointments available', 'Insurance & cashless support', 'Seamless patient support services'].map((item, i) => (
-                   <li key={i} className="flex items-center gap-4 font-medium text-[14px] leading-[170%] text-white">
-                     <div className="w-[9px] h-[9px] bg-white rounded-full shrink-0"></div> {item}
-                   </li>
-                 ))}
-               </ul>
+              <ul className="space-y-5 mb-8">
+                {['Same-day appointments available', 'Insurance & cashless support', 'Seamless patient support services'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-4 font-medium text-[14px] leading-[170%] text-white">
+                    <div className="w-[9px] h-[9px] bg-white rounded-full shrink-0"></div> {item}
+                  </li>
+                ))}
+              </ul>
 
-               <hr className="border-[rgba(220,241,255,0.55)]" />
+              <hr className="border-[rgba(220,241,255,0.55)]" />
             </div>
 
             {/* Right Form Side */}
             <div className="lg:w-1/2 bg-[#EEF8FF] p-10 lg:p-16 flex flex-col justify-center">
-               <h3 className="font-semibold text-[24px] leading-[36px] text-[#663399] mb-2">Patient Details</h3>
-               <p className="font-medium text-[16px] leading-[170%] text-[#000000] mb-8">
-                 Share your details and our care team will reach out to confirm your consultation with a specialist.
-               </p>
+              <h3 className="font-semibold text-[24px] leading-[36px] text-[#663399] mb-2">Patient Details</h3>
+              <p className="font-medium text-[16px] leading-[170%] text-[#000000] mb-8">
+                Share your details and our care team will reach out to confirm your consultation with a specialist.
+              </p>
 
-               <form className="space-y-6" onSubmit={handleSection6Submit}>
-                 <div>
-                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Patient Name*</label>
-                   <input
-                     type="text"
-                     required
-                     value={formData.name}
-                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                     placeholder="Enter Your Full Name"
-                     className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
-                   />
-                 </div>
-                 <div>
-                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Mobile Number*</label>
-                   <input
-                     type="tel"
-                     required
-                     value={formData.mobile}
-                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                     placeholder="10 - digit mobile number"
-                     className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
-                   />
-                 </div>
-                 <div>
-                   <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Concern</label>
-                   <input
-                     type="text"
-                     value={formData.concern}
-                     onChange={(e) => setFormData({ ...formData, concern: e.target.value })}
-                     placeholder="Define"
-                     className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
-                   />
-                 </div>
+              <form className="space-y-6" onSubmit={handleSection6Submit}>
+                <div>
+                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Patient Name*</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Enter Your Full Name"
+                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Mobile Number*</label>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.mobile}
+                    onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                    placeholder="10 - digit mobile number"
+                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Concern</label>
+                  <input
+                    type="text"
+                    value={formData.concern}
+                    onChange={(e) => setFormData({ ...formData, concern: e.target.value })}
+                    placeholder="Define"
+                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                  />
+                </div>
 
-                 <div className="pt-2">
-                   <button
-                     type="submit"
-                     disabled={isSubmittingForm || !formData.name || !formData.mobile}
-                     className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[21px] leading-[32px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                   >
-                     {isSubmittingForm ? (
-                       <>
-                         <Loader2 className="w-5 h-5 animate-spin" /> Processing...
-                       </>
-                     ) : (
-                       <>
-                         <Calendar className="w-5 h-5" /> Book an Appointment
-                       </>
-                     )}
-                   </button>
-                 </div>
-               </form>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmittingForm || !formData.name || !formData.mobile}
+                    className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[21px] leading-[32px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmittingForm ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" /> Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Calendar className="w-5 h-5" /> Book an Appointment
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
 
           </div>
@@ -724,7 +718,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       )}
 
       {/* Custom Scrollbar CSS for Blog List and Doctor Carousel */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
@@ -734,9 +729,9 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
       <AppointmentPopup
-  isOpen={isPopupOpen}
-  onClose={() => setIsPopupOpen(false)}
-/>
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
 
     </div>
   );

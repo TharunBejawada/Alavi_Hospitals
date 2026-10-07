@@ -30,7 +30,7 @@ const BRANCH_MAP_URLS = {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   // --- STATE FOR SPECIALITIES ---
   const [specialities, setSpecialities] = useState<any[]>([]);
   const [urlMap, setUrlMap] = useState<Record<string, string>>({});
@@ -48,7 +48,7 @@ const Footer = () => {
 
         const specData = await specRes.json();
         const pagesData = await pagesRes.json();
-        
+
         setSpecialities(specData.Items || []);
 
         // Map specialityId to the custom SEO URL slug
@@ -71,11 +71,11 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#2D1B3E] text-white pt-20 font-sans">
-      
-      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
-        
+
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16 pb-12 lg:pb-16">
-          
+
           {/* COLUMN 1: About */}
           <div className="space-y-6 lg:space-y-8">
             <div>
@@ -92,19 +92,19 @@ const Footer = () => {
                 About Alavi Multi Speciality Hospital
               </h3>
               <p className="text-[14px] xl:text-[15px] leading-relaxed text-gray-300 text-justify">
-                Established in March 2024, Alavi Multi Speciality Hospital
+                Established in October 2017, Alavi Multi Speciality Hospital
                 is committed to delivering expert and compassionate healthcare. We specialize in
                 women's health, pediatrics and a wide range of medical conditions.
               </p>
             </div>
-            <div className="flex items-center gap-4 text-white text-base">
+            <div className="flex items-center gap-5 text-white text-2xl lg:text-3xl">
               {socialLinks.map((social, index) => (
                 <Link
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#E59A1D] hover:scale-110 transition-all duration-300"
+                  className="hover:text-[#E59A1D] hover:scale-115 transition-all duration-300 p-1"
                 >
                   {social.icon}
                 </Link>
@@ -117,7 +117,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold border-b border-purple-500/30 pb-2 mb-6 lg:mb-8">
               Our Specialities
             </h3>
-            
+
             {loading ? (
               <div className="flex items-center gap-2 text-gray-400">
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -128,8 +128,8 @@ const Footer = () => {
                 {/* Reduced to 5 specialities to make room for other links */}
                 <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3 xl:gap-4 text-[14px] xl:text-[15px] text-gray-300 mb-4">
                   {specialities.slice(0, 5).map((spec) => {
-                    const targetUrl = urlMap[spec.specialityId] 
-                      ? `${urlMap[spec.specialityId]}` 
+                    const targetUrl = urlMap[spec.specialityId]
+                      ? `${urlMap[spec.specialityId]}`
                       : `/specialities/${spec.specialityId}`;
 
                     return (
@@ -141,13 +141,13 @@ const Footer = () => {
                     );
                   })}
                 </ul>
-                
+
                 {specialities.length > 5 && (
-                  <Link 
-                    href="/specialities" 
+                  <Link
+                    href="/specialities"
                     className="inline-block text-[14px] font-semibold text-[#E59A1D] hover:text-white transition-colors group mb-10"
                   >
-                    View All Specialities 
+                    View All Specialities
                     <span className="inline-block ml-1 group-hover:translate-x-1 transition-transform">&rarr;</span>
                   </Link>
                 )}
@@ -176,7 +176,7 @@ const Footer = () => {
 
           {/* COLUMN 3: Contact & Address */}
           <div className="space-y-6 lg:space-y-8 md:col-span-2 lg:col-span-1">
-            
+
             <div>
               <h3 className="text-xl font-bold border-b border-purple-500/30 pb-2 mb-6 lg:mb-8">
                 Contact Us
@@ -224,7 +224,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            
+
           </div>
 
         </div>

@@ -9,13 +9,13 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 const hospitals = [
   {
     name: "IDPL",
-    image: "/hospital-idpl.jpg", 
+    image: "/hospital-idpl.jpg",
     showLabel: true,
   },
   {
     name: "Chintal",
-    image: "/hospital-chintal.jpg", 
-    showLabel: true, 
+    image: "/hospital-chintal.jpg",
+    showLabel: true,
   },
 ];
 
@@ -43,18 +43,17 @@ const faqs = [
 ];
 
 const HospitalsAndFAQ = () => {
-  // Set the first FAQ as open by default to match the design
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };
 
   return (
-    <section className="py-8 bg-white px-4 lg:px-12 overflow-hidden font-[Poppins]">
-      <div className="container mx-auto max-w-7xl">
+    <section className="py-8 bg-white overflow-hidden font-[Poppins]">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          
+
           {/* LEFT COLUMN: Our Hospitals */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -65,7 +64,7 @@ const HospitalsAndFAQ = () => {
             <h2 className="text-3xl font-semibold text-[#663399] mb-8 tracking-normal">
               Our Hospitals
             </h2>
-            
+
             <div className="grid grid-cols-2 gap-4 h-[350px] lg:h-[450px]">
               {hospitals.map((hospital, index) => (
                 <div key={index} className="relative w-full h-full flex flex-col shadow-md rounded-sm overflow-hidden group">
@@ -111,11 +110,10 @@ const HospitalsAndFAQ = () => {
                     {/* Accordion Header */}
                     <button
                       onClick={() => toggleFaq(index)}
-                      className={`flex items-center gap-4 w-full text-left p-4 lg:px-6 transition-colors duration-300 ${
-                        isOpen 
-                          ? "bg-[#5B328C] text-white" 
-                          : "bg-white text-gray-900 hover:bg-gray-50"
-                      }`}
+                      className={`flex items-center gap-4 w-full text-left p-4 lg:px-6 transition-colors duration-300 ${isOpen
+                        ? "bg-[#5B328C] text-white"
+                        : "bg-white text-gray-900 hover:bg-gray-50"
+                        }`}
                     >
                       <span className="flex-shrink-0 text-xl font-bold">
                         {isOpen ? <FiMinus /> : <FiPlus className="text-[#5B328C]" />}

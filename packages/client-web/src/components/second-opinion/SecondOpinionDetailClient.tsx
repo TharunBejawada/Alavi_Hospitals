@@ -39,7 +39,7 @@ const emptyRequestForm = (): RequestFormState => ({ name: "", mobile: "", email:
 
 export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpinionTopic }) {
   const router = useRouter();
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [heroForm, setHeroForm] = useState<RequestFormState>(emptyRequestForm());
@@ -105,84 +105,84 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
     <div className="font-['Poppins'] min-h-screen bg-white pb-20">
 
       {/* --- 1. HERO --- */}
-    <section className="relative w-full h-auto min-h-[460px] md:h-[460px] flex items-center overflow-hidden bg-[#663399] font-['Inter'] py-10 md:py-0">
-      
-      {/* Background Image (Left Aligned) */}
-      <div className="absolute inset-y-0 left-0 w-full md:w-[80%] h-full">
-        {topic?.heroImage ? (
-          <Image src={topic.heroImage} alt={topic.title || "Hero Background"} fill className="object-cover" priority />
-        ) : (
-          <img src="/assets/hero-bg.png" alt="Doctors" className="w-full h-full object-cover" />
-        )}
-      </div>
+      <section className="relative w-full h-auto min-h-[460px] md:h-[460px] flex items-center overflow-hidden bg-[#663399] font-['Inter'] py-10 md:py-0">
 
-      {/* Specific Figma Gradient Overlay (Fades image to solid purple on the right) */}
-      <div 
-        className="absolute inset-0" 
-        style={{ background: 'linear-gradient(90deg, rgba(102, 51, 153, 0) 35.21%, #663399 48.79%, #663399 100%)' }} 
-      />
-
-      {/* Content Container */}
-      <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col md:flex-row items-center justify-end px-6 lg:px-[120px] gap-12 lg:gap-[100px]">
-        
-        {/* Left/Middle Content: Text and Button */}
-        <div className="w-full max-w-[285px]">
-          <h1 className="text-[26px] font-extrabold text-white leading-[145%] tracking-[0.01em] mb-6">
-            {topic?.heroHeading || "Already advised hernia surgery?\nGet an expert second opinion before you decide."}
-          </h1>
-          
-          <a href="tel:+919603911911" className="inline-block">
-            <button className="w-[190.55px] h-[48px] border-[2px] border-white text-white font-semibold text-[18px] leading-[145%] tracking-[0.02em] rounded-[31.7px] flex items-center justify-center gap-3 hover:bg-white/10 transition-colors shadow-[4px_6px_4px_-4px_rgba(0,44,75,0.24)]">
-              {/* Phone SVG matched to the solid design */}
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-              </svg>
-              Call Now
-            </button>
-          </a>
+        {/* Background Image (Left Aligned) */}
+        <div className="absolute inset-y-0 left-0 w-full md:w-[80%] h-full">
+          {topic?.heroImage ? (
+            <Image src={topic.heroImage} alt={topic.title || "Hero Background"} fill className="object-cover" priority />
+          ) : (
+            <img src="/assets/hero-bg.png" alt="Doctors" className="w-full h-full object-cover" />
+          )}
         </div>
 
-        {/* Right Content: The Form */}
-        <div className="w-[342px] bg-white rounded-[11px] p-[19px] shrink-0 shadow-xl">
-          <form
+        {/* Specific Figma Gradient Overlay (Fades image to solid purple on the right) */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(90deg, rgba(102, 51, 153, 0) 35.21%, #663399 48.79%, #663399 100%)' }}
+        />
+
+        {/* Content Container */}
+        <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col md:flex-row items-center justify-end px-6 lg:px-[120px] gap-12 lg:gap-[100px]">
+
+          {/* Left/Middle Content: Text and Button */}
+          <div className="w-full max-w-[285px]">
+            <h1 className="text-[26px] font-extrabold text-white leading-[145%] tracking-[0.01em] mb-6">
+              {topic?.heroHeading || "Already advised hernia surgery?\nGet an expert second opinion before you decide."}
+            </h1>
+
+            <a href="tel:+919603911911" className="inline-block">
+              <button className="w-[190.55px] h-[48px] border-[2px] border-white text-white font-semibold text-[18px] leading-[145%] tracking-[0.02em] rounded-[31.7px] flex items-center justify-center gap-3 hover:bg-white/10 transition-colors shadow-[4px_6px_4px_-4px_rgba(0,44,75,0.24)]">
+                {/* Phone SVG matched to the solid design */}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                </svg>
+                Call Now
+              </button>
+            </a>
+          </div>
+
+          {/* Right Content: The Form */}
+          <div className="w-[342px] bg-white rounded-[11px] p-[19px] shrink-0 shadow-xl">
+            <form
               onSubmit={(e) => { e.preventDefault(); submitRequest(heroForm, setIsSubmittingHero, () => setHeroForm(emptyRequestForm())); }}
               className="flex flex-col gap-[8px]"
             >
               {/* Name Input */}
               <div>
                 <label className="block text-[9px] font-medium text-[#000000] leading-[145%] mb-[2px]">Name:</label>
-                <input 
-                  type="text" 
-                  value={heroForm.name} 
-                  onChange={(e) => setHeroForm(f => ({ ...f, name: e.target.value }))} 
+                <input
+                  type="text"
+                  value={heroForm.name}
+                  onChange={(e) => setHeroForm(f => ({ ...f, name: e.target.value }))}
                   required
                   // FIX: text-[#000000] added so typed text is distinctly black
-                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50" 
+                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50"
                 />
               </div>
 
               {/* Mobile Number Input */}
               <div>
                 <label className="block text-[9px] font-medium text-[#000000] leading-[145%] mb-[2px]">Mobile Number :</label>
-                <input 
-                  type="tel" 
-                  value={heroForm.mobile} 
-                  onChange={(e) => setHeroForm(f => ({ ...f, mobile: e.target.value }))} 
+                <input
+                  type="tel"
+                  value={heroForm.mobile}
+                  onChange={(e) => setHeroForm(f => ({ ...f, mobile: e.target.value }))}
                   required
                   // FIX: text-[#000000] added
-                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50" 
+                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50"
                 />
               </div>
 
               {/* Email Address Input */}
               <div>
                 <label className="block text-[9px] font-medium text-[#000000] leading-[145%] mb-[2px]">Email Address:</label>
-                <input 
-                  type="email" 
-                  value={heroForm.email} 
-                  onChange={(e) => setHeroForm(f => ({ ...f, email: e.target.value }))} 
+                <input
+                  type="email"
+                  value={heroForm.email}
+                  onChange={(e) => setHeroForm(f => ({ ...f, email: e.target.value }))}
                   // FIX: text-[#000000] added
-                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50" 
+                  className="w-full h-[24.82px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50"
                 />
               </div>
 
@@ -197,10 +197,10 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
                   <span className="text-[8px] text-[#000000] truncate flex-1 leading-none mt-[1px]">
                     {isUploadingHero ? "Uploading..." : heroForm.fileName || "No file chosen"}
                   </span>
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadReport(f, setHeroForm, setIsUploadingHero); }} 
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadReport(f, setHeroForm, setIsUploadingHero); }}
                   />
                 </label>
               </div>
@@ -208,29 +208,29 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
               {/* Message Textarea */}
               <div>
                 <label className="block text-[9px] font-medium text-[#000000] leading-[145%] mb-[2px]">Message :</label>
-                <textarea 
-                  value={heroForm.message} 
-                  onChange={(e) => setHeroForm(f => ({ ...f, message: e.target.value }))} 
+                <textarea
+                  value={heroForm.message}
+                  onChange={(e) => setHeroForm(f => ({ ...f, message: e.target.value }))}
                   rows={2}
                   // FIX: text-[#000000] added
-                  className="w-full h-[45.93px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 py-1 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50 resize-none" 
+                  className="w-full h-[45.93px] bg-white border-[0.75px] border-[#663399] rounded-[5px] px-2 py-1 text-[10px] text-[#000000] outline-none focus:ring-1 focus:ring-[#663399]/50 resize-none"
                 />
               </div>
 
               {/* Submit Button */}
-              <button 
-                type="submit" 
-                disabled={isSubmittingHero} 
+              <button
+                type="submit"
+                disabled={isSubmittingHero}
                 className="w-full h-[28.58px] bg-[#663399] text-[#FFFFFF] font-semibold text-[12px] leading-[145%] rounded-[5px] flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60 mt-[2px]"
               >
                 {isSubmittingHero ? <Loader2 className="w-4 h-4 animate-spin" /> : "Request a Second Opinion"}
               </button>
-              
-            </form>
-        </div>
 
-      </div>
-    </section>
+            </form>
+          </div>
+
+        </div>
+      </section>
 
       {/* --- 2. OVERVIEW --- */}
       {topic.overview?.title && (
@@ -283,59 +283,59 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
 
       {/* --- 4. MID CTA --- */}
       <section className="w-full flex justify-center bg-white font-['Inter']">
-      {/* Container - Fixed 1440px width bounded */}
-      <div className="relative w-full h-[360px] md:h-[285px] bg-[#663399] overflow-hidden">
-        
-        {/* Right Side Background Image */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-full md:w-[621.31px] h-[414.41px]">
-          <img 
-            src="/assets/specialists-bg.png" 
-            alt="Medical Specialists reviewing scan" 
-            className="w-full h-full object-cover"
-          />
-          {/* Gradient Mask over the image - exact match to flipped Figma gradient */}
-          <div 
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(270deg, rgba(102, 51, 153, 0) 17.84%, #663399 85%)' }}
-          />
-        </div>
+        {/* Container - Fixed 1440px width bounded */}
+        <div className="relative w-full h-[360px] md:h-[285px] bg-[#663399] overflow-hidden">
 
-        {/* Content Area */}
-        <div className="relative z-10 w-full h-full flex flex-col justify-center px-6 md:px-0 md:pl-[170.81px]">
-          
-          <h2 className="text-[#FFFFFF] font-semibold text-[24px] md:text-[30px] leading-[146%] w-full max-w-[507.13px] mb-[28px]">
-            Get Your Second Medical Opinion<br className="hidden md:block" /> with our Specialists
-          </h2>
-          
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="group flex items-center justify-center gap-3 w-full md:w-[479.32px] h-[48px] bg-[#663399] border-[2px] border-[#FFFFFF] rounded-[31.7px] shadow-[4px_6px_4px_-4px_rgba(0,44,75,0.24)] hover:bg-white/10 transition-colors shrink-0"
-          >
-            {/* Calendar / Clock Icon */}
-            <svg 
-              width="24" height="24" viewBox="0 0 24 24" fill="none" 
-              stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-              className="shrink-0"
+          {/* Right Side Background Image */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-full md:w-[621.31px] h-[414.41px]">
+            <img
+              src="/assets/specialists-bg.png"
+              alt="Medical Specialists reviewing scan"
+              className="w-full h-full object-cover"
+            />
+            {/* Gradient Mask over the image - exact match to flipped Figma gradient */}
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(270deg, rgba(102, 51, 153, 0) 17.84%, #663399 85%)' }}
+            />
+          </div>
+
+          {/* Content Area */}
+          <div className="relative z-10 w-full h-full flex flex-col justify-center px-6 md:px-0 md:pl-[170.81px]">
+
+            <h2 className="text-[#FFFFFF] font-semibold text-[24px] md:text-[30px] leading-[146%] w-full max-w-[507.13px] mb-[28px]">
+              Get Your Second Medical Opinion<br className="hidden md:block" /> with our Specialists
+            </h2>
+
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="group flex items-center justify-center gap-3 w-full md:w-[479.32px] h-[48px] bg-[#663399] border-[2px] border-[#FFFFFF] rounded-[31.7px] shadow-[4px_6px_4px_-4px_rgba(0,44,75,0.24)] hover:bg-white/10 transition-colors shrink-0"
             >
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-              {/* Internal Clock detail */}
-              <circle cx="15.5" cy="15.5" r="3.5" fill="#663399" />
-              <polyline points="15.5 13.5 15.5 15.5 16.5 16.5" />
-            </svg>
+              {/* Calendar / Clock Icon */}
+              <svg
+                width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                className="shrink-0"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+                {/* Internal Clock detail */}
+                <circle cx="15.5" cy="15.5" r="3.5" fill="#663399" />
+                <polyline points="15.5 13.5 15.5 15.5 16.5 16.5" />
+              </svg>
 
-            <span className="text-[#FFFFFF] font-semibold text-[15px] md:text-[18px] leading-[145%] tracking-[0.02em]">
-              Book Appointment / Request a Call Back
-            </span>
-          </button>
+              <span className="text-[#FFFFFF] font-semibold text-[15px] md:text-[18px] leading-[145%] tracking-[0.02em]">
+                Book Appointment / Request a Call Back
+              </span>
+            </button>
+
+          </div>
 
         </div>
-
-      </div>
-    </section>
+      </section>
 
       {/* --- 5. RISKS TIMELINE --- */}
       {risksList.length > 0 && (
@@ -367,7 +367,7 @@ export default function SecondOpinionDetailClient({ topic }: { topic: SecondOpin
         </section>
       )}
 
-      
+
 
       {/* --- 6. BENEFITS BAND --- */}
       {(topic.benefits?.list?.length || 0) > 0 && (

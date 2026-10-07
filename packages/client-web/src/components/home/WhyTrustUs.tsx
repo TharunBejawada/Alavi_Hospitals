@@ -9,7 +9,7 @@ const trustItems = [
     id: 1,
     title: "Affordable Medical Services",
     description: "High-quality treatments delivered at transparent and affordable costs without compromising care.",
-    iconSrc: "/icons/affordable.png", 
+    iconSrc: "/icons/affordable.png",
   },
   {
     id: 2,
@@ -58,80 +58,75 @@ export default function WhyTrustUs() {
   };
 
   return (
-    <section className="bg-white overflow-hidden py-4 lg:py-8 font-[Poppins]">
-      
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-semibold text-[#663399]">
-          Why Patients Trust Us?
-        </h2>
-      </div>
+    <section className="bg-white overflow-hidden py-4 lg:py-4 font-[Poppins]">
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
 
-      <div className="py-12 relative w-full bg-[#5B328C] min-h-[500px] flex items-center">
-        
-        {/* BACKGROUND FIX: Added object-left so the left side of the image never crops */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/why-trust-bg.png" 
-            alt="Background Layout" 
-            fill 
-            className="object-cover object-left md:object-center"
-            priority
-          />
-        </div> 
-       
-        <div className="container mx-auto max-w-7xl px-4 lg:px-12 relative z-10 py-12 lg:py-0">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-32 items-center">
-            
-            {/* LEFT COLUMN: Empty space to push the text to the right, letting the background image show through */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="lg:col-span-5 w-full flex justify-center lg:justify-start self-end hidden lg:flex"
-            >
-              {/* Keeping the empty height container so the grid layout stays perfectly balanced */}
-              <div className="relative w-full max-w-[480px] h-[320px] sm:h-[400px] lg:h-[520px] shrink-0">
-              </div>
-            </motion.div>
-
-            {/* RIGHT COLUMN: Interactive Grid List of Core Strengths */}
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-100px" }}
-              className="lg:col-span-7 space-y-6 md:space-y-8"
-            >
-              {trustItems.map((item) => (
-                <motion.div 
-                  variants={itemVariants}
-                  key={item.id}
-                  className="flex items-start gap-4 lg:gap-5 group"
-                >
-                  <div className="w-10 h-10 lg:w-12 lg:h-12 relative shrink-0 transition-transform duration-300 group-hover:scale-110">
-                    <Image 
-                      src={item.iconSrc} 
-                      alt={item.title} 
-                      fill 
-                      className="object-contain" 
-                    />
-                  </div>
-
-                  <div className="flex flex-col text-left">
-                    <h3 className="text-white font-bold text-lg mb-1 tracking-wide">
-                      {item.title}
-                    </h3>
-                    <p className="text-white text-sm leading-normal max-w-2xl font-medium">
-                      {item.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-          </div>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#663399]">
+            Why Patients Trust Us?
+          </h2>
         </div>
+
+        {/* Rounded Purple Banner Container Card */}
+        <div className="relative w-full bg-[#5B328C] rounded-[24px] lg:rounded-[32px] overflow-hidden min-h-[450px] lg:min-h-[500px] flex items-center shadow-xl">
+
+          {/* Dedicated Left Image Container - Constrained to Left 40% on desktop, hidden on mobile */}
+          <div className="hidden lg:block absolute inset-y-0 left-0 w-[40%] z-0 overflow-hidden pointer-events-none">
+            <Image
+              src="/why-trust-bg.png"
+              alt="Why Patients Trust Us"
+              fill
+              className="object-cover lg:object-contain object-left"
+              priority
+            />
+          </div>
+
+          <div className="w-full relative z-10 p-6 sm:p-8 lg:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+
+              {/* LEFT COLUMN: Empty space to allow the background doctor image to show through */}
+              <div className="lg:col-span-5 hidden lg:block h-[350px] lg:h-[460px]" />
+
+              {/* RIGHT COLUMN: Grid List of Core Strengths */}
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-100px" }}
+                className="lg:col-span-7 space-y-4 sm:space-y-5"
+              >
+                {trustItems.map((item) => (
+                  <motion.div
+                    variants={itemVariants}
+                    key={item.id}
+                    className="flex items-start gap-3 lg:gap-4 group"
+                  >
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 relative shrink-0 transition-transform duration-300 group-hover:scale-110 mt-0.5">
+                      <Image
+                        src={item.iconSrc}
+                        alt={item.title}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+
+                    <div className="flex flex-col text-left">
+                      <h3 className="text-white font-bold text-base lg:text-lg mb-0.5 tracking-wide leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-white/95 text-xs sm:text-sm leading-relaxed font-medium">
+                        {item.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
   );

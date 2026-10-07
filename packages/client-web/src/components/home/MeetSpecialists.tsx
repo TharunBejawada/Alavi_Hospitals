@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Loader2, ChevronLeft, ChevronRight } from "lucide-react"; 
-import { API_URL } from "../../config"; 
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { API_URL } from "../../config";
 import AppointmentPopup from "../AppointmentPopup";
 
 export default function MeetSpecialists() {
@@ -91,8 +91,8 @@ export default function MeetSpecialists() {
 
   return (
     <section className="py-4 lg:py-8 bg-white overflow-hidden font-[Poppins]">
-      <div className="max-w-[1440px] w-full mx-auto px-8 md:px-12 xl:px-16">
-        
+      <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
+
         {/* Header Section */}
         <div className="text-center max-w-4xl mx-auto mb-12">
           <h2 className="text-3xl md:text-4xl font-semibold text-[#0066A9] mb-4">
@@ -105,7 +105,7 @@ export default function MeetSpecialists() {
 
         {/* Main Blue Container Block */}
         <div className="bg-[#0066A9] rounded-[30px] p-6 md:p-8 lg:p-10 shadow-xl min-h-[400px] flex flex-col justify-center relative">
-          
+
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="w-10 h-10 animate-spin text-white mb-3" />
@@ -117,10 +117,10 @@ export default function MeetSpecialists() {
             </div>
           ) : (
             <div className="relative group/carousel">
-              
+
               {/* Left Arrow (Only if > 4 doctors) */}
               {showControls && (
-                <button 
+                <button
                   onClick={scrollLeft}
                   className="cursor-pointer absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-[#F4F9FF]"
                 >
@@ -129,39 +129,38 @@ export default function MeetSpecialists() {
               )}
 
               {/* Dynamic Container: Flex row with scroll snap */}
-              <motion.div 
+              <motion.div
                 ref={carouselRef}
                 onScroll={handleScroll}
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, margin: "-50px" }}
-                className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4 pt-2 ${
-                  doctors.length <= 4 ? "lg:justify-center" : ""
-                }`}
+                className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4 pt-2 ${doctors.length <= 4 ? "lg:justify-center" : ""
+                  }`}
               >
                 {doctors.map((doctor) => {
-                  const designationLines = Array.isArray(doctor.designations) 
-                    ? doctor.designations 
-                    : doctor.designation 
-                      ? doctor.designation.split(",").map((d: string) => d.trim()) 
+                  const designationLines = Array.isArray(doctor.designations)
+                    ? doctor.designations
+                    : doctor.designation
+                      ? doctor.designation.split(",").map((d: string) => d.trim())
                       : [];
 
                   return (
-                    <motion.div 
+                    <motion.div
                       variants={cardVariants}
-                      key={doctor.doctorId || doctor.id} 
+                      key={doctor.doctorId || doctor.id}
                       // Width calculations: 1 on Mobile, 2 on Tablet, 4 on Desktop
                       className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] shrink-0 snap-start group bg-white rounded-2xl p-5 flex flex-col border-2 border-transparent hover:bg-[#004A85] hover:border-white transition-all duration-300 shadow-md hover:shadow-2xl"
                     >
-                      
+
                       {/* Image Container with Purple Border */}
                       <div className="w-full bg-[#F4F9FF] rounded-[28px] border-[2px] border-[#663399] overflow-hidden aspect-square relative mb-5">
                         {doctor.image ? (
-                          <Image 
-                            src={doctor.image} 
-                            alt={doctor.name} 
-                            fill 
+                          <Image
+                            src={doctor.image}
+                            alt={doctor.name}
+                            fill
                             className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                             sizes="(max-width: 768px) 100vw, 25vw"
                           />
@@ -177,7 +176,7 @@ export default function MeetSpecialists() {
                         <h3 className="text-[18px] font-bold text-[#663399] group-hover:text-white transition-colors mb-2 line-clamp-1">
                           {doctor.name}
                         </h3>
-                        
+
                         <div className="text-[15px] font-normal text-[#000000] group-hover:text-white/90 transition-colors leading-snug mb-6 flex-1">
                           {designationLines.map((line: string, idx: number) => (
                             <p key={idx}>{line}</p>
@@ -186,20 +185,20 @@ export default function MeetSpecialists() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-row gap-2 mt-auto">
-                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="flex-1 min-w-0">
-                            <button className="cursor-pointer w-full bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-2 rounded transition-colors whitespace-nowrap shadow-sm">
+                          <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="flex-1 min-w-0 flex">
+                            <button className="cursor-pointer w-full min-h-[44px] bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-xs lg:text-[13px] leading-tight px-1.5 py-1.5 rounded transition-colors flex items-center justify-center text-center shadow-sm">
                               Know More
                             </button>
                           </Link>
-                          <button 
+                          <button
                             onClick={() => {
-                              setPopupContext({ 
-                                doctor: doctor.name, 
-                                speciality: doctor.department || doctor.speciality || "" 
+                              setPopupContext({
+                                doctor: doctor.name,
+                                speciality: doctor.department || doctor.speciality || ""
                               });
                               setIsPopupOpen(true);
                             }}
-                            className="cursor-pointer flex-1 min-w-0 bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-[13px] lg:text-[14px] py-2.5 px-2 rounded transition-colors whitespace-nowrap shadow-sm"
+                            className="cursor-pointer flex-1 min-w-0 min-h-[44px] bg-[#005B9F] group-hover:bg-white text-white group-hover:text-[#005B9F] font-semibold text-xs lg:text-[13px] leading-tight px-1.5 py-1.5 rounded transition-colors flex items-center justify-center text-center shadow-sm"
                           >
                             Book Appointment
                           </button>
@@ -213,7 +212,7 @@ export default function MeetSpecialists() {
 
               {/* Right Arrow (Only if > 4 doctors) */}
               {showControls && (
-                <button 
+                <button
                   onClick={scrollRight}
                   className="cursor-pointer absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity hover:bg-[#F4F9FF]"
                 >
@@ -229,11 +228,10 @@ export default function MeetSpecialists() {
                     <button
                       key={idx}
                       onClick={() => scrollToDoctor(idx)}
-                      className={`cursor-pointer rounded-full transition-all duration-300 ${
-                        activeIndex === idx 
-                          ? "w-3 h-3 bg-white" 
-                          : "w-2 h-2 bg-white/40 hover:bg-white/70"
-                      }`}
+                      className={`cursor-pointer rounded-full transition-all duration-300 ${activeIndex === idx
+                        ? "w-3 h-3 bg-white"
+                        : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                        }`}
                       aria-label={`Go to slide ${idx + 1}`}
                     />
                   ))}
@@ -242,21 +240,22 @@ export default function MeetSpecialists() {
 
             </div>
           )}
-          
+
         </div>
       </div>
 
       {/* Global CSS to hide the ugly native scrollbar but keep the scrolling functionality */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
-      <AppointmentPopup 
-  isOpen={isPopupOpen} 
-  onClose={() => setIsPopupOpen(false)} 
-  defaultDoctor={popupContext.doctor}
-  defaultSpeciality={popupContext.speciality}
-/>
+      <AppointmentPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        defaultDoctor={popupContext.doctor}
+        defaultSpeciality={popupContext.speciality}
+      />
     </section>
   );
 }

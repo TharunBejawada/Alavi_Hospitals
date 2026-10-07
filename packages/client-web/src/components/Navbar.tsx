@@ -211,7 +211,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* --- MAIN DESKTOP NAVIGATION BAR (Normal Font Weight) --- */}
+      {/* --- MAIN DESKTOP NAVIGATION BAR (Bold Font Weight) --- */}
       <nav className="hidden lg:block bg-white py-3.5 border-b border-gray-100">
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16">
           <ul className="flex justify-center items-center gap-5 lg:gap-7 xl:gap-9">
@@ -229,7 +229,7 @@ const Header = () => {
                   >
                     <button
                       type="button"
-                      className={`flex items-center gap-1 text-[13px] xl:text-[14px] font-normal transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399] font-medium" : "text-gray-700"
+                      className={`flex items-center gap-1 text-[13px] xl:text-[14px] font-bold transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
                         }`}
                     >
                       {link.name}
@@ -254,7 +254,7 @@ const Header = () => {
                               <li key={child.name}>
                                 <Link
                                   href={child.href}
-                                  className={`block px-5 py-2.5 text-[13px] font-normal hover:bg-[#F3E8FF] hover:text-[#663399] transition-colors whitespace-nowrap ${pathname === child.href ? "text-[#663399] bg-[#F3E8FF]" : "text-gray-700"
+                                  className={`block px-5 py-2.5 text-[13px] font-bold hover:bg-[#F3E8FF] hover:text-[#663399] transition-colors whitespace-nowrap ${pathname === child.href ? "text-[#663399] bg-[#F3E8FF]" : "text-gray-700"
                                     }`}
                                 >
                                   {child.name}
@@ -273,7 +273,7 @@ const Header = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className={`text-[13px] xl:text-[14px] font-normal transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399] font-medium" : "text-gray-700"
+                    className={`text-[13px] xl:text-[14px] font-bold transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
                       }`}
                   >
                     {link.name}
@@ -320,7 +320,7 @@ const Header = () => {
                         <button
                           type="button"
                           onClick={() => setMobileExpanded(isExpanded ? null : link.name)}
-                          className={`flex items-center justify-between w-full text-[15px] font-normal ${isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#663399]" : "text-gray-700"
+                          className={`flex items-center justify-between w-full text-[15px] font-bold ${isExpanded || link.children.some((c) => c.href === pathname) ? "text-[#663399]" : "text-gray-700"
                             }`}
                         >
                           {link.name}
@@ -340,7 +340,7 @@ const Header = () => {
                                   <Link
                                     href={child.href}
                                     onClick={() => setIsOpen(false)}
-                                    className={`text-[13px] font-normal ${pathname === child.href ? "text-[#663399]" : "text-gray-600"}`}
+                                    className={`text-[13px] font-bold ${pathname === child.href ? "text-[#663399]" : "text-gray-600"}`}
                                   >
                                     {child.name}
                                   </Link>
@@ -358,7 +358,7 @@ const Header = () => {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className={`text-[15px] font-normal ${pathname === link.href ? "text-[#663399]" : "text-gray-700"}`}
+                        className={`text-[15px] font-bold ${pathname === link.href ? "text-[#663399]" : "text-gray-700"}`}
                       >
                         {link.name}
                       </Link>

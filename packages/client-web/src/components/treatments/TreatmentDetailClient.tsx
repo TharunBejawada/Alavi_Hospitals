@@ -158,7 +158,7 @@ const InfoItemIcon = ({
 
 export default function TreatmentDetailClient({ treatment }: { treatment: Treatment }) {
   const router = useRouter();
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Hero quick-lead form
@@ -409,7 +409,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
         className="max-w-[1440px] mx-auto px-6 md:px-10 pb-16"
       >
         <div className="bg-[#663399] rounded-2xl flex flex-col md:flex-row overflow-hidden relative shadow-lg min-h-[280px]">
-          
+
           {/* Left Side: Image with Swoosh Transition */}
           <div className="relative w-full md:w-[42%] h-[260px] md:h-auto shrink-0">
             <SafeImage
@@ -440,9 +440,9 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
             </div>
             {/* Mobile bottom curve (ensures smooth transition when stacked) */}
             <div className="block md:hidden absolute bottom-0 inset-x-0 h-[40px] translate-y-[1px] pointer-events-none">
-               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-                 <path d="M0,100 L0,0 C40,60 60,60 100,0 L100,100 Z" fill="#663399" />
-               </svg>
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+                <path d="M0,100 L0,0 C40,60 60,60 100,0 L100,100 Z" fill="#663399" />
+              </svg>
             </div>
           </div>
 
@@ -471,7 +471,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
               </motion.button>
             </div>
           </div>
-          
+
         </div>
       </motion.section>
 
@@ -495,11 +495,11 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 dangerouslySetInnerHTML={{ __html: treatment.treatmentOptions.description.replace(/&nbsp;/g, " ") }}
               />
             )}
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 text-left items-stretch">
               {optionsList.map((item, idx) => {
                 const featured = idx === 0;
-                
+
                 if (featured) {
                   return (
                     <motion.div
@@ -519,7 +519,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                           <div className="absolute inset-0 bg-[#663399]" />
                         )}
                       </div>
-                      
+
                       {/* Bottom Text Half */}
                       <div className="p-5 flex-1 flex flex-col">
                         <h3 className="font-bold text-white text-[15px] mb-3 leading-snug">
@@ -576,7 +576,7 @@ export default function TreatmentDetailClient({ treatment }: { treatment: Treatm
                 );
               })}
             </div>
-            
+
           </div>
         </motion.section>
       )}
