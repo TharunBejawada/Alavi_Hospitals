@@ -227,7 +227,7 @@ const Leadership: React.FC = () => {
                   <strong className="text-[#5B328C]">{doc.name}</strong>, {doc.intro}
                 </p>
 
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mt-auto">
+                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
                   {doc.detail}
                 </p>
               </motion.div>
