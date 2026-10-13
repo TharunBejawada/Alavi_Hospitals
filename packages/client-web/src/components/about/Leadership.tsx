@@ -13,8 +13,6 @@ interface StaticDoctor {
   role: string;
   intro: string;
   detail: string;
-  /** fallback image if doctor not found in API */
-  fallbackImage: string;
   /** fallback experience if doctor not found in API */
   fallbackExperience: string;
 }
@@ -26,7 +24,6 @@ const FEATURED_DOCTOR: StaticDoctor = {
     "Dr. M. Chandra Sekhar, the Managing Director, is an experienced General Physician and Diabetologist with over 19 years of medical expertise.",
   detail:
     "Holding qualifications including MBBS, PGDHSc, PG Diploma in Clinical Endocrinology & Diabetes, and Post Graduation in Diabetology, he has dedicated his career to advancing patient care and managing complex medical conditions.",
-  fallbackImage: "/dr-chandra-sekhar.jpg",
   fallbackExperience: "19+",
 };
 
@@ -38,7 +35,6 @@ const BOTTOM_DOCTORS: StaticDoctor[] = [
       "Director, is a specialist in Pediatrics and Neonatology with 16 years of experience in child healthcare.",
     detail:
       "Holding qualifications of MBBS and MD in Pediatrics, he is dedicated to ensuring the healthy growth and development of infants and children.",
-    fallbackImage: "/dr-pradeep.jpg",
     fallbackExperience: "19+",
   },
   {
@@ -48,7 +44,6 @@ const BOTTOM_DOCTORS: StaticDoctor[] = [
       "Director at Alavi Hospitals, is a renowned Obstetrician, Gynecologist, and Infertility Specialist with 13 years of experience in women's healthcare.",
     detail:
       "She holds qualifications including MBBS, DGO, DRM (Germany), Fellowship in Reproductive Medicine (IMA), and Fellowship in Laparoscopy. Dr. Kalyani is widely respected for her dedication to maternal health and fertility care.",
-    fallbackImage: "/doctors/kalyani.png",
     fallbackExperience: "13+",
   },
   {
@@ -58,7 +53,6 @@ const BOTTOM_DOCTORS: StaticDoctor[] = [
       "Director, specializes in Functional Medicine and Rheumatology and brings 18 years of clinical experience to the institution.",
     detail:
       "With qualifications including MBBS and PGDHSc, he focuses on improving metabolic health and managing complex chronic conditions.",
-    fallbackImage: "/dr-srinivasa.jpg",
     fallbackExperience: "18+",
   },
 ];
@@ -104,9 +98,9 @@ const Leadership: React.FC = () => {
     return match ? { image: match.image, experience: match.experience } : {};
   };
 
-  // Resolve image & experience for each doctor
+  // Resolve image & experience for each doctor (image from API only)
   const featuredApi = getApiData(FEATURED_DOCTOR.name);
-  const featuredImage = featuredApi.image || FEATURED_DOCTOR.fallbackImage;
+  const featuredImage = featuredApi.image ?? null;
   const featuredExp = featuredApi.experience
     ? formatExperience(featuredApi.experience)
     : FEATURED_DOCTOR.fallbackExperience;
@@ -133,16 +127,22 @@ const Leadership: React.FC = () => {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="w-full bg-[#FAF8FE] rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 mb-8 sm:mb-10 border border-[#F0E8FA] shadow-sm flex flex-col lg:flex-row items-center gap-6 lg:gap-10"
         >
-          {/* Left: Doctor Photo */}
+          {/* Left: Doctor Photo (API only) */}
           <div className="relative w-full lg:w-[320px] shrink-0 aspect-[4/3] lg:aspect-[4/4] rounded-[20px] bg-[#EFE8FC] overflow-hidden flex items-end justify-center">
             <div className="absolute inset-x-4 bottom-0 top-6 bg-[#E3D6F8] rounded-t-full z-0" />
-            <Image
-              src={featuredImage}
-              alt={FEATURED_DOCTOR.name}
-              fill
-              className="object-cover object-top z-10"
-              priority
-            />
+            {featuredImage ? (
+              <Image
+                src={featuredImage}
+                alt={FEATURED_DOCTOR.name}
+                fill
+                className="object-cover object-top z-10"
+                priority
+              />
+            ) : (
+              <div className="relative z-10 w-full h-full flex items-center justify-center text-[#5B328C] font-semibold text-sm">
+                Alavi Hospitals
+              </div>
+            )}
           </div>
 
           {/* Center: Static Content */}
@@ -176,7 +176,7 @@ const Leadership: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {BOTTOM_DOCTORS.map((doc, index) => {
             const apiData = getApiData(doc.name);
-            const image = apiData.image || doc.fallbackImage;
+            const image = apiData.image ?? null;
             const exp = apiData.experience
               ? formatExperience(apiData.experience)
               : doc.fallbackExperience;
@@ -190,16 +190,22 @@ const Leadership: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-[#FAF8FE] rounded-[24px] p-5 sm:p-6 flex flex-col border border-[#F0E8FA] shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                {/* Image Container */}
+                {/* Image Container (API only) */}
                 <div className="relative w-full aspect-[4/3] rounded-[20px] bg-[#EFE8FC] overflow-hidden mb-5 flex items-end justify-center">
                   <div className="absolute inset-x-4 bottom-0 top-6 bg-[#E3D6F8] rounded-t-full z-0" />
 
-                  <Image
-                    src={image}
-                    alt={doc.name}
-                    fill
-                    className="object-cover object-top z-10"
-                  />
+                  {image ? (
+                    <Image
+                      src={image}
+                      alt={doc.name}
+                      fill
+                      className="object-cover object-top z-10"
+                    />
+                  ) : (
+                    <div className="relative z-10 w-full h-full flex items-center justify-center text-[#5B328C] font-semibold text-sm">
+                      Alavi Hospitals
+                    </div>
+                  )}
 
                   {/* Experience callout (from API) */}
                   <div className="absolute top-3 right-3 z-20 flex flex-col items-end text-right">
