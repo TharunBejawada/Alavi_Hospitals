@@ -65,9 +65,18 @@ function formatExperience(exp: string | undefined | null): string {
   return numMatch ? `${numMatch[0]}+` : exp.trim();
 }
 
-/** Normalise a name for fuzzy matching (lowercase, strip punctuation) */
-function normaliseName(name: string) {
-  return name.toLowerCase().replace(/[^a-z\s]/g, "").trim();
+/**
+ * Extract significant name tokens — strips "dr" prefix and single-letter
+ * initials so "Dr. M. Chandra Sekhar" → ["chandra","sekhar"]
+ * and "Dr. B. Kalyani" → ["kalyani"].
+ * This makes matching robust regardless of how initials are stored in the DB.
+ */
+function getTokens(name: string): string[] {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, "")
+    .split(/\s+/)
+    .filter((w) => w.length > 1 && w !== "dr");
 }
 
 interface ApiDoctor {
@@ -85,16 +94,22 @@ const Leadership: React.FC = () => {
     axios
       .get(`${API_URL}/api/doctors/getAllEnabledDoctors`)
       .then((res) => setApiDoctors(res.data.Items || []))
-      .catch(() => {/* silently fall back to static data */ });
+      .catch(() => {/* silently ignore errors */ });
   }, []);
 
-  /** Find the API record that best matches a static doctor name */
+  /**
+   * Find the API record whose significant tokens best overlap with the
+   * static doctor name. Returns image & experience from the best match.
+   */
   const getApiData = (staticName: string): { image?: string; experience?: string } => {
-    const needle = normaliseName(staticName);
-    const match = apiDoctors.find((d) =>
-      normaliseName(d.name).includes(needle) ||
-      needle.includes(normaliseName(d.name))
-    );
+    const needleTokens = getTokens(staticName);
+
+    const match = apiDoctors.find((d) => {
+      const apiTokens = getTokens(d.name);
+      // Match if every needle token appears in the API name tokens
+      return needleTokens.every((t) => apiTokens.includes(t));
+    });
+
     return match ? { image: match.image, experience: match.experience } : {};
   };
 
