@@ -45,11 +45,11 @@ const BOTTOM_DOCTORS: StaticDoctor[] = [
     name: "Dr. B. Kalyani",
     role: "Director",
     intro:
-      "Director at Alavi Hospitals, is a renowned Obstetrician, Gynecologist, and Infertility Specialist with 19 years of experience in women's healthcare.",
+      "Director at Alavi Hospitals, is a renowned Obstetrician, Gynecologist, and Infertility Specialist with 13 years of experience in women's healthcare.",
     detail:
       "She holds qualifications including MBBS, DGO, DRM (Germany), Fellowship in Reproductive Medicine (IMA), and Fellowship in Laparoscopy. Dr. Kalyani is widely respected for her dedication to maternal health and fertility care.",
     fallbackImage: "/doctors/kalyani.png",
-    fallbackExperience: "19+",
+    fallbackExperience: "13+",
   },
   {
     name: "Dr. Srinivasa Rao Mallampati",
