@@ -98,19 +98,31 @@ const Leadership: React.FC = () => {
   }, []);
 
   /**
-   * Find the API record whose significant tokens best overlap with the
-   * static doctor name. Returns image & experience from the best match.
+   * Find the best-matching API doctor for a given static name.
+   * Strategy: pick the API entry with the most token overlap.
+   * At least one significant token (length ≥ 5) must match to avoid
+   * false positives on short common words.
    */
   const getApiData = (staticName: string): { image?: string; experience?: string } => {
     const needleTokens = getTokens(staticName);
 
-    const match = apiDoctors.find((d) => {
-      const apiTokens = getTokens(d.name);
-      // Match if every needle token appears in the API name tokens
-      return needleTokens.every((t) => apiTokens.includes(t));
-    });
+    let bestMatch: ApiDoctor | null = null;
+    let bestScore = 0;
 
-    return match ? { image: match.image, experience: match.experience } : {};
+    for (const d of apiDoctors) {
+      const apiTokens = getTokens(d.name);
+      const matched = needleTokens.filter((t) => apiTokens.includes(t));
+      const score = matched.length;
+      // Require at least one long token (≥5 chars) to match, to avoid
+      // accidentally matching on short words like "rao"
+      const hasSignificantMatch = matched.some((t) => t.length >= 5);
+      if (score > bestScore && hasSignificantMatch) {
+        bestScore = score;
+        bestMatch = d;
+      }
+    }
+
+    return bestMatch ? { image: bestMatch.image, experience: bestMatch.experience } : {};
   };
 
   // Resolve image & experience for each doctor (image from API only)
