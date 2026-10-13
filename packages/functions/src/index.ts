@@ -4,10 +4,10 @@ import dotenv from "dotenv";
 import multer from "multer";
 import { createUser, getAllUsers } from "./controllers/userController.js";
 import { login } from "./controllers/authController.js";
-import { 
+import {
   addBlog, getAllBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage, getBlogsByDepartmentKeywords
 } from "./controllers/blogController.js";
-import { 
+import {
   addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors, getDoctorsByDepartment
 } from "./controllers/doctorController.js";
 import { setDoctorAvailability, getDoctorAvailability } from "./controllers/availabilityController.js";
@@ -19,23 +19,24 @@ import * as vaccineController from "./controllers/vaccineController.js";
 import * as insurancePartnerController from "./controllers/insurancePartnerController.js";
 import * as insuranceProcessController from "./controllers/insuranceProcessController.js";
 import * as healthPackageController from "./controllers/healthPackageController.js";
+import * as llmsConfigController from "./controllers/llmsConfigController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
 
-const upload = multer({ 
+const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 } // Limit to 5MB
 });
 
-const app = express();
+const app: any = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/", (req: any, res: any) => {
   res.send("Alavi Hospitals API is running...");
 });
 
@@ -138,6 +139,14 @@ app.put("/api/health-packages/update/:id", healthPackageController.updateHealthP
 app.put("/api/health-packages/:id/toggle", healthPackageController.toggleHealthPackageStatus);
 app.delete("/api/health-packages/delete/:id", healthPackageController.deleteHealthPackage);
 app.post("/api/health-packages/uploadImage", upload.single("image"), healthPackageController.uploadHealthPackageImage);
+
+// LLMs.txt & AI Context Routes
+app.get("/api/llms-config", llmsConfigController.getConfigHandler);
+app.post("/api/llms-config", llmsConfigController.saveConfigHandler);
+app.get("/llms.txt", llmsConfigController.getLlmsTxtHandler);
+app.get("/api/llms.txt", llmsConfigController.getLlmsTxtHandler);
+app.get("/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
+app.get("/api/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);

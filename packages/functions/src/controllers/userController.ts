@@ -1,8 +1,7 @@
-import { db, TABLE_NAME } from "../db/dynamo.ts";
+import { db, TABLE_NAME } from "../db/dynamo.js";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "@alavi-hospitals-app/core/src/types.ts"; // Shared types
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 export const createUser = async (req: any, res: any) => {
@@ -23,7 +22,7 @@ export const createUser = async (req: any, res: any) => {
         ":email": email,
       },
     };
-    
+
     const existingUser = await db.send(new QueryCommand(checkUserParams));
 
     if (existingUser.Items && existingUser.Items.length > 0) {
@@ -80,10 +79,10 @@ export const getAllUsers = async (req: any, res: any) => {
       TableName: TABLE_NAME,
       // Ideally use "ProjectionExpression" to exclude 'password' from the response
       ProjectionExpression: "userId, email, #n, #r, #s, lastLogin",
-      ExpressionAttributeNames: { 
-         "#n": "name",
-         "#r": "role",
-         "#s": "status"
+      ExpressionAttributeNames: {
+        "#n": "name",
+        "#r": "role",
+        "#s": "status"
       }
     });
 

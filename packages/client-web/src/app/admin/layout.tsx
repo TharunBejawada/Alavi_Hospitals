@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { 
-  LayoutDashboard, 
-  FileText, 
+import {
+  LayoutDashboard,
+  FileText,
   HeartPulse,
-  Users, 
+  Users,
   Calendar,
-  Settings, 
-  Newspaper, 
-  LogOut, 
+  Settings,
+  Newspaper,
+  LogOut,
   Activity,
   Image as ImageIcon,
   Menu,
@@ -20,7 +20,8 @@ import {
   MessageCircleQuestionMark,
   Syringe,
   Umbrella,
-  PackageCheck
+  PackageCheck,
+  Bot
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     const user = localStorage.getItem("adminUser");
-    
+
     if (!user) {
       router.push("/admin/login");
     } else {
@@ -76,6 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Vaccinations", href: "/admin/vaccinations", icon: Syringe },
     { name: "Insurance & TPA", href: "/admin/insurance", icon: Umbrella },
     { name: "Health Packages", href: "/admin/health-packages", icon: PackageCheck },
+    { name: "LLMs & AI Context", href: "/admin/llms-txt", icon: Bot },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
@@ -98,8 +100,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       `}>
         {/* Header */}
         <div className="p-6 border-b border-slate-800 shrink-0 mt-14 md:mt-0">
-           <h1 className="text-white font-bold text-lg tracking-wide">Alavi Hospitals Admin</h1>
-           <p className="text-xs text-slate-500 mt-1">v1.0.0 • VG Digital</p>
+          <h1 className="text-white font-bold text-lg tracking-wide">Alavi Hospitals Admin</h1>
+          <p className="text-xs text-slate-500 mt-1">v1.0.0 • VG Digital</p>
         </div>
 
         {/* Scrollable Navigation Area */}
@@ -107,15 +109,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {menu.map((item) => {
             const isActive = pathname.startsWith(item.href);
             return (
-              <Link 
-                key={item.name} 
+              <Link
+                key={item.name}
                 href={item.href}
                 onClick={() => setIsMobileMenuOpen(false)} // Close menu on mobile click
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  isActive 
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/50" 
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/50"
                     : "hover:bg-slate-800 hover:text-white"
-                }`}
+                  }`}
               >
                 <item.icon className="w-5 h-5 shrink-0" />
                 <span className="font-medium text-sm">{item.name}</span>
@@ -126,7 +127,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer Area (Pinned to Bottom) */}
         <div className="p-4 border-t border-slate-800 shrink-0 bg-[#0F172A]">
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-lg transition"
           >
@@ -139,7 +140,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* MAIN CONTENT WRAPPER */}
       <main className="flex-1 md:ml-64 p-8 pt-20 md:pt-8 min-h-screen">
         <div className="max-w-7xl mx-auto">
-           {children}
+          {children}
         </div>
       </main>
 

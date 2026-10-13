@@ -28,13 +28,13 @@ export interface BlogPost {
   author: string;
   timeline: string; // Date string
   extraFields: ExtraField[];
-  
+
   // SEO
   seoTitle?: string;
   metaDescription?: string;
   metaKeywords?: string;
   url?: string;
-  
+
   enabled: boolean;
   createdAt: string;
 }
@@ -61,10 +61,10 @@ export interface Doctor {
   metaKeywords?: string;
   url?: string;
   enabled: boolean;
-  
+
   // The old string field (optional now)
-  designation?: string; 
-  
+  designation?: string;
+
   // The new array fields
   designations?: string[];
   keyExpertise?: string[];
@@ -73,7 +73,7 @@ export interface Doctor {
   experienceAchievements?: string[];
   memberships?: string[];
   closingDescription?: string;
-  
+
   // Existing dynamic objects
   extraFields?: { heading: string; description: string }[];
   faqs?: { question: string; answer: string }[];
@@ -437,3 +437,45 @@ export interface HealthPackage {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// ==========================================
+// LLMs.txt & AI Context Manager Types
+// ==========================================
+
+export interface LlmsCustomSectionItem {
+  title: string;
+  url: string;
+  description?: string;
+}
+
+export interface LlmsCustomSection {
+  id: string;
+  title: string;
+  description?: string;
+  items: LlmsCustomSectionItem[];
+}
+
+export interface LlmsDynamicSections {
+  includeDoctors?: boolean;
+  includeBlogs?: boolean;
+  includeSpecialities?: boolean;
+  includeTreatments?: boolean;
+  includeHealthPackages?: boolean;
+  includeSecondOpinion?: boolean;
+}
+
+export interface LlmsConfig {
+  id?: string;
+  title: string;
+  summary: string;
+  homepage: string;
+  enabled: boolean;
+  systemNotes?: string;
+  dynamicSections: LlmsDynamicSections;
+  customSections: LlmsCustomSection[];
+  useRawOverride: boolean;
+  rawMarkdownOverride?: string;
+  fullTxtContent?: string;
+  updatedAt?: string;
+}
+
