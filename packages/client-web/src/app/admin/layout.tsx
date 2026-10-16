@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return;
     }
 
-    const user = localStorage.getItem("adminUser");
+    const user = localStorage.getItem("adminUser") || sessionStorage.getItem("adminUser");
 
     if (!user) {
       router.push("/admin/login");
@@ -48,6 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     localStorage.removeItem("adminUser");
+    sessionStorage.removeItem("adminUser");
     router.push("/admin/login");
   };
 
@@ -105,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Scrollable Navigation Area */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto thin-scrollbar">
           {menu.map((item) => {
             const isActive = pathname.startsWith(item.href);
             return (

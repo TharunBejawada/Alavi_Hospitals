@@ -15,8 +15,8 @@ const leftNavItems = [
 export default function FloatingSideNav() {
   const pathname = usePathname(); // ADD THIS
 
-  // ADD THIS: If the URL starts with /admin, don't render the component
-  if (pathname?.startsWith("/admin")) {
+  // If the URL starts with /admin, don't render the component
+  if (pathname?.toLowerCase().startsWith("/admin")) {
     return null;
   }
   return (

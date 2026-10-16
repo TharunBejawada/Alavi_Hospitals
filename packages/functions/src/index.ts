@@ -26,14 +26,15 @@ dotenv.config();
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 } // Limit to 5MB
+  limits: { fileSize: 25 * 1024 * 1024 } // Limit to 25MB
 });
 
 const app: any = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
 // Routes
 app.get("/", (req: any, res: any) => {
@@ -148,8 +149,24 @@ app.get("/api/llms.txt", llmsConfigController.getLlmsTxtHandler);
 app.get("/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
 app.get("/api/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
 
-// app.listen(PORT, () => {
-//   console.log(`Server running on http://localhost:${PORT}`);
-// });
+// Multer and general error handling middleware
+app.use((err: any, req: any, res: any, next: any) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ error: "File too large. Maximum size allowed is 25MB." });
+    }
+    return res.status(400).json({ error: `Upload error: ${err.message}` });
+  }
+  if (err) {
+    return res.status(err.status || 500).json({ error: err.message || "An unexpected error occurred" });
+  }
+  next();
+});
+
+if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 export const handler = serverless(app);

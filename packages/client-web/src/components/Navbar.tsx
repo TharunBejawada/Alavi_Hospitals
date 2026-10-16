@@ -58,13 +58,14 @@ const Header = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
   const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
+  const isAdminRoute = pathname?.toLowerCase().startsWith("/admin");
 
   useEffect(() => {
+    if (isAdminRoute) return;
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isAdminRoute]);
 
   // --- Google Translate Setup ---
   useEffect(() => {
@@ -107,6 +108,10 @@ const Header = () => {
     }
   };
 
+  if (isAdminRoute) {
+    return null;
+  }
+
   return (
     <header className={`w-full z-50 sticky top-0 bg-white transition-shadow duration-300 ${isScrolled ? "shadow-md" : ""}`}>
 
@@ -129,32 +134,30 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-5 xl:gap-7">
 
             {/* Siren + Mobile Number Badge Pill */}
-            <div className="flex items-center">
+            <a
+              href="tel:9603911911"
+              className="flex items-center group cursor-pointer"
+            >
               {/* White ringed circle around Siren Icon */}
-              <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#663399] text-white flex items-center justify-center border-[3px] border-white shadow-md z-10 shrink-0">
-                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white" viewBox="0 0 24 24" fill="none">
-                  {/* Radiating Rays */}
-                  <line x1="12" y1="3.5" x2="12" y2="6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                  <line x1="5.5" y1="6.5" x2="7.5" y2="8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                  <line x1="18.5" y1="6.5" x2="16.5" y2="8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                  <line x1="3" y1="15" x2="5.8" y2="15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                  <line x1="21" y1="15" x2="18.2" y2="15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                  {/* Siren Dome Light */}
-                  <path d="M7 17.5 C7 11, 17 11, 17 17.5 Z" fill="currentColor" />
-                  {/* Base Bar */}
-                  <rect x="5.5" y="17.5" width="13" height="3" rx="1" fill="currentColor" />
-                </svg>
+              <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#663399] text-white flex items-center justify-center border-[3px] border-white shadow-md z-10 shrink-0 group-hover:bg-[#542982] transition-colors">
+                <Image
+                  src="/Emergency Icon.png"
+                  alt="Emergency Icon"
+                  width={34}
+                  height={28}
+                  className="w-7 h-auto sm:w-8 object-contain"
+                  priority
+                />
               </div>
 
               {/* Connected Purple Pill (Normal Weight Text matching reference image) */}
-              <a
-                href="tel:9603911911"
-                className="bg-[#663399] text-white rounded-r-full rounded-l-full pl-8 pr-7 py-2.5 sm:py-3 -ml-6 flex items-center gap-3 text-base xl:text-lg hover:bg-[#542982] transition-colors shadow-md"
+              <div
+                className="bg-[#663399] text-white rounded-r-full rounded-l-full pl-8 pr-7 py-2.5 sm:py-3 -ml-6 flex items-center gap-3 text-base xl:text-lg group-hover:bg-[#542982] transition-colors shadow-md"
               >
                 <FaPhoneAlt size={16} className="text-white transform -rotate-12" />
                 <span className="tracking-wide font-normal">9603 911 911</span>
-              </a>
-            </div>
+              </div>
+            </a>
 
             {/* Language Selector Button */}
             {!isAdminRoute && (
@@ -369,8 +372,17 @@ const Header = () => {
 
               <div className="mt-auto p-4 bg-purple-50 rounded-2xl space-y-3">
                 <p className="text-[#663399] font-normal text-xs tracking-wider uppercase">Emergency Contact</p>
-                <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-normal text-gray-800">
-                  <FaPhoneAlt className="text-[#663399]" /> 9603 911 911
+                <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-medium text-gray-800 hover:text-[#663399] transition-colors">
+                  <span className="w-8 h-8 rounded-full bg-[#663399] flex items-center justify-center shrink-0 shadow-sm">
+                    <Image
+                      src="/Emergency Icon.png"
+                      alt="Emergency Icon"
+                      width={18}
+                      height={15}
+                      className="w-4 h-auto object-contain"
+                    />
+                  </span>
+                  <span>9603 911 911</span>
                 </a>
               </div>
             </motion.div>

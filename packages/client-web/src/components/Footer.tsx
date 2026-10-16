@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa6";
 import { Loader2 } from "lucide-react";
@@ -29,6 +30,8 @@ const BRANCH_MAP_URLS = {
 };
 
 const Footer = () => {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.toLowerCase().startsWith("/admin");
   const currentYear = new Date().getFullYear();
 
   // --- STATE FOR SPECIALITIES ---
@@ -38,6 +41,8 @@ const Footer = () => {
 
   // --- FETCH SPECIALITIES ON MOUNT ---
   useEffect(() => {
+    if (isAdminRoute) return;
+
     async function fetchData() {
       try {
         // Fetch specialities and speciality landing pages in parallel
@@ -67,7 +72,11 @@ const Footer = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [isAdminRoute]);
+
+  if (isAdminRoute) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#2D1B3E] text-white pt-20 font-sans">

@@ -3,8 +3,15 @@
 import { Phone } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export default function FloatingContact() {
+  const pathname = usePathname();
+
+  if (pathname?.toLowerCase().startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <div className="hidden md:flex fixed z-50 
       /* Mobile: Bottom center, horizontal row */

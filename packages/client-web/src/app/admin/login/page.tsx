@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -12,10 +12,21 @@ export default function AdminLogin() {
   // State for inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   
   // UI States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Pre-fill email if previously remembered
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedAdminEmail");
+    const wasRemembered = localStorage.getItem("adminRememberMe") === "true";
+    if (savedEmail && wasRemembered) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +47,18 @@ export default function AdminLogin() {
         throw new Error(data.error || "Login failed");
       }
 
-      // 2. Save User Session (Simple LocalStorage for now)
-      // In production, you might use cookies or a more robust auth library
-      localStorage.setItem("adminUser", JSON.stringify(data.user));
+      // 2. Save User Session with Remember Me support
+      if (rememberMe) {
+        localStorage.setItem("adminUser", JSON.stringify(data.user));
+        localStorage.setItem("rememberedAdminEmail", email);
+        localStorage.setItem("adminRememberMe", "true");
+        sessionStorage.removeItem("adminUser");
+      } else {
+        sessionStorage.setItem("adminUser", JSON.stringify(data.user));
+        localStorage.removeItem("adminUser");
+        localStorage.removeItem("rememberedAdminEmail");
+        localStorage.removeItem("adminRememberMe");
+      }
 
       // 3. Redirect
       router.push("/admin/dashboard");
@@ -126,6 +146,19 @@ export default function AdminLogin() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm py-0.5">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600 hover:text-slate-800">
+                <input 
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer accent-blue-600"
+                />
+                <span className="font-medium text-slate-700">Remember me</span>
+              </label>
+              <span className="text-xs text-slate-400">Contact IT Support</span>
             </div>
 
             <button 

@@ -142,8 +142,8 @@ export default function SpecialityPageForm() {
       const res = await axios.post(`${API_URL}/api/specialities/uploadImage`, uploadData);
       callback(res.data.imageUrl);
       toast.success("Image uploaded!");
-    } catch {
-      toast.error("Upload failed");
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Upload failed");
     }
   };
 

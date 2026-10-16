@@ -64,8 +64,8 @@ export default function SpecialityForm() {
       });
       setSpeciality((prev) => ({ ...prev, [type]: response.data.imageUrl }));
       toast.success(`${type === "icon" ? "Icon" : "Image"} uploaded!`);
-    } catch (error) {
-      toast.error("Upload failed");
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Upload failed");
     }
   };
 
