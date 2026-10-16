@@ -1,17 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
-import {
-    Building2,
-    BedDouble,
-    Users,
-    Stethoscope,
-    Syringe
-} from "lucide-react";
 
 interface StatItem {
-    icon: React.ElementType;
+    iconSrc: string;
     value: string;
     label: string;
     sublabel?: string;
@@ -19,28 +13,28 @@ interface StatItem {
 
 const stats: StatItem[] = [
     {
-        icon: Building2,
+        iconSrc: "/assets/about-us/Locations IDPL & Chintal.png",
         value: "2",
         label: "Locations",
         sublabel: "IDPL & Chintal",
     },
     {
-        icon: BedDouble,
+        iconSrc: "/assets/about-us/BEDS.png",
         value: "80",
         label: "Beds",
     },
     {
-        icon: Users,
+        iconSrc: "/assets/about-us/HAPPY PATIENTS.png",
         value: "200K+",
         label: "Happy Patients",
     },
     {
-        icon: Stethoscope,
+        iconSrc: "/assets/about-us/EXPERIENCED DOCTORS.png",
         value: "25+",
         label: "Experienced Doctors",
     },
     {
-        icon: Syringe,
+        iconSrc: "/assets/about-us/SURGERIES.png",
         value: "6K+",
         label: "Surgeries & Major Procedures",
     },
@@ -118,7 +112,6 @@ const ImpactAtAGlance: React.FC = () => {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-0 lg:divide-x lg:divide-white/20">
                         {stats.map((item, index) => {
-                            const IconComponent = item.icon;
                             return (
                                 <motion.div
                                     key={index}
@@ -129,8 +122,13 @@ const ImpactAtAGlance: React.FC = () => {
                                     className="flex flex-col items-center justify-center text-center px-2 lg:px-3 py-1"
                                 >
                                     {/* Icon */}
-                                    <div className="mb-1.5 text-white/90">
-                                        <IconComponent className="w-7 h-7 sm:w-9 sm:h-9 stroke-[1.5]" />
+                                    <div className="relative w-8 h-8 sm:w-10 sm:h-10 mb-2 flex items-center justify-center">
+                                        <Image
+                                            src={item.iconSrc}
+                                            alt={item.label}
+                                            fill
+                                            className="object-contain"
+                                        />
                                     </div>
 
                                     {/* Value with Count Animation */}

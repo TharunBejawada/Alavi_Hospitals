@@ -82,7 +82,7 @@ export default function MeetSpecialists() {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
   };
 
   // Determine if carousel controls are needed based on screen size approximations
@@ -94,17 +94,17 @@ export default function MeetSpecialists() {
       <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
 
         {/* Header Section */}
-        <div className="text-center max-w-4xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-semibold text-[#0066A9] mb-4">
+        <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#0066A9] mb-3 sm:mb-4">
             Meet Our Specialists
           </h2>
-          <p className="text-[#0C0200] text-xl font-medium leading-normal">
+          <p className="text-[#0C0200] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-relaxed">
             Delivering trusted, high-quality care through experienced doctors focused on accurate diagnosis, advanced treatment and patient well-being.
           </p>
         </div>
 
         {/* Main Blue Container Block */}
-        <div className="bg-[#0066A9] rounded-[30px] p-6 md:p-8 lg:p-10 shadow-xl min-h-[400px] flex flex-col justify-center relative">
+        <div className="bg-[#0066A9] rounded-[24px] sm:rounded-[30px] p-4 sm:p-8 lg:p-10 shadow-xl min-h-[400px] flex flex-col justify-center relative">
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -118,11 +118,11 @@ export default function MeetSpecialists() {
           ) : (
             <div className="relative group/carousel">
 
-              {/* Left Arrow (Only if > 4 doctors) */}
+              {/* Left Arrow (Hidden on small screens to prevent overlay/overflow) */}
               {showControls && (
                 <button
                   onClick={scrollLeft}
-                  className="cursor-pointer absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-[#F4F9FF]"
+                  className="cursor-pointer hidden sm:flex absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-[#F4F9FF]"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
@@ -210,11 +210,11 @@ export default function MeetSpecialists() {
                 })}
               </motion.div>
 
-              {/* Right Arrow (Only if > 4 doctors) */}
+              {/* Right Arrow (Hidden on small screens) */}
               {showControls && (
                 <button
                   onClick={scrollRight}
-                  className="cursor-pointer absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity hover:bg-[#F4F9FF]"
+                  className="cursor-pointer hidden sm:flex absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 bg-white text-[#0066A9] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity hover:bg-[#F4F9FF]"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>

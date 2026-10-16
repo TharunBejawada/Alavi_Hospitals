@@ -124,28 +124,28 @@ export default function SecondOpinionRequestModal({ isOpen, onClose, topicTitle 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[824px] bg-white rounded-[23px] p-6 lg:p-8 shadow-2xl h-[80vh] flex flex-col font-['Poppins'] overflow-hidden"
+            className="relative w-full max-w-[824px] bg-white rounded-[23px] p-5 sm:p-6 lg:p-8 shadow-2xl max-h-[92vh] flex flex-col font-['Poppins'] overflow-hidden"
           >
             <button
               onClick={onClose}
               disabled={isSubmitting}
-              className="absolute top-4 right-4 md:top-6 md:right-6 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-10 disabled:opacity-50"
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-10 disabled:opacity-50 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center shrink-0 mb-4 flex flex-col items-center">
-              <h2 className="font-semibold text-[21px] leading-[156%] text-[#663399] mb-2">
+            <div className="text-center shrink-0 mb-3 sm:mb-4 pr-6 sm:pr-0 flex flex-col items-center">
+              <h2 className="font-semibold text-lg sm:text-[21px] leading-tight text-[#663399] mb-1.5 sm:mb-2">
                 Request a Second Opinion
               </h2>
-              <p className="font-normal text-[16px] leading-[24px] text-black max-w-[702px] w-full">
+              <p className="font-normal text-xs sm:text-[15px] leading-snug sm:leading-[24px] text-black max-w-[702px] w-full">
                 Share your details and, if you have them, your medical reports. Our specialists will review your case and get back to you.
               </p>
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="max-w-[712px] w-full mx-auto flex flex-col flex-1 justify-between min-h-0 overflow-y-auto custom-scrollbar pr-2 pb-2"
+              className="max-w-[712px] w-full mx-auto flex flex-col flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-1 pb-1"
             >
               <div>
                 <label className="block font-medium text-[16px] leading-[24px] text-black mb-1">Your Name*:</label>

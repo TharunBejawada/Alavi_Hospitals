@@ -104,7 +104,7 @@ export default function DoctorListUser() {
 
   const itemFadeUp = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
     exit: { opacity: 0, y: -20, transition: { duration: 0.2 } }
   };
 
@@ -127,16 +127,16 @@ export default function DoctorListUser() {
 
         {/* Left Text Content (Constrained inside container with sticky icon padding) */}
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 flex z-10 relative">
-          <div className="w-full flex flex-col justify-center py-12 md:py-20 lg:py-24">
+          <div className="w-full flex flex-col justify-center py-10 md:py-20 lg:py-24">
             <motion.h1
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
-              className="max-w-3xl text-3xl md:text-4xl lg:text-[42px] font-semibold text-white mb-4 leading-tight"
+              className="max-w-3xl text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-semibold text-white mb-4 leading-tight"
             >
               Meet the Medical Experts Behind Your Care
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-white/90 text-xl leading-relaxed max-w-xl"
+              className="text-white/90 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl"
             >
               Our experienced specialists provide compassionate and advanced medical care across multiple specialties.
             </motion.p>
@@ -269,11 +269,11 @@ export default function DoctorListUser() {
                         key={doctor.doctorId}
                         layout
                         // Group Hover handles the transition from the light card to the dark gradient card
-                        className="hover:bg-[linear-gradient(270.11deg,#0066A9_0.09%,#663399_99.91%)] group bg-[#F4F9FF] rounded-[24px] overflow-hidden p-6 flex flex-col md:flex-row gap-12 border border-blue-100 hover:border-transparent hover:shadow-xl transition-all duration-500"
+                        className="hover:bg-[linear-gradient(270.11deg,#0066A9_0.09%,#663399_99.91%)] group bg-[#F4F9FF] rounded-[24px] overflow-hidden p-4 sm:p-6 flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-12 border border-blue-100 hover:border-transparent hover:shadow-xl transition-all duration-500"
                       >
 
                         {/* Doctor Image Container (Added Border) */}
-                        <div className="w-full md:w-[257px] shrink-0 bg-white rounded-[20px] border-[2px] border-[#5B328C] group-hover:border-white/40 overflow-hidden aspect-[4/5] relative transition-colors duration-500">
+                        <div className="w-full md:w-[257px] max-w-[280px] mx-auto md:mx-0 shrink-0 bg-white rounded-[20px] border-[2px] border-[#5B328C] group-hover:border-white/40 overflow-hidden aspect-[4/5] relative transition-colors duration-500">
                           {doctor.image ? (
                             <Image
                               src={doctor.image}
@@ -298,7 +298,7 @@ export default function DoctorListUser() {
                               {/* <div className="bg-white p-1.5 rounded-full shrink-0 group-hover:bg-white/20 transition-colors shadow-sm group-hover:shadow-none">
                                 <FaUserDoctor className="text-[#0066A9] group-hover:text-white transition-colors" />
                               </div> */}
-                              <span className="text-[21px] font-semibold text-[#0066A9] group-hover:text-white transition-colors">
+                              <span className="text-base sm:text-lg md:text-[21px] font-semibold text-[#0066A9] group-hover:text-white transition-colors">
                                 {doctor.department}
                               </span>
                             </div>
@@ -308,20 +308,20 @@ export default function DoctorListUser() {
 
                           {/* Name */}
                           <Link href={`/doctors/${doctor.url || doctor.doctorId}`} className="w-fit">
-                            <h2 className="text-[21px] font-bold text-[#663399] group-hover:text-white transition-colors mb-1.5 hover:underline decoration-2 underline-offset-4 break-words">
+                            <h2 className="text-lg sm:text-xl md:text-[21px] font-bold text-[#663399] group-hover:text-white transition-colors mb-1.5 hover:underline decoration-2 underline-offset-4 break-words">
                               {doctor.name}
                             </h2>
                           </Link>
 
                           {/* Designations */}
-                          <p className="text-[18px] font-normal text-[#000000] group-hover:text-white/90 transition-colors leading-snug mb-3 break-words line-clamp-2">
+                          <p className="text-sm sm:text-base md:text-[18px] font-normal text-[#000000] group-hover:text-white/90 transition-colors leading-snug mb-3 break-words line-clamp-2">
                             {designationText}
                           </p>
 
                           {/* Qualifications Badge */}
                           {doctor.qualification && (
                             <div className="mb-4">
-                              <span className="inline-block bg-[#0066A9] group-hover:bg-white text-white group-hover:text-[#5B328C] transition-colors text-[18px] font-normal py-1.5 px-3 rounded shadow-sm break-words line-clamp-2">
+                              <span className="inline-block bg-[#0066A9] group-hover:bg-white text-white group-hover:text-[#5B328C] transition-colors text-xs sm:text-sm md:text-[16px] font-normal py-1.5 px-3 rounded shadow-sm break-words line-clamp-2">
                                 {doctor.qualification}
                               </span>
                             </div>
@@ -329,13 +329,13 @@ export default function DoctorListUser() {
 
                           {/* Experience */}
                           {doctor.experience && (
-                            <p className="text-[18px] font-medium text-[#663399] group-hover:text-white transition-colors mb-6 mt-auto">
+                            <p className="text-sm sm:text-base md:text-[18px] font-medium text-[#663399] group-hover:text-white transition-colors mb-6 mt-auto">
                               Experience : {formatExperience(doctor.experience)}
                             </p>
                           )}
 
                           {/* Action Buttons */}
-                          <div className="flex flex-col sm:flex-row gap-8 mt-auto">
+                          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-auto">
                             <Link href={`/doctors/${doctor.url || doctor.doctorId}`}>
                               <button className="cursor-pointer w-full sm:w-auto bg-transparent text-[#663399] border-[1.5px] border-[#663399] group-hover:text-white group-hover:border-white hover:bg-[#663399]/10 font-medium text-[14px] py-2.5 px-6 rounded transition-colors whitespace-nowrap">
                                 View Profile

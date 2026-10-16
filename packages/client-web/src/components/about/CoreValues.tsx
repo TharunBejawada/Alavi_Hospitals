@@ -1,40 +1,34 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  HeartHandshake,
-  Award,
-  ShieldCheck,
-  UserCheck,
-  Users
-} from "lucide-react";
 
 interface ValueItem {
   title: string;
-  icon: React.ElementType;
+  iconSrc: string;
 }
 
 const valuesList: ValueItem[] = [
   {
     title: "Compassion",
-    icon: HeartHandshake,
+    iconSrc: "/assets/about-us/COMPASSION.png",
   },
   {
     title: "Excellence",
-    icon: Award,
+    iconSrc: "/assets/about-us/EXELLENCE.png",
   },
   {
     title: "Integrity",
-    icon: ShieldCheck,
+    iconSrc: "/assets/about-us/INTEGRITY.png",
   },
   {
     title: "Patient-First Care",
-    icon: UserCheck,
+    iconSrc: "/assets/about-us/PATIENT CARE.png",
   },
   {
     title: "Community Commitment",
-    icon: Users,
+    iconSrc: "/assets/about-us/COMMUNITY.png",
   },
 ];
 
@@ -57,7 +51,6 @@ const CoreValues: React.FC = () => {
         {/* 5 Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
           {valuesList.map((item, index) => {
-            const IconComp = item.icon;
             return (
               <motion.div
                 key={index}
@@ -65,11 +58,16 @@ const CoreValues: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="bg-[#663399] rounded-[18px] sm:rounded-[20px] p-6 sm:p-8 flex flex-col items-center justify-center text-center text-white min-h-[160px] sm:min-h-[180px] lg:min-h-[200px] shadow-md hover:shadow-xl transition-shadow duration-300"
+                className="bg-[#663399] rounded-[18px] sm:rounded-[20px] p-5 sm:p-6 lg:p-8 flex flex-col items-center justify-center text-center text-white min-h-[160px] sm:min-h-[180px] lg:min-h-[200px] shadow-md hover:shadow-xl transition-shadow duration-300"
               >
                 {/* Icon */}
-                <div className="mb-4 text-white/90">
-                  <IconComp className="w-10 h-10 sm:w-12 sm:h-12 stroke-[1.5]" />
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 mb-3 sm:mb-4 flex items-center justify-center">
+                  <Image
+                    src={item.iconSrc}
+                    alt={item.title}
+                    fill
+                    className="object-contain"
+                  />
                 </div>
 
                 {/* Title */}

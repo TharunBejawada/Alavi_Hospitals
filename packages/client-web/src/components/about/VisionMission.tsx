@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Target, Search } from "lucide-react";
 
 const VisionMission: React.FC = () => {
   return (
@@ -15,34 +15,18 @@ const VisionMission: React.FC = () => {
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 0.7, ease: "easeOut" as const }}
             className="bg-[#663399] rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 lg:p-10 text-white flex items-center gap-5 sm:gap-6 shadow-md"
           >
             {/* Eye Icon Circle */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-              <div className="relative flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 sm:w-10 sm:h-10 text-white stroke-[2]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.573 16.49 16.638 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-4.35-4.35"
-                  />
-                </svg>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-white/15 flex items-center justify-center shrink-0 p-3 sm:p-4">
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Image
+                  src="/assets/about-us/OUR VISION.png"
+                  alt="Our Vision"
+                  fill
+                  className="object-contain"
+                />
               </div>
             </div>
 
@@ -62,12 +46,19 @@ const VisionMission: React.FC = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+            transition={{ duration: 0.7, ease: "easeOut" as const, delay: 0.1 }}
             className="bg-[#F4EFFC] rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 lg:p-10 text-[#5B328C] flex items-center gap-5 sm:gap-6 shadow-sm border border-[#E9DCFA]"
           >
             {/* Target Icon Circle */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-[#E5D5FA] flex items-center justify-center shrink-0">
-              <Target className="w-8 h-8 sm:w-10 sm:h-10 text-[#5B328C] stroke-[2]" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-[#E5D5FA] flex items-center justify-center shrink-0 p-3 sm:p-4">
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Image
+                  src="/assets/about-us/OUR MISSION.png"
+                  alt="Our Mission"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
 
             {/* Content */}

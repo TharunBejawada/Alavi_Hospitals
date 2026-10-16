@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Calendar, Phone, ChevronDown, CheckCircle2 } from "lucide-react";
+import { Loader2, Calendar, Phone, ChevronDown, CheckCircle2, BookOpen, ArrowRight } from "lucide-react";
 import { API_URL } from "../../config";
 import AppointmentPopup from "../AppointmentPopup";
 
@@ -166,9 +166,9 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               (s: any) => s.specialityId === matchedPage.specialityId
             );
 
-            if (actualSpeciality && actualSpeciality.specialityName) {
-              const exactDepartmentName = actualSpeciality.specialityName;
+            const exactDepartmentName = actualSpeciality?.specialityName || matchedPage.title || "";
 
+            if (exactDepartmentName) {
               // 2. Fetch both Doctors and Blogs in parallel using the exact department string
               const [docsRes, blogsRes] = await Promise.all([
                 fetch(`${API_URL}/api/doctors/getDoctorsByDepartment/${encodeURIComponent(exactDepartmentName)}`),
@@ -179,7 +179,69 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               const blogsData = await blogsRes.json();
 
               setDoctors(docsData.Items || []);
-              setBlogs(blogsData.Items || []);
+
+              // 3. Filter blogs strictly based on blog.categories matching this speciality
+              const rawBlogs = blogsData.Items || [];
+              const targetSpecialityNames = [
+                exactDepartmentName,
+                actualSpeciality?.specialityName,
+                matchedPage.title,
+                slug
+              ].filter(Boolean) as string[];
+
+              const filteredBlogs = rawBlogs.filter((blog: any) => {
+                if (!blog.categories) return false;
+
+                let categories: string[] = [];
+                const catData = blog.categories;
+                if (typeof catData === "string") {
+                  try {
+                    const parsed = JSON.parse(catData);
+                    categories = Array.isArray(parsed) ? parsed.map((c: any) => String(c.S || c)) : [catData];
+                  } catch {
+                    categories = [catData];
+                  }
+                } else if (Array.isArray(catData)) {
+                  categories = catData.map((c: any) => String(c.S || c));
+                } else if (typeof catData === "object" && catData !== null) {
+                  if (catData.S) categories = [String(catData.S)];
+                }
+
+                if (categories.length === 0) return false;
+
+                // Match each category against the target speciality names and compound parts
+                return categories.some((catRaw: string) => {
+                  const cat = catRaw.toLowerCase().replace(/&amp;/g, "&").replace(/['’]/g, "").trim();
+                  if (!cat || cat.length < 2) return false;
+                  const catAlt = cat.replace(/ae/g, "e");
+
+                  return targetSpecialityNames.some((specName: string) => {
+                    const normalizedSpec = specName.toLowerCase().replace(/&amp;/g, "&").replace(/['’]/g, "").trim();
+                    const specAlt = normalizedSpec.replace(/ae/g, "e");
+
+                    // Exact match
+                    if (cat === normalizedSpec || catAlt === specAlt) return true;
+
+                    // Split parts by '&', 'and', ',', '/'
+                    const specParts = normalizedSpec
+                      .split(/\s*&\s*|\s+and\s+|\s*,\s*|\s*\/\s*/)
+                      .map((p) => p.trim())
+                      .filter((p) => p.length > 2);
+                    specParts.push(normalizedSpec);
+
+                    return specParts.some((part: string) => {
+                      const partAlt = part.replace(/ae/g, "e");
+                      if (cat === part || catAlt === partAlt) return true;
+                      if (part.length >= 4 && cat.length >= 4) {
+                        return part.includes(cat) || partAlt.includes(catAlt) || cat.includes(part) || catAlt.includes(partAlt);
+                      }
+                      return false;
+                    });
+                  });
+                });
+              });
+
+              setBlogs(filteredBlogs);
             }
           } catch (err) {
             console.error("Failed to fetch department data:", err);
@@ -249,18 +311,18 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               className="text-lg md:text-xl text-white/90 leading-relaxed mb-8 prose prose-invert max-w-4xl"
               dangerouslySetInnerHTML={{ __html: pageData.description.replace(/&nbsp;/g, ' ') }}
             />
-            <div className="flex flex-wrap gap-8">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6">
               <button
                 onClick={() => {
                   setIsPopupOpen(true);
                 }}
-                className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors"
+                className="cursor-pointer bg-transparent border-2 border-white text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-white hover:text-[#5B328C] transition-colors w-full sm:w-auto"
               >
-                <Calendar className="w-8 h-8" /> Book an Appointment
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6" /> Book an Appointment
               </button>
-              <a href="tel:+919603911911">
-                <button className="cursor-pointer bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors">
-                  <Phone className="w-8 h-8" /> +91 9603 911 911
+              <a href="tel:+919603911911" className="w-full sm:w-auto">
+                <button className="cursor-pointer bg-transparent border-2 border-white text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors w-full sm:w-auto">
+                  <Phone className="w-5 h-5 sm:w-6 sm:h-6" /> +91 9603 911 911
                 </button>
               </a>
             </div>
@@ -270,17 +332,17 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
       {/* --- 2. CONDITIONS TREATED --- */}
       {pageData.conditionsTreated?.list?.length > 0 && (
-        <section className="py-20 bg-[#FAFAFA]">
+        <section className="py-12 sm:py-20 bg-[#FAFAFA]">
           <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
             {/* Section Title */}
-            <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-[32px] font-semibold leading-tight text-[#663399] mb-4">
               {pageData.conditionsTreated.title}
             </h2>
 
             {/* Section Description */}
             <div
-              className="text-[21px] font-medium leading-none text-[#0C0200] max-w-3xl mx-auto mb-12"
+              className="text-base sm:text-lg md:text-[21px] font-medium leading-relaxed text-[#0C0200] max-w-3xl mx-auto mb-8 sm:mb-12"
               dangerouslySetInnerHTML={{ __html: pageData.conditionsTreated.description }}
             />
 
@@ -335,11 +397,11 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
         <section className="py-20 bg-white">
           <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
-            <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
+            <h2 className="font-semibold text-2xl sm:text-3xl md:text-[32px] leading-tight text-[#663399] mb-4">
               {pageData.specialityDoctors?.title || "Our Specialists"}
             </h2>
 
-            <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-5xl mx-auto mb-16">
+            <p className="font-medium text-base sm:text-lg md:text-[21px] leading-relaxed text-[#0C0200] max-w-5xl mx-auto mb-10 sm:mb-16">
               {pageData.specialityDoctors?.description}
             </p>
 
@@ -443,17 +505,17 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
       {/* --- 4. TREATMENTS & PROCEDURES --- */}
       {(pageData.treatmentsProcedures?.list?.length || 0) > 0 && (
-        <section className="py-20 bg-[#F5F8FC]">
+        <section className="py-12 sm:py-20 bg-[#F5F8FC]">
           <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 text-center">
 
             {/* Section Title */}
-            <h2 className="text-[32px] font-semibold leading-none text-[#663399] mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-[32px] font-semibold leading-tight text-[#663399] mb-4">
               {pageData.treatmentsProcedures.title}
             </h2>
 
             {/* Section Description */}
             <div
-              className="text-[21px] font-medium leading-none text-[#0C0200] max-w-3xl mx-auto mb-12 text-center"
+              className="text-base sm:text-lg md:text-[21px] font-medium leading-relaxed text-[#0C0200] max-w-3xl mx-auto mb-8 sm:mb-12 text-center"
               dangerouslySetInnerHTML={{ __html: pageData.treatmentsProcedures.description.replace(/&nbsp;/g, ' ') }}
             />
 
@@ -499,20 +561,20 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
       )}
 
       {/* --- 5. BLOGS SECTION --- */}
-      {blogs.length > 0 && (
-        <section className="py-20 bg-white">
-          <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
-            {/* Header */}
-            <div className="text-center mb-12">
-              <h2 className="font-semibold text-[32px] leading-[48px] text-[#663399] mb-4">
-                Blogs
-              </h2>
-              <p className="font-medium text-[21px] leading-[32px] text-[#0C0200] max-w-[1035px] mx-auto">
-                Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
-              </p>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="font-semibold text-2xl sm:text-3xl md:text-[32px] leading-tight text-[#663399] mb-4">
+              Blogs
+            </h2>
+            <p className="font-medium text-base sm:text-lg md:text-[21px] leading-relaxed text-[#0C0200] max-w-[1035px] mx-auto">
+              Discover expert-led articles on health conditions, treatments and wellness to help you make confident decisions.
+            </p>
+          </div>
 
+          {blogs.length > 0 ? (
             <div className="flex flex-col lg:flex-row gap-6">
 
               {/* Featured Blog (Left Side) -> Takes blogs[0] */}
@@ -521,7 +583,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                 className="w-full lg:w-[56%] bg-[#663399] rounded-[24px] overflow-hidden flex flex-col shadow-md group cursor-pointer transition-transform hover:-translate-y-1 duration-300"
               >
                 {/* Featured Image Container */}
-                <div className="relative w-auto aspect-[11/5] bg-[#D9D9D9] overflow-hidden m-6 mb-0 rounded-[16px] w-[calc(100%-48px)] flex items-center justify-center">
+                <div className="relative w-auto aspect-[11/5] bg-[#D9D9D9] overflow-hidden m-4 sm:m-6 mb-0 rounded-[16px] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] flex items-center justify-center">
                   {blogs[0].blogImage ? (
                     <Image
                       src={blogs[0].blogImage}
@@ -535,24 +597,24 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                 </div>
 
                 {/* Featured Content */}
-                <div className="p-6 md:p-8 text-white flex flex-col flex-grow justify-center">
-                  <h3 className="font-bold text-[24px] leading-[150%] mb-3 group-hover:text-[#EEF8FF] transition-colors line-clamp-2">
+                <div className="p-4 sm:p-6 md:p-8 text-white flex flex-col flex-grow justify-center">
+                  <h3 className="font-bold text-lg sm:text-xl md:text-[24px] leading-snug mb-3 group-hover:text-[#EEF8FF] transition-colors line-clamp-2">
                     {blogs[0].blogTitle}
                   </h3>
                   {/* Uses metaDescription first, falls back to stripping HTML from extraFields */}
-                  <p className="font-normal text-[16px] leading-[160%] text-white/90 line-clamp-3">
+                  <p className="font-normal text-sm sm:text-[16px] leading-relaxed text-white/90 line-clamp-3">
                     {blogs[0].metaDescription || blogs[0].extraFields?.[0]?.description?.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ') || "Click to read more about this topic."}
                   </p>
                 </div>
               </Link>
 
               {/* List Blogs (Right Side) -> Takes blogs.slice(1) */}
-              <div className="w-full lg:w-[44%] bg-[rgba(217,217,217,0.25)] rounded-[24px] p-6 lg:p-8 flex flex-col h-full relative">
+              <div className="w-full lg:w-[44%] bg-[rgba(217,217,217,0.25)] rounded-[24px] p-4 sm:p-6 lg:p-8 flex flex-col h-full relative">
 
                 {/* View All Button */}
-                <div className="absolute top-6 right-6 z-10">
+                <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-10">
                   <Link href="/blog">
-                    <button className="bg-[#663399] text-white text-[14px] font-semibold px-6 py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+                    <button className="bg-[#663399] text-white text-xs sm:text-[14px] font-semibold px-4 sm:px-6 py-1.5 sm:py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
                       View All
                     </button>
                   </Link>
@@ -560,15 +622,15 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
                 {/* Scrollable List OR Empty State */}
                 {blogs.length > 1 ? (
-                  <div className="flex flex-col gap-6 pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="flex flex-col gap-4 sm:gap-6 pt-12 sm:pt-14 h-full overflow-y-auto pr-2 custom-scrollbar">
                     {blogs.slice(1).map((blog, idx) => (
                       <Link
                         href={`/blog/${blog.url || blog.blogId}`}
                         key={blog.blogId || idx}
-                        className="flex gap-5 items-center group cursor-pointer"
+                        className="flex gap-4 sm:gap-5 items-center group cursor-pointer"
                       >
                         {/* Blog Thumbnail Box */}
-                        <div className="w-[120px] h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm flex items-center justify-center">
+                        <div className="w-[100px] h-[70px] sm:w-[120px] sm:h-[80px] md:w-[140px] md:h-[90px] relative rounded-[12px] bg-[#663399] shrink-0 overflow-hidden shadow-sm flex items-center justify-center">
                           {blog.blogImage ? (
                             <Image src={blog.blogImage} alt={blog.blogTitle || "Blog thumbnail"} fill className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
                           ) : (
@@ -578,7 +640,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
                         {/* Blog Title */}
                         <div>
-                          <h4 className="font-semibold text-[16px] leading-[150%] text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
+                          <h4 className="font-semibold text-sm sm:text-[16px] leading-snug text-[#0C0200] group-hover:text-[#663399] transition-colors pr-2 line-clamp-3">
                             {blog.blogTitle}
                           </h4>
                         </div>
@@ -594,36 +656,56 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               </div>
 
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            /* Meaningful Empty / Coming Soon UI when no blogs are found for this speciality */
+            <div className="bg-gradient-to-br from-[#FAF7FD] to-[#F3EBFA] border border-[#E8DAF7] rounded-[24px] sm:rounded-[32px] p-8 sm:p-12 md:p-16 text-center max-w-2xl mx-auto shadow-sm flex flex-col items-center justify-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#663399]/10 text-[#663399] flex items-center justify-center mb-5">
+                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-[#663399]" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#663399] mb-2">
+                Articles Coming Soon
+              </h3>
+              <p className="text-sm sm:text-base text-[#4A4A4A] max-w-md mx-auto leading-relaxed mb-6">
+                Our medical specialists are currently drafting expert-reviewed articles and health insights for {pageData?.title || "this specialty"}. Please check back soon!
+              </p>
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 bg-[#663399] text-white px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-[#522580] transition-colors cursor-pointer"
+              >
+                Explore Other Health Blogs
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* --- 6. APPOINTMENT CTA SECTION --- */}
-      <section className="py-20 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
-          <div className="flex flex-col lg:flex-row shadow-xl rounded-[32px] overflow-hidden border-0 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)]">
+          <div className="flex flex-col lg:flex-row shadow-xl rounded-[24px] sm:rounded-[32px] overflow-hidden border-0 bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)]">
 
             {/* Left Purple Side */}
-            <div className="lg:w-1/2 p-10 lg:p-16 flex flex-col justify-center text-white relative">
+            <div className="lg:w-1/2 p-6 sm:p-10 lg:p-16 flex flex-col justify-center text-white relative">
 
               {/* Badge */}
-              <div className="bg-[rgba(231,216,245,0.21)] w-fit px-5 py-2.5 rounded-[22px] flex items-center gap-2 mb-8">
+              <div className="bg-[rgba(231,216,245,0.21)] w-fit px-4 sm:px-5 py-2 sm:py-2.5 rounded-[22px] flex items-center gap-2 mb-6 sm:mb-8">
                 <Calendar className="w-4 h-4 text-white" />
-                <span className="font-semibold text-[14px] leading-[21px] text-white">Book an Appointment</span>
+                <span className="font-semibold text-xs sm:text-[14px] leading-tight text-white">Book an Appointment</span>
               </div>
 
-              <h2 className="font-semibold text-[32px] leading-[48px] text-white mb-6">
+              <h2 className="font-semibold text-2xl sm:text-3xl md:text-[32px] leading-tight text-white mb-4 sm:mb-6">
                 Take the first step toward<br />a pain-free life.
               </h2>
 
-              <p className="font-medium text-[16px] leading-[170%] text-white mb-10 max-w-md">
+              <p className="font-medium text-sm sm:text-[16px] leading-relaxed text-white mb-6 sm:mb-10 max-w-md">
                 Share your details and our care team will reach out to confirm your consultation with a specialist.
               </p>
 
-              <ul className="space-y-5 mb-8">
+              <ul className="space-y-3.5 sm:space-y-5 mb-6 sm:mb-8">
                 {['Same-day appointments available', 'Insurance & cashless support', 'Seamless patient support services'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4 font-medium text-[14px] leading-[170%] text-white">
-                    <div className="w-[9px] h-[9px] bg-white rounded-full shrink-0"></div> {item}
+                  <li key={i} className="flex items-center gap-3 sm:gap-4 font-medium text-xs sm:text-[14px] leading-snug text-white">
+                    <div className="w-[7px] h-[7px] sm:w-[9px] sm:h-[9px] bg-white rounded-full shrink-0"></div> {item}
                   </li>
                 ))}
               </ul>
@@ -632,43 +714,43 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
             </div>
 
             {/* Right Form Side */}
-            <div className="lg:w-1/2 bg-[#EEF8FF] p-10 lg:p-16 flex flex-col justify-center">
-              <h3 className="font-semibold text-[24px] leading-[36px] text-[#663399] mb-2">Patient Details</h3>
-              <p className="font-medium text-[16px] leading-[170%] text-[#000000] mb-8">
+            <div className="lg:w-1/2 bg-[#EEF8FF] p-6 sm:p-10 lg:p-16 flex flex-col justify-center">
+              <h3 className="font-semibold text-xl sm:text-[24px] leading-tight text-[#663399] mb-2">Patient Details</h3>
+              <p className="font-medium text-sm sm:text-[16px] leading-relaxed text-[#000000] mb-6 sm:mb-8">
                 Share your details and our care team will reach out to confirm your consultation with a specialist.
               </p>
 
-              <form className="space-y-6" onSubmit={handleSection6Submit}>
+              <form className="space-y-4 sm:space-y-6" onSubmit={handleSection6Submit}>
                 <div>
-                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Patient Name*</label>
+                  <label className="block font-semibold text-sm sm:text-[16px] leading-tight text-[#250F3C] mb-1.5 sm:mb-2 ml-2 sm:ml-4">Patient Name*</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Enter Your Full Name"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                    className="w-full bg-white px-5 sm:px-6 py-3 sm:py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-xs placeholder:text-[#807090] placeholder:opacity-50 text-sm sm:text-base"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Mobile Number*</label>
+                  <label className="block font-semibold text-sm sm:text-[16px] leading-tight text-[#250F3C] mb-1.5 sm:mb-2 ml-2 sm:ml-4">Mobile Number*</label>
                   <input
                     type="tel"
                     required
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                     placeholder="10 - digit mobile number"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                    className="w-full bg-white px-5 sm:px-6 py-3 sm:py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-xs placeholder:text-[#807090] placeholder:opacity-50 text-sm sm:text-base"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[16px] leading-[24px] text-[#250F3C] mb-2 ml-4">Concern</label>
+                  <label className="block font-semibold text-sm sm:text-[16px] leading-tight text-[#250F3C] mb-1.5 sm:mb-2 ml-2 sm:ml-4">Concern</label>
                   <input
                     type="text"
                     value={formData.concern}
                     onChange={(e) => setFormData({ ...formData, concern: e.target.value })}
                     placeholder="Define"
-                    className="w-full bg-white px-6 py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-[12px] placeholder:text-[#807090] placeholder:opacity-50"
+                    className="w-full bg-white px-5 sm:px-6 py-3 sm:py-4 rounded-[30px] shadow-[0px_0px_4px_-1px_rgba(0,0,0,0.25)] outline-none focus:ring-2 focus:ring-[#5B328C]/50 transition-all text-[#250F3C] placeholder:font-medium placeholder:text-xs placeholder:text-[#807090] placeholder:opacity-50 text-sm sm:text-base"
                   />
                 </div>
 
@@ -676,7 +758,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                   <button
                     type="submit"
                     disabled={isSubmittingForm || !formData.name || !formData.mobile}
-                    className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-[21px] leading-[32px] py-3.5 px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer mx-auto w-full md:w-auto bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] text-white font-semibold text-base sm:text-lg md:text-[21px] py-3 sm:py-3.5 px-8 sm:px-10 rounded-[32px] flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmittingForm ? (
                       <>
@@ -698,15 +780,15 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
       {/* --- 7. FAQS --- */}
       {(pageData.faqs?.length || 0) > 0 && (
-        <section className="py-20 bg-[#FAFAFA]">
+        <section className="py-12 sm:py-20 bg-[#FAFAFA]">
           <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12">
 
             {/* Section Heading */}
-            <h2 className="text-[32px] font-semibold leading-none text-center text-[#663399] mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-[32px] font-semibold leading-tight text-center text-[#663399] mb-8 sm:mb-12">
               Frequently Asked Questions
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {pageData.faqs.map((faq, index) => (
                 <FAQItem
                   key={index}

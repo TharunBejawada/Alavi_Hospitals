@@ -91,7 +91,7 @@ export default function PatientInformationPage() {
     <div className="min-h-screen bg-white font-['Poppins']">
 
       {/* --- 1. HERO --- */}
-<section className="relative w-full h-[500px] lg:h-[448px] flex items-center overflow-hidden bg-[#663399] font-['Inter']">
+<section className="relative w-full min-h-[380px] lg:h-[448px] flex items-center overflow-hidden bg-[#663399] font-['Inter'] py-12 lg:py-0">
   
   {/* Right Side Image Asset */}
   <div className="absolute top-0 right-0 w-full lg:w-[90%] h-full z-0 opacity-20 lg:opacity-100">
@@ -110,15 +110,15 @@ export default function PatientInformationPage() {
       transition={{ duration: 0.6 }}
       className="max-w-[496px] flex flex-col"
     >
-      <p className="text-[18px] md:text-[21px] font-semibold text-white uppercase leading-[138%] mb-[8px]">
+      <p className="text-sm sm:text-base md:text-[21px] font-semibold text-white uppercase leading-[138%] mb-[8px]">
         PATIENT INFORMATION
       </p>
       
-      <h1 className="text-[36px] md:text-[48px] font-bold text-white leading-[138%] mb-[20px] max-w-[418px]">
+      <h1 className="text-2xl sm:text-3xl md:text-[44px] font-bold text-white leading-tight sm:leading-[138%] mb-3 sm:mb-[20px] max-w-[418px]">
         Patients&rsquo; Rights &amp; Responsibilities
       </h1>
       
-      <p className="text-[16px] md:text-[18px] font-medium text-white leading-[138%]">
+      <p className="text-sm sm:text-base md:text-[18px] font-medium text-white/90 leading-relaxed">
         At Alavi Hospitals, we are committed to providing safe, respectful, transparent and compassionate care to every patient.
       </p>
     </motion.div>

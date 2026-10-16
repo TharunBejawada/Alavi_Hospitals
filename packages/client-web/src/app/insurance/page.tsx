@@ -57,14 +57,14 @@ export default function InsurancePage() {
     <div className="min-h-screen bg-white font-['Poppins']">
 
       {/* --- 1. HERO --- */}
-<section className="relative w-full h-[440px] flex items-center overflow-hidden font-['Inter'] bg-[#F1E9FA]">
+<section className="relative w-full min-h-[360px] md:h-[440px] flex items-center overflow-hidden font-['Inter'] bg-[#F1E9FA] py-10 md:py-0">
   
   {/* Background Banner Image */}
-  <div className="absolute inset-0 z-0">
+  <div className="absolute inset-0 z-0 opacity-40 md:opacity-100">
     <img 
       src="/assets/insurance-hero.png" 
       alt="Medical insurance for your family" 
-      className="w-full h-full md:object-right object-center" 
+      className="w-full h-full object-cover md:object-right object-center" 
     />
   </div>
 
@@ -76,15 +76,15 @@ export default function InsurancePage() {
       transition={{ duration: 0.6 }}
       className="max-w-[531px] flex flex-col"
     >
-      <h1 className="text-[36px] md:text-[48px] font-bold text-[#663399] leading-[138%] mb-[16px] uppercase">
+      <h1 className="text-2xl sm:text-3xl md:text-[44px] font-bold text-[#663399] leading-tight sm:leading-[138%] mb-3 sm:mb-[16px] uppercase">
         MEDICAL INSURANCE & TPA PARTNERS
       </h1>
       
-      <p className="text-[18px] md:text-[21px] font-semibold text-black leading-[138%] mb-[14px]">
+      <p className="text-base sm:text-lg md:text-[21px] font-semibold text-black leading-snug mb-2 sm:mb-[14px]">
         Your insurance. Your care. Our support.
       </p>
       
-      <p className="text-[16px] md:text-[18px] font-medium text-black leading-[138%] max-w-[478px]">
+      <p className="text-sm sm:text-base md:text-[18px] font-medium text-black leading-relaxed max-w-[478px]">
         Explore our empanelled insurance companies and TPA partners for cashless hospitalization.
       </p>
     </motion.div>

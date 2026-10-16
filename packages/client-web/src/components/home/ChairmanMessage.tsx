@@ -8,12 +8,12 @@ const ChairmanMessage = () => {
   // Framer Motion Variants
   const fadeLeft = {
     hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } },
   };
 
   const fadeRight = {
     hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const, delay: 0.2 } },
   };
 
   return (
@@ -54,20 +54,20 @@ const ChairmanMessage = () => {
             </div>
 
             {/* Signature & Name Block */}
-            <div className="mt-8">
-              <div className="relative w-72 h-24 mb-4 mx-auto lg:ml-12">
+            <div className="mt-8 text-center lg:text-left">
+              <div className="relative w-60 sm:w-72 h-20 sm:h-24 max-w-full mb-4 mx-auto lg:ml-12">
                 <Image
                   src="/signature.png"
                   alt="Chairman Signature"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-center lg:object-left"
                 />
               </div>
 
-              <div className="inline-block bg-[#5B328C] text-white px-6 py-2.5 font-bold text-lg shadow-sm">
+              <div className="inline-block bg-[#5B328C] text-white px-5 sm:px-6 py-2 sm:py-2.5 font-bold text-base sm:text-lg shadow-sm">
                 Dr. M. Chandra Sekhar
               </div>
-              <p className="mt-3 font-semibold text-gray-900 ml-1">
+              <p className="mt-3 font-semibold text-gray-900">
                 Chairman & Managing Director
               </p>
             </div>
@@ -81,10 +81,10 @@ const ChairmanMessage = () => {
             variants={fadeRight}
             className="lg:col-span-5 flex justify-center lg:justify-start lg:pl-8 mt-8 lg:mt-0"
           >
-            <div className="bg-[#5B328C] p-5 rounded-tl-[80px] rounded-br-[80px] w-full max-w-[420px] shadow-xl">
+            <div className="bg-[#5B328C] p-4 sm:p-5 rounded-tl-[50px] sm:rounded-tl-[80px] rounded-br-[50px] sm:rounded-br-[80px] w-full max-w-[420px] shadow-xl">
 
               {/* The Inner Image Container */}
-              <div className="relative w-full aspect-[4/5] rounded-tl-[80px] rounded-br-[80px] overflow-hidden bg-gray-200">
+              <div className="relative w-full aspect-[4/5] rounded-tl-[50px] sm:rounded-tl-[80px] rounded-br-[50px] sm:rounded-br-[80px] overflow-hidden bg-gray-200">
                 <Image
                   src="/chairman-photo.jpeg"
                   alt="Dr. M. Chandra Sekhar"

@@ -216,32 +216,32 @@ export default function SecondOpinionHubPage() {
             transition={{ duration: 0.6 }}
             className="max-w-[680.92px]"
           >
-            <h1 className="text-[36px] font-bold text-[#663399] leading-[48px] mb-4 max-w-[575px]">
+            <h1 className="text-2xl sm:text-3xl lg:text-[36px] font-bold text-[#663399] leading-tight sm:leading-[48px] mb-3 sm:mb-4 max-w-[575px]">
               Get a Trusted Second Opinion<br className="hidden lg:block" /> at Alavi Hospitals
             </h1>
 
-            <h2 className="text-[32px] font-semibold text-[#0066A9] leading-[44px] mb-8 max-w-[575px]">
+            <h2 className="text-xl sm:text-2xl lg:text-[32px] font-semibold text-[#0066A9] leading-tight sm:leading-[44px] mb-6 sm:mb-8 max-w-[575px]">
               Not Sure About Your Diagnosis or<br className="hidden lg:block" /> Treatment Plan?
             </h2>
 
-            <p className="text-[18px] font-normal text-[#000000] leading-[28px] mb-10 w-full max-w-[680.92px]">
+            <p className="text-sm sm:text-base lg:text-[18px] font-normal text-[#000000] leading-relaxed mb-8 sm:mb-10 w-full max-w-[680.92px]">
               If you have been advised surgery, received a complex diagnosis, or want to
               explore other treatment options, a second opinion from our experienced
               specialists can help you make an informed decision with clarity and peace
               of mind.
             </p>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="text-white font-bold text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[402.42px] h-[64.45px] flex items-center justify-center"
+                className="text-white font-bold text-base sm:text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[380px] h-[52px] sm:h-[64.45px] flex items-center justify-center px-4"
                 style={{ background: 'linear-gradient(90deg, #0066A9 -128.06%, #663399 51.87%)' }}
               >
                 Request a Second Opinion Today
               </button>
-              <a href="tel:+919603911911">
+              <a href="tel:+919603911911" className="w-full sm:w-auto">
                 <button
-                  className="text-white font-bold text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[145.59px] h-[64.45px] flex items-center justify-center"
+                  className="text-white font-bold text-base sm:text-lg rounded-[19px] hover:opacity-90 transition-opacity w-full sm:w-[145.59px] h-[52px] sm:h-[64.45px] flex items-center justify-center"
                   style={{ background: 'linear-gradient(90deg, #0066A9 -84.11%, #663399 116.13%)' }}
                 >
                   Call Now
@@ -255,11 +255,11 @@ export default function SecondOpinionHubPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="relative w-full max-w-[480px] aspect-square mx-auto lg:mr-10 mt-8 lg:mt-0"
+            className="relative w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[480px] aspect-square mx-auto lg:mr-10 mt-6 lg:mt-0"
           >
             {/* Dashed Outer Ring */}
             <svg
-              className="absolute inset-[-10%] w-[120%] h-[120%] z-0 opacity-80 pointer-events-none"
+              className="absolute inset-[-6%] sm:inset-[-10%] w-[112%] sm:w-[120%] h-[112%] sm:h-[120%] z-0 opacity-80 pointer-events-none"
               viewBox="0 0 100 100"
               preserveAspectRatio="xMidYMid meet"
             >
@@ -275,7 +275,7 @@ export default function SecondOpinionHubPage() {
             </svg>
 
             {/* Main Image */}
-            <div className="relative w-full h-full rounded-full overflow-hidden bg-gray-200 z-10 border-[6px] border-[#F5FBFF]">
+            <div className="relative w-full h-full rounded-full overflow-hidden bg-gray-200 z-10 border-4 sm:border-[6px] border-[#F5FBFF]">
               <img
                 src="/assets/doctor-patient.png"
                 alt="Doctor showing x-ray to patient"
@@ -284,29 +284,29 @@ export default function SecondOpinionHubPage() {
             </div>
 
             {/* Knee Icon (Top Right) */}
-            <div className="absolute -top-[5%] right-[5%] w-[100px] h-[100px] bg-[#0066A9] rounded-full border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
+            <div className="absolute -top-[3%] sm:-top-[5%] right-[2%] sm:right-[5%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
                 src="/assets/knee-icon.png"
                 alt="Orthopedics"
-                className="w-12 h-12 object-contain"
+                className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
             </div>
 
             {/* Spine Icon (Bottom Left) */}
-            <div className="absolute bottom-[5%] -left-[8%] w-[100px] h-[100px] bg-[#0066A9] rounded-full border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
+            <div className="absolute bottom-[3%] sm:bottom-[5%] -left-[3%] sm:-left-[6%] lg:-left-[8%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
                 src="/assets/spine-icon.png"
                 alt="Spine"
-                className="w-12 h-12 object-contain"
+                className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
             </div>
 
             {/* Brain Icon (Bottom Right) */}
-            <div className="absolute bottom-[8%] -right-[5%] w-[100px] h-[100px] bg-[#0066A9] rounded-full border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
+            <div className="absolute bottom-[6%] sm:bottom-[8%] -right-[3%] sm:-right-[5%] lg:-right-[5%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
                 src="/assets/brain-icon.png"
                 alt="Neurology"
-                className="w-12 h-12 object-contain"
+                className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
             </div>
           </motion.div>
@@ -315,15 +315,15 @@ export default function SecondOpinionHubPage() {
       </section>
 
       {/* --- 2. WHY SEEK / WHEN TO CONSIDER --- */}
-      <section className="py-16 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 font-['Poppins'] flex justify-center">
+      <section className="py-12 sm:py-16 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:pl-28 xl:pl-36 lg:pr-12 font-['Poppins'] flex justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[52px] w-full max-w-[1453px]">
 
           {/* Left Card: Why Seek a Second Opinion? */}
-          <div className="w-full bg-[rgba(246,238,255,0.53)] rounded-[26px] p-8 md:p-10 flex flex-col h-full min-h-[650px]">
-            <h2 className="text-[26px] font-bold text-[#663399] leading-[39px] mb-2">
+          <div className="w-full bg-[rgba(246,238,255,0.53)] rounded-[26px] p-6 sm:p-8 md:p-10 flex flex-col h-full min-h-0 lg:min-h-[650px]">
+            <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-[#663399] leading-snug mb-2">
               Why Seek a Second Opinion?
             </h2>
-            <p className="text-[21px] font-medium text-[#000000] leading-[32px] mb-6">
+            <p className="text-base sm:text-lg md:text-[21px] font-medium text-[#000000] leading-relaxed mb-6">
               A second opinion can help you:
             </p>
 
@@ -331,7 +331,7 @@ export default function SecondOpinionHubPage() {
             <div className="flex-1 flex flex-col">
               <div className="divide-y divide-[rgba(72,31,119,0.30)]">
                 {WHY_SEEK_ITEMS.map((text, idx) => (
-                  <div key={idx} className="group flex items-center gap-4 py-[15px] cursor-pointer transition-all duration-300">
+                  <div key={idx} className="group flex items-center gap-4 py-[13px] sm:py-[15px] cursor-pointer transition-all duration-300">
                     <svg
                       width="18" height="18" viewBox="0 0 24 24" fill="none"
                       strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -340,7 +340,7 @@ export default function SecondOpinionHubPage() {
                       <circle cx="12" cy="12" r="10" />
                       <path d="M8 12l3 3 5-6" />
                     </svg>
-                    <span className="text-[16px] leading-[24px] font-medium text-[#000000] group-hover:font-semibold group-hover:text-[#663399] transition-all duration-300">
+                    <span className="text-sm sm:text-[16px] leading-[24px] font-medium text-[#000000] group-hover:font-semibold group-hover:text-[#663399] transition-all duration-300">
                       {text}
                     </span>
                   </div>
@@ -348,26 +348,26 @@ export default function SecondOpinionHubPage() {
               </div>
             </div>
 
-            <p className="text-[16px] font-medium text-[#000000] leading-[24px] mt-8">
+            <p className="text-xs sm:text-sm md:text-[16px] font-medium text-[#000000] leading-relaxed mt-6 sm:mt-8">
               Second opinions are especially helpful for complex conditions, major surgeries, cancer treatment, chronic illnesses, and unclear diagnoses.
             </p>
           </div>
 
           {/* Right Card: When Should You Consider a Second Opinion? */}
-          <div className="w-full bg-[#F1FAFF] rounded-[26px] p-8 md:p-10 flex flex-col h-full min-h-[650px]">
-            <h2 className="text-[26px] font-bold text-[#481F77] leading-[39px] mb-2">
+          <div className="w-full bg-[#F1FAFF] rounded-[26px] p-6 sm:p-8 md:p-10 flex flex-col h-full min-h-0 lg:min-h-[650px]">
+            <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-[#481F77] leading-snug mb-2">
               When Should You Consider a<br className="hidden md:block" /> Second Opinion?
             </h2>
-            <p className="text-[21px] font-medium text-[#000000] leading-[32px] mb-8">
+            <p className="text-base sm:text-lg md:text-[21px] font-medium text-[#000000] leading-relaxed mb-6 sm:mb-8">
               You may benefit from a second opinion if:
             </p>
 
             {/* Pill Buttons */}
-            <div className="flex flex-col gap-[15px]">
+            <div className="flex flex-col gap-3 sm:gap-[15px]">
               {WHEN_TO_CONSIDER_ITEMS.map((text, idx) => (
                 <div
                   key={idx}
-                  className="group flex items-center gap-5 px-6 md:px-8 py-3 w-full rounded-[38.42px] bg-[#FFFFFF] min-h-[71.11px] hover:bg-[#0066A9] hover:min-h-[76.84px] cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="group flex items-center gap-3.5 sm:gap-5 px-5 sm:px-8 py-3 w-full rounded-[38.42px] bg-[#FFFFFF] min-h-[58px] sm:min-h-[71.11px] hover:bg-[#0066A9] cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md"
                 >
                   <svg
                     width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -376,7 +376,7 @@ export default function SecondOpinionHubPage() {
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
-                  <span className="text-[18px] leading-[27px] font-medium text-[#2A255B] group-hover:font-semibold group-hover:text-[#FFFFFF] transition-all duration-300">
+                  <span className="text-sm sm:text-base md:text-[18px] leading-snug font-medium text-[#2A255B] group-hover:font-semibold group-hover:text-[#FFFFFF] transition-all duration-300">
                     {text}
                   </span>
                 </div>

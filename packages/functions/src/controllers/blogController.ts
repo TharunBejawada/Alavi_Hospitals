@@ -175,20 +175,88 @@ export const uploadBlogImage = async (req: any, res: any) => {
   }
 };
 
-// --- 7. GET RELATED BLOGS BY DEPARTMENT KEYWORDS (WITH DEBUG LOGS) ---
+function normalizeString(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/&amp;/g, '&')
+    .replace(/['’]/g, '')
+    .trim();
+}
+
+function normalizeSpelling(str: string): string {
+  return str.replace(/ae/g, 'e');
+}
+
+export function matchBlogCategoriesWithDepartment(blogCategories: any, departmentName: string): boolean {
+  if (!blogCategories || !departmentName) return false;
+
+  let categories: string[] = [];
+
+  if (typeof blogCategories === "string") {
+    try {
+      const parsed = JSON.parse(blogCategories);
+      if (Array.isArray(parsed)) {
+        categories = parsed.map(c => String(c.S || c));
+      } else {
+        categories = [blogCategories];
+      }
+    } catch {
+      categories = [blogCategories];
+    }
+  } else if (Array.isArray(blogCategories)) {
+    categories = blogCategories.map(c => String(c.S || c));
+  } else if (typeof blogCategories === "object" && blogCategories !== null) {
+    if (blogCategories.S) {
+      categories = [String(blogCategories.S)];
+    }
+  }
+
+  if (categories.length === 0) return false;
+
+  const normalizedDept = normalizeString(departmentName);
+
+  // Split department into parts by '&', 'and', ',', '/'
+  const deptParts = normalizedDept
+    .split(/\s*&\s*|\s+and\s+|\s*,\s*|\s*\/\s*/)
+    .map(p => p.trim())
+    .filter(p => p.length > 2);
+
+  deptParts.push(normalizedDept);
+
+  for (const catRaw of categories) {
+    const cat = normalizeString(catRaw);
+    if (!cat || cat.length < 2) continue;
+    const catAlt = normalizeSpelling(cat);
+
+    for (const part of deptParts) {
+      const partAlt = normalizeSpelling(part);
+
+      // 1. Exact match
+      if (cat === part || catAlt === partAlt) {
+        return true;
+      }
+
+      // 2. Part contains category or category contains part
+      if (part.length >= 4 && cat.length >= 4) {
+        if (part.includes(cat) || partAlt.includes(catAlt)) {
+          return true;
+        }
+        if (cat.includes(part) || catAlt.includes(partAlt)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+// --- 7. GET RELATED BLOGS BY DEPARTMENT KEYWORDS / CATEGORIES ---
 export const getBlogsByDepartmentKeywords = async (req: any, res: any) => {
   try {
-    
-    const department = decodeURIComponent(req.params.department);
+    const department = decodeURIComponent(req.params.department || "");
 
-    const keywords = department
-      .replace(/[&,-]/g, ' ') 
-      .split(/\s+/)           
-      .filter(word => word.length > 2) 
-      .map(word => word.toLowerCase()); 
-
-
-    if (keywords.length === 0) {
+    if (!department.trim()) {
       return res.status(200).json({ Items: [] });
     }
 
@@ -202,31 +270,10 @@ export const getBlogsByDepartmentKeywords = async (req: any, res: any) => {
     const allBlogs = result.Items || [];
 
     const matchedBlogs = allBlogs.filter(blog => {
-      let categoryText = "";
-
-      if (blog.categories) {
-        let catData = blog.categories;
-
-        if (typeof catData === "string") {
-          try { catData = JSON.parse(catData); } 
-          catch (e) { categoryText = catData; }
-        }
-
-        if (Array.isArray(catData)) {
-          categoryText = catData.map(item => item.S || item).join(" ");
-        } else if (typeof catData === "object" && catData !== null) {
-           categoryText = catData.S || "";
-        } else if (typeof catData === "string") {
-          categoryText += " " + catData;
-        }
-      }
-
-      categoryText = categoryText.toLowerCase();
-
-      return keywords.some(kw => categoryText.includes(kw));
+      return matchBlogCategoriesWithDepartment(blog.categories, department);
     });
 
-    matchedBlogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    matchedBlogs.sort((a, b) => new Date(b.createdAt || b.timeline || 0).getTime() - new Date(a.createdAt || a.timeline || 0).getTime());
 
     res.status(200).json({ Items: matchedBlogs });
   } catch (error) {

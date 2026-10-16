@@ -119,7 +119,7 @@ function BlogsContent() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative w-80 h-80 md:w-[400px] md:h-[400px] lg:w-[1200px] lg:h-[500px] shrink-0 pointer-events-auto"
+                className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] lg:w-[1200px] lg:h-[500px] max-w-full shrink-0 pointer-events-auto"
               >
                  <Image 
                    src="/blog-hero-hands.png" 

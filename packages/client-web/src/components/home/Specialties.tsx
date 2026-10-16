@@ -213,7 +213,7 @@ export default function Specialties() {
                 key={spec.id}
                 ref={(el) => { pillRefs.current[idx] = el; }}
                 onClick={() => handlePillClick(idx)}
-                className={`cursor-pointer shrink-0 font-[Poppins] whitespace-nowrap px-6 py-2.5 rounded-full border-2 font-medium text-lg transition-all duration-300 ${isActive
+                className={`cursor-pointer shrink-0 font-[Poppins] whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border-2 font-medium text-sm sm:text-base md:text-lg transition-all duration-300 ${isActive
                   ? "bg-[#0066A9] border-[#0066A9] text-white shadow-md scale-105"
                   : "bg-white border-[#0066A9] text-[#000000] hover:bg-blue-50"
                   }`}
@@ -224,8 +224,8 @@ export default function Specialties() {
           })}
 
           <Link href="/specialities" className="shrink-0">
-            <button className="cursor-pointer font-[Poppins] whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-[#0066A9] bg-white text-[#0066A9] font-semibold text-lg flex items-center gap-2 hover:bg-blue-50 transition-colors">
-              View all <FaCirclePlay className="text-lg" />
+            <button className="cursor-pointer font-[Poppins] whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border-2 border-[#0066A9] bg-white text-[#0066A9] font-semibold text-sm sm:text-base md:text-lg flex items-center gap-2 hover:bg-blue-50 transition-colors">
+              View all <FaCirclePlay className="text-base sm:text-lg" />
             </button>
           </Link>
         </div>
@@ -240,11 +240,11 @@ export default function Specialties() {
           onTouchEnd={onTouchEnd}
         >
 
-          {/* Outer Navigation Arrows */}
+          {/* Outer Navigation Arrows (Hidden on mobile where swipe gesture and dots work best) */}
           <button
             onClick={handlePrev}
             aria-label="Previous specialty"
-            className="cursor-pointer absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg focus:outline-none"
+            className="cursor-pointer hidden sm:flex absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg focus:outline-none"
           >
             <Image
               src="/icons/leftArrow.png"
@@ -257,7 +257,7 @@ export default function Specialties() {
           <button
             onClick={handleNext}
             aria-label="Next specialty"
-            className="cursor-pointer absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg focus:outline-none"
+            className="cursor-pointer hidden sm:flex absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 text-white rounded-full items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg focus:outline-none"
           >
             <Image
               src="/icons/rightArrow.png"
@@ -268,7 +268,7 @@ export default function Specialties() {
           </button>
 
           {/* Gradient Card */}
-          <div style={{ background: 'linear-gradient(90deg, #663399 56.94%, #0066A9 116.43%)' }} className="rounded-[32px] md:rounded-[40px] shadow-2xl p-6 lg:p-10 min-h-[450px] flex items-center relative overflow-hidden">
+          <div style={{ background: 'linear-gradient(90deg, #663399 56.94%, #0066A9 116.43%)' }} className="rounded-[24px] sm:rounded-[32px] md:rounded-[40px] shadow-2xl p-5 sm:p-8 lg:p-10 min-h-[450px] flex items-center relative overflow-hidden">
 
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -348,14 +348,14 @@ export default function Specialties() {
                   </div>
 
                   {/* Call to Action Buttons */}
-                  <div className="flex flex-wrap gap-4 sm:gap-6">
-                    <Link href={`/doctors?specialty=${currentSpecialty.id}`}>
-                      <button className="cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-100 px-8 py-3 rounded-full font-semibold text-base sm:text-lg shadow-md transition-colors hover:shadow-lg">
+                  <div className="flex flex-wrap gap-3 sm:gap-6">
+                    <Link href={`/doctors?specialty=${currentSpecialty.id}`} className="w-full sm:w-auto">
+                      <button className="w-full sm:w-auto cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-100 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm sm:text-base shadow-md transition-colors hover:shadow-lg text-center">
                         Find a doctor
                       </button>
                     </Link>
-                    <Link href={`/specialities/${currentSpecialty.id}`}>
-                      <button className="cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-100 px-8 py-3 rounded-full font-semibold text-base sm:text-lg shadow-md transition-colors hover:shadow-lg">
+                    <Link href={`/specialities/${currentSpecialty.id}`} className="w-full sm:w-auto">
+                      <button className="w-full sm:w-auto cursor-pointer bg-[#FFFFFF] text-[#663399] hover:bg-gray-100 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm sm:text-base shadow-md transition-colors hover:shadow-lg text-center">
                         Explore more
                       </button>
                     </Link>

@@ -35,15 +35,15 @@ const doctorTalksData = {
 export default function DoctorTalks() {
   return (
     <section className="font-[Poppins] pt-8 pb-4 w-full border-t border-gray-100">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
         <div>
-          <h3 className="text-[26px] font-semibold text-[#5B328C] mb-2">Doctor Talks</h3>
-          <p className="text-gray-800 font-medium text-[21px]">
+          <h3 className="text-xl sm:text-2xl md:text-[26px] font-semibold text-[#5B328C] mb-1 sm:mb-2">Doctor Talks</h3>
+          <p className="text-gray-800 font-medium text-sm sm:text-base md:text-lg">
             Explore doctor-led discussions on various medical conditions, treatment options and wellness tips.
           </p>
         </div>
         <Link href="/doctor-talks">
-          <button className="bg-[#483B8D] text-white px-6 py-2.5 rounded shadow-md hover:bg-[#3D2C7A] transition-colors font-semibold text-[21px] flex items-center gap-2 whitespace-nowrap">
+          <button className="bg-[#483B8D] text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded shadow-md hover:bg-[#3D2C7A] transition-colors font-semibold text-sm sm:text-base flex items-center gap-2 whitespace-nowrap">
             View All <FaArrowRight />
           </button>
         </Link>
@@ -61,18 +61,18 @@ export default function DoctorTalks() {
             <div className="relative w-full aspect-[4/3] bg-gray-200">
               <Image src={talk.image} alt={talk.title} fill className="object-cover" />
             </div>
-            <div className="p-6 flex flex-col flex-1">
-              <h4 className={`font-bold text-[21px] leading-snug mb-6 flex-1 ${talk.isPurple ? "text-white" : "text-gray-900"}`}>
+            <div className="p-4 sm:p-6 flex flex-col flex-1">
+              <h4 className={`font-bold text-base sm:text-lg md:text-xl leading-snug mb-4 sm:mb-6 flex-1 ${talk.isPurple ? "text-white" : "text-gray-900"}`}>
                 {talk.title}
               </h4>
               <div className="flex items-center gap-3 mt-auto">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-[14px] shrink-0 ${
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 ${
                   talk.isPurple ? "bg-white text-[#5B328C]" : "bg-[#5B328C] text-white"
                 }`}>
                   Dr
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold text-[21px]">{talk.doctor}</span>
+                  <span className="font-bold text-sm sm:text-base md:text-lg">{talk.doctor}</span>
                   <span className={`text-[11px] font-medium leading-tight mt-0.5 ${talk.isPurple ? "text-white/80" : "text-gray-500"}`}>
                     {talk.specialty}
                   </span>
@@ -86,20 +86,20 @@ export default function DoctorTalks() {
         <div className="flex flex-col gap-4">
           {doctorTalksData.list.map((talk) => (
             <div key={talk.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow h-full">
-              <div className="relative w-[35%] h-full min-h-[100px] bg-gray-200 shrink-0">
+              <div className="relative w-[35%] h-full min-h-[90px] sm:min-h-[100px] bg-gray-200 shrink-0">
                 <Image src={talk.image} alt={talk.title} fill className="object-cover" />
               </div>
-              <div className="p-4 flex flex-col justify-center w-[65%]">
-                <h4 className="font-bold text-[21px] leading-snug text-gray-900 mb-3 line-clamp-2">
+              <div className="p-3 sm:p-4 flex flex-col justify-center w-[65%]">
+                <h4 className="font-bold text-xs sm:text-sm md:text-base leading-snug text-gray-900 mb-2 line-clamp-2">
                   {talk.title}
                 </h4>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#5B328C] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#5B328C] text-white flex items-center justify-center font-bold text-[8px] sm:text-[9px] shrink-0">
                     Dr
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-bold text-[21px] text-gray-900">{talk.doctor}</span>
-                    <span className="text-[18px] font-medium leading-tight text-gray-500 line-clamp-1">
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-bold text-xs sm:text-sm text-gray-900 truncate">{talk.doctor}</span>
+                    <span className="text-[10px] sm:text-xs font-medium leading-tight text-gray-500 line-clamp-1">
                       {talk.specialty}
                     </span>
                   </div>

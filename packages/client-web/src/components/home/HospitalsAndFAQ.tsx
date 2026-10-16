@@ -61,13 +61,13 @@ const HospitalsAndFAQ = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="text-3xl font-semibold text-[#663399] mb-8 tracking-normal">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#663399] mb-6 sm:mb-8 tracking-normal">
               Our Hospitals
             </h2>
 
-            <div className="grid grid-cols-2 gap-4 h-[350px] lg:h-[450px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-auto sm:h-[350px] lg:h-[450px]">
               {hospitals.map((hospital, index) => (
-                <div key={index} className="relative w-full h-full flex flex-col shadow-md rounded-sm overflow-hidden group">
+                <div key={index} className="relative w-full h-[220px] sm:h-full flex flex-col shadow-md rounded-xl overflow-hidden group">
                   <div className="relative w-full h-full flex-grow">
                     <Image
                       src={hospital.image}
@@ -78,8 +78,8 @@ const HospitalsAndFAQ = () => {
                   </div>
                   {/* Purple Banner (Rendered only if showLabel is true) */}
                   {hospital.showLabel && (
-                    <div className="absolute bottom-0 w-full bg-[#5B328C] py-4 text-center z-10">
-                      <h3 className="text-white text-xl font-bold tracking-wider">
+                    <div className="absolute bottom-0 w-full bg-[#5B328C] py-3 sm:py-4 text-center z-10">
+                      <h3 className="text-white text-lg sm:text-xl font-bold tracking-wider">
                         {hospital.name}
                       </h3>
                     </div>
@@ -97,7 +97,7 @@ const HospitalsAndFAQ = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col"
           >
-            <h2 className="text-3xl font-semibold text-[#663399] mb-8 tracking-normal">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#663399] mb-6 sm:mb-8 tracking-normal">
               FAQ's
             </h2>
 
@@ -106,19 +106,19 @@ const HospitalsAndFAQ = () => {
                 const isOpen = openFaq === index;
 
                 return (
-                  <div key={index} className="flex flex-col">
+                  <div key={index} className="flex flex-col rounded-xl overflow-hidden shadow-sm border border-gray-100">
                     {/* Accordion Header */}
                     <button
                       onClick={() => toggleFaq(index)}
-                      className={`flex items-center gap-4 w-full text-left p-4 lg:px-6 transition-colors duration-300 ${isOpen
+                      className={`flex items-center gap-4 w-full text-left p-4 lg:px-6 transition-colors duration-300 cursor-pointer ${isOpen
                         ? "bg-[#5B328C] text-white"
                         : "bg-white text-gray-900 hover:bg-gray-50"
                         }`}
                     >
-                      <span className="flex-shrink-0 text-xl font-bold">
+                      <span className="flex-shrink-0 text-lg sm:text-xl font-bold">
                         {isOpen ? <FiMinus /> : <FiPlus className="text-[#5B328C]" />}
                       </span>
-                      <span className="font-semibold text-[18px] leading-tight">
+                      <span className="font-semibold text-base sm:text-[18px] leading-snug">
                         {faq.question}
                       </span>
                     </button>

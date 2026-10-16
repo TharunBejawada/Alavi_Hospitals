@@ -98,11 +98,11 @@ export default function VaccinationsPage() {
       </p>
       
       {/* Buttons */}
-      <div className="flex flex-wrap gap-[54px]">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6 lg:gap-[54px]">
         {/* Call Now */}
         <a 
           href="tel:+919603911911"
-          className="w-[153px] h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
+          className="w-full sm:w-[153px] h-[44px] sm:h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
         >
           Call Now
         </a>
@@ -110,7 +110,7 @@ export default function VaccinationsPage() {
         {/* Book an Appointment */}
         <button
           onClick={() => setIsPopupOpen(true)}
-          className="w-[271px] h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
+          className="w-full sm:w-[271px] h-[44px] sm:h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
         >
           Book an Appointment
         </button>
@@ -264,14 +264,14 @@ export default function VaccinationsPage() {
 </motion.section>
 
       {/* --- 5. BOTTOM CTA --- */}
-<section className="relative w-full h-[450px] lg:h-[318px] bg-[#663399] overflow-hidden font-['Inter']">
+<section className="relative w-full min-h-[400px] h-auto lg:h-[318px] bg-[#663399] overflow-hidden font-['Inter'] py-10 lg:py-0">
   
   {/* Background Image */}
   <div className="absolute right-0 top-0 h-full w-full lg:w-[50%]">
     <img 
       src="/assets/vaccination-cta.png" 
       alt="Vaccination vial and syringes" 
-      className="w-full h-full object-fit object-right" 
+      className="w-full h-full object-fit object-right opacity-30 lg:opacity-100" 
     />
   </div>
 
@@ -284,27 +284,27 @@ export default function VaccinationsPage() {
   />
 
   {/* Content Container */}
-  <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col justify-center px-6 lg:px-16 py-10 lg:py-0">
+  <div className="relative z-10 max-w-[1453px] w-full h-full mx-auto flex flex-col justify-center px-6 lg:px-16">
     
     <div className="flex flex-col max-w-[741px]">
-      <h2 className="text-[26px] font-bold text-white leading-[149%] mb-[13px] max-w-[553px]">
+      <h2 className="text-xl sm:text-2xl lg:text-[26px] font-bold text-white leading-snug mb-2 sm:mb-[13px] max-w-[553px]">
         Walk in or pre-book your vaccination
       </h2>
       
-      <p className="text-[21px] font-medium text-white leading-[149%] mb-[13px] max-w-[553px]">
+      <p className="text-base sm:text-lg lg:text-[21px] font-medium text-white leading-snug mb-2 sm:mb-[13px] max-w-[553px]">
         Planning a vaccination for yourself or your family?
       </p>
       
-      <p className="text-[21px] font-medium text-white leading-[149%] mb-[30px]">
+      <p className="text-sm sm:text-base lg:text-[21px] font-medium text-white/90 leading-relaxed mb-6 sm:mb-[30px]">
         Walk in for available vaccination services or pre-book your appointment for a convenient experience.
       </p>
       
       {/* Buttons Container */}
-      <div className="flex flex-wrap gap-[54px]">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6 lg:gap-[54px]">
         {/* Call Now Button */}
         <a 
           href="tel:+919603911911"
-          className="w-[153px] h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
+          className="w-full sm:w-[153px] h-[44px] sm:h-[39px] flex items-center justify-center border-2 border-white text-white font-semibold rounded-[3px] hover:bg-white/10 transition-colors"
         >
           Call Now
         </a>
@@ -312,7 +312,7 @@ export default function VaccinationsPage() {
         {/* Book an Appointment Button */}
         <button
           onClick={() => setIsPopupOpen(true)}
-          className="w-[271px] h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
+          className="w-full sm:w-[271px] h-[44px] sm:h-[41px] flex items-center justify-center bg-white text-[#663399] font-semibold rounded-[3px] hover:opacity-90 transition-opacity"
         >
           Book an Appointment
         </button>

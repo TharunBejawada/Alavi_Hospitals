@@ -93,11 +93,11 @@ export default function AdmissionGuidelinesPage() {
         variants={fadeUp}
         className="py-20 max-w-[1440px] w-full mx-auto px-6 lg:px-[154px]"
       >
-        <div className="bg-[#F6FBFF] rounded-[12px] p-10 lg:p-[70px] max-w-[1146px] mx-auto transition-shadow duration-300 hover:shadow-[0_10px_40px_rgba(102,51,153,0.05)]">
-          <motion.h2 variants={childFadeUp} className="text-[#663399] font-bold text-[26px] text-center mb-2">
+        <div className="bg-[#F6FBFF] rounded-[12px] p-5 sm:p-10 lg:p-[70px] max-w-[1146px] mx-auto transition-shadow duration-300 hover:shadow-[0_10px_40px_rgba(102,51,153,0.05)]">
+          <motion.h2 variants={childFadeUp} className="text-[#663399] font-bold text-xl sm:text-2xl md:text-[26px] text-center mb-2">
             Admission Process
           </motion.h2>
-          <motion.p variants={childFadeUp} className="text-[#000000] text-[18px] text-center max-w-[661px] mx-auto mb-[60px] leading-[1.48]">
+          <motion.p variants={childFadeUp} className="text-[#000000] text-sm sm:text-base md:text-[18px] text-center max-w-[661px] mx-auto mb-8 sm:mb-[60px] leading-relaxed">
             Our team will guide you through each step and assist you with the necessary formalities.
           </motion.p>
 
@@ -112,30 +112,30 @@ export default function AdmissionGuidelinesPage() {
                 <motion.div 
                   key={idx} 
                   variants={childFadeUp}
-                  className="flex gap-4 lg:gap-8 group cursor-default"
+                  className="flex gap-2.5 sm:gap-4 lg:gap-8 group cursor-default"
                   onMouseEnter={() => setHoveredStep(idx)}
                   onMouseLeave={() => setHoveredStep(null)}
                 >
                   {/* Step Label */}
-                  <div className="w-[65px] pt-1 shrink-0 text-right">
-                    <span className={`font-medium text-[16px] leading-[1.39] transition-colors duration-300 ${isDotActive ? 'text-[#663399]' : 'text-[#000000]'}`}>
+                  <div className="w-[50px] sm:w-[65px] pt-1 shrink-0 text-right">
+                    <span className={`font-medium text-xs sm:text-[16px] leading-[1.39] transition-colors duration-300 ${isDotActive ? 'text-[#663399]' : 'text-[#000000]'}`}>
                       {item.step}
                     </span>
                   </div>
 
                   {/* Timeline Visual */}
-                  <div className="flex flex-col items-center shrink-0 w-[40px] relative">
+                  <div className="flex flex-col items-center shrink-0 w-[32px] sm:w-[40px] relative">
                     <motion.div 
                       whileHover={{ scale: 1.15 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`w-[40px] h-[40px] rounded-full flex items-center justify-center shrink-0 z-10 transition-colors duration-300 bg-[#F6FBFF] ${isDotActive ? 'border-[2px] border-[#663399]' : 'border-[2px] border-transparent'}`}
+                      className={`w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-full flex items-center justify-center shrink-0 z-10 transition-colors duration-300 bg-[#F6FBFF] ${isDotActive ? 'border-[2px] border-[#663399]' : 'border-[2px] border-transparent'}`}
                     >
-                      <div className={`w-[24px] h-[24px] rounded-full transition-colors duration-300 ${isDotActive ? 'bg-[#663399]' : 'bg-[#D8CBE5]'}`} />
+                      <div className={`w-[18px] h-[18px] sm:w-[24px] sm:h-[24px] rounded-full transition-colors duration-300 ${isDotActive ? 'bg-[#663399]' : 'bg-[#D8CBE5]'}`} />
                     </motion.div>
                     
                     {/* The Connecting Line */}
                     {!isLast && (
-                      <div className="absolute top-[40px] bottom-0 w-[2px] bg-[#D8CBE5] overflow-hidden">
+                      <div className="absolute top-[32px] sm:top-[40px] bottom-0 w-[2px] bg-[#D8CBE5] overflow-hidden">
                         <div 
                           className="absolute top-0 left-0 w-full bg-[#663399] transition-all duration-500 ease-in-out origin-top"
                           style={{ height: isLineActive ? '100%' : '0%' }}
@@ -148,12 +148,12 @@ export default function AdmissionGuidelinesPage() {
                   <motion.div 
                     whileHover={{ x: 4 }}
                     transition={{ duration: 0.2 }}
-                    className={`pb-12 ${isLast ? 'pb-0' : ''}`}
+                    className={`pb-8 sm:pb-12 ${isLast ? 'pb-0' : ''} flex-1 min-w-0`}
                   >
-                    <h3 className={`font-semibold text-[21px] mb-2 leading-[1.39] transition-colors duration-300 ${isDotActive ? "text-[#663399]" : "text-[#000000]"}`}>
+                    <h3 className={`font-semibold text-base sm:text-lg md:text-[21px] mb-1.5 sm:mb-2 leading-snug transition-colors duration-300 break-words ${isDotActive ? "text-[#663399]" : "text-[#000000]"}`}>
                       {item.title}
                     </h3>
-                    <p className="text-[#000000] text-[18px] leading-[1.42] max-w-[704px]">
+                    <p className="text-[#000000] text-xs sm:text-sm md:text-[18px] leading-relaxed max-w-[704px] break-words">
                       {item.desc}
                     </p>
                   </motion.div>

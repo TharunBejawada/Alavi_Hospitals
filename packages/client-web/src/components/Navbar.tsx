@@ -120,12 +120,13 @@ const Header = () => {
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16 py-3 flex justify-between items-center">
 
           {/* Alavi Logo */}
-          <Link href="/" className="flex-shrink-0 min-w-[200px]">
+          <Link href="/" className="flex-shrink-0 min-w-[150px] sm:min-w-[180px] md:min-w-[200px]">
             <Image
               src="/logo-alavi.png"
               alt="Alavi Hospitals"
               width={220}
               height={62}
+              className="w-[160px] sm:w-[190px] md:w-[220px] h-auto object-contain"
               priority
             />
           </Link>
@@ -305,16 +306,37 @@ const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-[300px] bg-white z-[70] shadow-2xl p-6 lg:hidden flex flex-col"
+              className="fixed right-0 top-0 h-full w-[85vw] max-w-[320px] bg-white z-[70] shadow-2xl p-6 lg:hidden flex flex-col"
             >
-              <div className="flex justify-between items-center mb-8">
-                <Image src="/logo-alavi.png" alt="Logo" width={140} height={40} />
-                <button onClick={() => setIsOpen(false)} className="text-[#663399]">
+              <div className="flex justify-between items-center mb-6">
+                <Image src="/logo-alavi.png" alt="Logo" width={140} height={40} className="w-[130px] h-auto object-contain" />
+                <button onClick={() => setIsOpen(false)} className="text-[#663399] p-1 cursor-pointer">
                   <HiX size={28} />
                 </button>
               </div>
 
-              <ul className="flex flex-col gap-5 overflow-y-auto flex-grow">
+              {/* Mobile Language Selector */}
+              <div className="mb-5 pb-4 border-b border-gray-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</span>
+                <div className="flex items-center gap-1.5">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => changeLanguage(lang.code)}
+                      className={`px-2.5 py-1 text-xs rounded-full transition-colors font-medium ${
+                        currentLang === lang.code
+                          ? "bg-[#663399] text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-purple-100"
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <ul className="flex flex-col gap-4 overflow-y-auto flex-grow pr-1">
                 {navLinks.map((link) => {
                   if (link.children) {
                     const isExpanded = mobileExpanded === link.name;
@@ -370,7 +392,7 @@ const Header = () => {
                 })}
               </ul>
 
-              <div className="mt-auto p-4 bg-purple-50 rounded-2xl space-y-3">
+              <div className="mt-4 p-4 bg-purple-50 rounded-2xl space-y-3">
                 <p className="text-[#663399] font-normal text-xs tracking-wider uppercase">Emergency Contact</p>
                 <a href="tel:9603911911" className="flex items-center gap-3 text-sm font-medium text-gray-800 hover:text-[#663399] transition-colors">
                   <span className="w-8 h-8 rounded-full bg-[#663399] flex items-center justify-center shrink-0 shadow-sm">

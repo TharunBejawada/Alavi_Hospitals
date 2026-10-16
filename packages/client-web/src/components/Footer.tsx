@@ -240,7 +240,7 @@ const Footer = () => {
       </div>
 
       {/* --- BOTTOM COPYRIGHT BAR --- */}
-      <div className="bg-[#5B328C] py-5 text-center border-t border-white/10">
+      <div className="bg-[#5B328C] pt-5 pb-24 md:pb-24 lg:pb-5 text-center border-t border-white/10">
         <p className="text-[12px] md:text-[13px] font-bold tracking-[0.1em] uppercase px-4">
           Copyright © {currentYear} . ALAVI HOSPITALS . All Rights Reserved
         </p>

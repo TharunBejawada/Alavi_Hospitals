@@ -51,10 +51,10 @@ const Hero = () => {
             // Extracted the inner content to avoid duplicating code
             const itemContent = (
               <>
-                <span className="text-white font-semibold text-lg lg:text-lg whitespace-nowrap text-left">
+                <span className="text-white font-semibold text-base sm:text-lg text-left pr-3 leading-snug">
                   {item.title}
                 </span>
-                <FiArrowRightCircle className="text-white/60 text-[26px] font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0" />
+                <FiArrowRightCircle className="text-white/60 text-[24px] sm:text-[26px] font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0" />
               </>
             );
 
@@ -63,7 +63,7 @@ const Hero = () => {
               <button
                 key={index}
                 onClick={() => setIsPopupOpen(true)}
-                className="w-full flex-1 group flex items-center justify-between px-6 lg:px-8 py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300 cursor-pointer"
+                className="w-full flex-1 group flex items-center justify-between px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300 cursor-pointer"
               >
                 {itemContent}
               </button>
@@ -71,7 +71,7 @@ const Hero = () => {
               <Link 
                 key={index} 
                 href={item.link}
-                className="flex-1 group flex items-center justify-between px-6 lg:px-8 py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300"
+                className="flex-1 group flex items-center justify-between px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300"
               >
                 {itemContent}
               </Link>

@@ -131,23 +131,23 @@ export default function AppointmentPopup({ isOpen, onClose, defaultSpeciality = 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-[824px] bg-[#FFFFFF] rounded-[23px] p-6 lg:p-8 shadow-2xl h-[80vh] flex flex-col font-['Poppins'] overflow-hidden"
+            className="relative w-full max-w-[824px] bg-[#FFFFFF] rounded-[23px] p-5 sm:p-6 lg:p-8 shadow-2xl max-h-[92vh] flex flex-col font-['Poppins'] overflow-hidden"
           >
             {/* Close Button */}
             <button 
               onClick={onClose}
               disabled={isSubmitting}
-              className="absolute top-4 right-4 md:top-6 md:right-6 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-10 disabled:opacity-50"
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-10 disabled:opacity-50 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Header Texts */}
-            <div className="text-center shrink-0 mb-4 flex flex-col items-center">
-              <h2 className="font-semibold text-[21px] leading-[156%] text-[#663399] mb-2">
+            <div className="text-center shrink-0 mb-3 sm:mb-4 pr-6 sm:pr-0 flex flex-col items-center">
+              <h2 className="font-semibold text-lg sm:text-[21px] leading-tight text-[#663399] mb-1.5 sm:mb-2">
                 Book an Appointment
               </h2>
-              <p className="font-normal text-[16px] leading-[24px] text-[#000000] max-w-[702px] w-full">
+              <p className="font-normal text-xs sm:text-[15px] leading-snug sm:leading-[24px] text-[#000000] max-w-[702px] w-full">
                 Schedule Your Consultation at Alavi Hospitals. Fill in your details below and our team will get in touch with you to confirm your appointment.
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function AppointmentPopup({ isOpen, onClose, defaultSpeciality = 
             {/* Form */}
             <form 
               onSubmit={handleSubmit}
-              className="max-w-[712px] w-full mx-auto flex flex-col flex-1 justify-between min-h-0 overflow-y-auto custom-scrollbar pr-2 pb-2"
+              className="max-w-[712px] w-full mx-auto flex flex-col flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-1 pb-1"
             >
               {/* Row 1: Name */}
               <div>
@@ -262,7 +262,7 @@ export default function AppointmentPopup({ isOpen, onClose, defaultSpeciality = 
                   onChange={(e) => setAgreement(e.target.checked)}
                   className="mt-1 w-[17px] h-[17px] border border-[#000000] rounded-sm accent-[#663399] cursor-pointer shrink-0" 
                 />
-                <label htmlFor="agreement" className="font-normal text-[16px] leading-[24px] text-[#000000] cursor-pointer select-none">
+                <label htmlFor="agreement" className="font-normal text-xs sm:text-[15px] leading-snug sm:leading-[24px] text-[#000000] cursor-pointer select-none">
                   I agree to receive appointment updates and healthcare information from Alavi Hospitals.
                 </label>
               </div>
@@ -271,13 +271,13 @@ export default function AppointmentPopup({ isOpen, onClose, defaultSpeciality = 
               <button 
                 type="submit"
                 disabled={!isFormValid || isSubmitting}
-                className={`w-full h-[64px] bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] rounded-[14px] text-[#FFFFFF] font-semibold text-[21px] flex items-center justify-center transition-all shadow-md mt-6 shrink-0 ${
-                  isFormValid && !isSubmitting ? "hover:opacity-90" : "opacity-50 cursor-not-allowed"
+                className={`w-full h-[52px] sm:h-[64px] bg-[linear-gradient(90deg,#0066A9_0%,#663399_100%)] rounded-[14px] text-[#FFFFFF] font-semibold text-base sm:text-[21px] flex items-center justify-center transition-all shadow-md mt-5 sm:mt-6 shrink-0 ${
+                  isFormValid && !isSubmitting ? "hover:opacity-90 cursor-pointer" : "opacity-50 cursor-not-allowed"
                 }`}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-6 h-6 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Processing...
                   </>
                 ) : (

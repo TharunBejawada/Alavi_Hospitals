@@ -120,12 +120,12 @@ export default function PatientStories() {
       <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-16 xl:px-20">
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-semibold text-[#663399] mb-4"
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#663399] mb-3 sm:mb-4"
           >
             Patient Stories
           </motion.h2>
@@ -134,29 +134,29 @@ export default function PatientStories() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-[#0C0200] text-xl font-medium leading-relaxed"
+            className="text-[#0C0200] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-relaxed"
           >
             Real experiences, real recoveries. Hear from our patients as they share their journey of healing, trust and expert care at Alavi Hospitals.
           </motion.p>
         </div>
 
         {/* Staggered Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5 items-center">
 
           {/* Column 1 (Far Left) */}
           <div className="flex flex-col gap-4 lg:gap-5">
-            <StoryCard data={stories[0]} heightClass="h-[280px]" delay={0.1} onSelect={setSelectedVideo} />
+            <StoryCard data={stories[0]} heightClass="h-[250px] sm:h-[280px]" delay={0.1} onSelect={setSelectedVideo} />
           </div>
 
           {/* Column 2 (Mid Left) */}
           <div className="flex flex-col gap-4 lg:gap-5">
-            <StoryCard data={stories[1]} heightClass="h-[230px]" delay={0.2} onSelect={setSelectedVideo} />
-            <StoryCard data={stories[3]} heightClass="h-[230px]" delay={0.3} onSelect={setSelectedVideo} />
+            <StoryCard data={stories[1]} heightClass="h-[220px] sm:h-[230px]" delay={0.2} onSelect={setSelectedVideo} />
+            <StoryCard data={stories[3]} heightClass="h-[220px] sm:h-[230px]" delay={0.3} onSelect={setSelectedVideo} />
           </div>
 
           {/* Column 3 (Center - Big One: WN162fuCtn4) */}
-          <div className="flex flex-col gap-4 lg:gap-5">
-            <StoryCard data={stories[2]} heightClass="h-[480px]" delay={0.4} onSelect={setSelectedVideo} />
+          <div className="flex flex-col gap-4 lg:gap-5 sm:col-span-2 md:col-span-1">
+            <StoryCard data={stories[2]} heightClass="h-[280px] sm:h-[350px] lg:h-[480px]" delay={0.4} onSelect={setSelectedVideo} />
           </div>
 
           {/* Column 4 (Mid Right) */}

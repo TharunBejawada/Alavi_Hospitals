@@ -63,11 +63,11 @@ export default function HealthPackageDetailClient({ healthPackage }: { healthPac
      {/* --- 1. HERO --- */}
 <section className="relative w-full lg:h-[427px] bg-[#663399] font-['Inter'] pb-10 lg:pb-0 overflow-visible">
   {/* Main 1440px Wrapper for exact CSS coordinate mapping */}
-  <div className="max-w-[1440px] w-full mx-auto relative h-full px-6 lg:px-0 flex flex-col lg:block pt-10 lg:pt-0">
+  <div className="max-w-[1440px] w-full mx-auto relative h-full px-6 lg:px-0 flex flex-col lg:block pt-6 sm:pt-10 lg:pt-0">
     
     {/* 1. Hero Image (Pops out top, overlaps Pricing Card) */}
     {pkg.heroImage && (
-      <div className="lg:absolute lg:left-[129px] lg:-top-[54px] lg:w-[424px] lg:h-[372px] lg:z-20 w-full max-w-[420px] mx-auto mb-6 relative shrink-0">
+      <div className="lg:absolute lg:left-[129px] lg:-top-[54px] lg:w-[424px] lg:h-[372px] lg:z-20 w-full max-w-[340px] sm:max-w-[420px] h-[220px] sm:h-[300px] lg:h-[372px] mx-auto mb-6 relative shrink-0">
         <Image 
           src={pkg.heroImage} 
           alt={pkg.pageTitle} 
@@ -85,28 +85,28 @@ export default function HealthPackageDetailClient({ healthPackage }: { healthPac
       transition={{ duration: 0.6 }} 
       className="lg:absolute lg:left-[543px] lg:top-[36px] flex flex-col lg:z-10 mb-8 items-center lg:items-start text-center lg:text-left"
     >
-      <h1 className="text-[28px] lg:text-[34px] font-bold text-white uppercase leading-[138%] max-w-[306px] mb-[16px]">
+      <h1 className="text-2xl sm:text-[28px] lg:text-[34px] font-bold text-white uppercase leading-[138%] max-w-[420px] lg:max-w-[306px] mb-3 sm:mb-[16px]">
         {pkg.pageTitle}
       </h1>
       {pkg.pageSubtitle && (
-        <p className="text-[14px] lg:text-[16px] font-semibold text-white leading-[149%] max-w-[340px] mb-[12px]">
+        <p className="text-sm sm:text-[16px] font-semibold text-white leading-[149%] max-w-[420px] lg:max-w-[340px] mb-2 sm:mb-[12px]">
           {pkg.pageSubtitle}
         </p>
       )}
       {pkg.heroDescription && (
-        <p className="text-[12px] font-medium text-white leading-[149%] max-w-[321px]">
+        <p className="text-xs sm:text-[12px] font-medium text-white/90 leading-[149%] max-w-[420px] lg:max-w-[321px]">
           {pkg.heroDescription}
         </p>
       )}
     </motion.div>
 
     {/* 3. Pricing Card (Matches precise 693x95.5 desktop dimensions) */}
-    <div className="lg:absolute lg:left-[171px] lg:top-[315px] w-full lg:w-[693px] lg:h-[95.5px] lg:z-10 flex flex-col lg:flex-row bg-white rounded-[12px] border-[3px] border-[#FFFDFD] shadow-[0px_1px_7px_#521C86] overflow-hidden mb-10 lg:mb-0">
+    <div className="lg:absolute lg:left-[171px] lg:top-[315px] w-full lg:w-[693px] lg:h-[95.5px] lg:z-10 grid grid-cols-2 lg:flex bg-white rounded-[12px] border-[3px] border-[#FFFDFD] shadow-[0px_1px_7px_#521C86] overflow-hidden mb-8 lg:mb-0">
       
       {/* Box 1: Package Price */}
-      <div className="flex-1 lg:flex-none lg:w-[171px] flex flex-col items-center justify-center bg-white py-4 lg:py-0 relative border-b lg:border-b-0 lg:border-r border-[#E7D8F5]">
-        <p className="text-[14px] font-semibold text-[#663399] leading-[149%]">Package Price</p>
-        <div className="relative text-[24px] font-bold text-[#663399] leading-[149%] mt-1">
+      <div className="lg:w-[171px] flex flex-col items-center justify-center bg-white py-3 sm:py-4 lg:py-0 relative border-b lg:border-b-0 border-r border-[#E7D8F5]">
+        <p className="text-xs sm:text-[14px] font-semibold text-[#663399] leading-[149%]">Package Price</p>
+        <div className="relative text-lg sm:text-[24px] font-bold text-[#663399] leading-[149%] mt-0.5 sm:mt-1">
           {formatCurrency(pkg.originalPrice)}
           {/* Red Strikethrough Line */}
           <div className="absolute top-1/2 left-[-10%] w-[120%] h-[1.5px] bg-[#E30000] -rotate-[8deg]"></div>
@@ -114,68 +114,70 @@ export default function HealthPackageDetailClient({ healthPackage }: { healthPac
       </div>
 
       {/* Box 2: Discounted Price */}
-      <div className="flex-1 lg:flex-none lg:w-[184px] flex flex-col items-center justify-center bg-[#663399] py-4 lg:py-0">
-        <p className="text-[14px] font-semibold text-[#FFFEFE] leading-[149%]">DISCOUNTED PRICE</p>
-        <p className="text-[32px] font-extrabold text-white leading-none mt-1">
+      <div className="lg:w-[184px] flex flex-col items-center justify-center bg-[#663399] py-3 sm:py-4 lg:py-0 border-b lg:border-b-0 border-[#E7D8F5]/30">
+        <p className="text-xs sm:text-[14px] font-semibold text-[#FFFEFE] leading-[149%]">DISCOUNTED PRICE</p>
+        <p className="text-xl sm:text-[30px] lg:text-[32px] font-extrabold text-white leading-tight mt-0.5 sm:mt-1">
           {formatCurrency(pkg.discountedPrice)}
         </p>
       </div>
 
       {/* Box 3: You Save */}
-      <div className="flex-1 lg:flex-none lg:w-[168px] flex flex-col items-center justify-center bg-white py-4 lg:py-0">
-        <p className="text-[14px] font-semibold text-[#663399] leading-[149%]">You Save</p>
-        <p className="text-[21px] font-bold text-[#663399] leading-[149%] mt-1">
+      <div className="lg:w-[168px] flex flex-col items-center justify-center bg-white py-3 sm:py-4 lg:py-0 border-r lg:border-r-0 border-[#E7D8F5]">
+        <p className="text-xs sm:text-[14px] font-semibold text-[#663399] leading-[149%]">You Save</p>
+        <p className="text-sm sm:text-base lg:text-[21px] font-bold text-[#663399] leading-[149%] mt-0.5 sm:mt-1">
           {savedPercent}% ({formatCurrency(savedAmount)})
         </p>
       </div>
 
       {/* Box 4: Call Now Button */}
-      <a href="tel:+919603911911" className="flex-1 lg:flex-none lg:w-[164px] h-full flex items-center justify-center bg-[#663399] gap-[10px] py-4 lg:py-0 hover:bg-[#5b2d8a] transition-colors cursor-pointer">
-        <svg className="w-6 h-6 fill-white shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <a href="tel:+919603911911" className="lg:w-[164px] h-full flex items-center justify-center bg-[#663399] gap-2 sm:gap-[10px] py-3 sm:py-4 lg:py-0 hover:bg-[#5b2d8a] transition-colors cursor-pointer">
+        <svg className="w-5 h-5 sm:w-6 sm:h-6 fill-white shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"></path>
         </svg>
-        <span className="text-[20px] font-bold text-white leading-[149%]">Call Now</span>
+        <span className="text-sm sm:text-base lg:text-[20px] font-bold text-white leading-[149%]">Call Now</span>
       </a>
 
     </div>
 
     {/* 4. Booking Form (Matches precise 345x365 desktop dimensions) */}
-    <div className="lg:absolute lg:left-[949px] lg:top-[30px] w-full lg:w-[345px] h-[365px] bg-white rounded-[11px] px-[20px] py-[18px] flex flex-col justify-between z-30 mx-auto">
-      <form onSubmit={handleSubmit} className="flex flex-col h-full justify-between">
+    <div className="lg:absolute lg:left-[949px] lg:top-[30px] w-full max-w-[420px] lg:max-w-none lg:w-[345px] h-auto lg:h-[365px] bg-white rounded-[11px] p-5 lg:px-[20px] lg:py-[18px] flex flex-col justify-between z-30 mx-auto shadow-md lg:shadow-none">
+      <form onSubmit={handleSubmit} className="flex flex-col h-full justify-between gap-3 sm:gap-4 lg:gap-0">
         
         {/* Form Inputs Group */}
-        <div className="flex flex-col gap-[10px]">
+        <div className="flex flex-col gap-2.5 sm:gap-3 lg:gap-[10px]">
           <div>
-            <label className="block text-[9px] font-medium text-black mb-[4px]">Name:</label>
+            <label className="block text-xs lg:text-[9px] font-semibold lg:font-medium text-black mb-1 lg:mb-[4px]">Name:</label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Enter your full name"
-              className="w-full h-[30px] bg-white border-[0.75px] border-[#663399] rounded-[3px] px-2 text-[9px] text-black placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]/50" />
+              className="w-full h-[40px] lg:h-[30px] bg-white border border-[#663399]/60 lg:border-[0.75px] lg:border-[#663399] rounded-[4px] lg:rounded-[3px] px-3 lg:px-2 text-sm lg:text-[9px] text-black placeholder-[#A0A0A0] lg:placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]" />
           </div>
           <div>
-            <label className="block text-[9px] font-medium text-black mb-[4px]">Mobile Number :</label>
+            <label className="block text-xs lg:text-[9px] font-semibold lg:font-medium text-black mb-1 lg:mb-[4px]">Mobile Number :</label>
             <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)} required placeholder="Enter your mobile number"
-              className="w-full h-[30px] bg-white border-[0.75px] border-[#663399] rounded-[3px] px-2 text-[9px] text-black placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]/50" />
+              className="w-full h-[40px] lg:h-[30px] bg-white border border-[#663399]/60 lg:border-[0.75px] lg:border-[#663399] rounded-[4px] lg:rounded-[3px] px-3 lg:px-2 text-sm lg:text-[9px] text-black placeholder-[#A0A0A0] lg:placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]" />
           </div>
           <div>
-            <label className="block text-[9px] font-medium text-black mb-[4px]">Email Address:</label>
+            <label className="block text-xs lg:text-[9px] font-semibold lg:font-medium text-black mb-1 lg:mb-[4px]">Email Address:</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address"
-              className="w-full h-[30px] bg-white border-[0.75px] border-[#663399] rounded-[3px] px-2 text-[9px] text-black placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]/50" />
+              className="w-full h-[40px] lg:h-[30px] bg-white border border-[#663399]/60 lg:border-[0.75px] lg:border-[#663399] rounded-[4px] lg:rounded-[3px] px-3 lg:px-2 text-sm lg:text-[9px] text-black placeholder-[#A0A0A0] lg:placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]" />
           </div>
-          <div>
-            <label className="block text-[9px] font-medium text-black mb-[4px]">Preferred Date :</label>
-            <input type="date" value={preferredDate} onChange={(e) => setPreferredDate(e.target.value)} placeholder="Select Date"
-              className="w-full h-[30px] bg-white border-[0.75px] border-[#663399] rounded-[3px] px-2 text-[9px] text-black placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]/50" />
-          </div>
-          <div>
-            <label className="block text-[9px] font-medium text-black mb-[4px]">Preferred Time :</label>
-            <input type="time" value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)} placeholder="Select Time"
-              className="w-full h-[30px] bg-white border-[0.75px] border-[#663399] rounded-[3px] px-2 text-[9px] text-black placeholder-[#DCDCDC] outline-none focus:ring-1 focus:ring-[#663399]/50" />
+          <div className="grid grid-cols-2 gap-2 lg:block">
+            <div>
+              <label className="block text-xs lg:text-[9px] font-semibold lg:font-medium text-black mb-1 lg:mb-[4px]">Preferred Date :</label>
+              <input type="date" value={preferredDate} onChange={(e) => setPreferredDate(e.target.value)} placeholder="Select Date"
+                className="w-full h-[40px] lg:h-[30px] bg-white border border-[#663399]/60 lg:border-[0.75px] lg:border-[#663399] rounded-[4px] lg:rounded-[3px] px-2 text-xs lg:text-[9px] text-black placeholder-[#A0A0A0] outline-none focus:ring-1 focus:ring-[#663399]" />
+            </div>
+            <div>
+              <label className="block text-xs lg:text-[9px] font-semibold lg:font-medium text-black mb-1 lg:mb-[4px]">Preferred Time :</label>
+              <input type="time" value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)} placeholder="Select Time"
+                className="w-full h-[40px] lg:h-[30px] bg-white border border-[#663399]/60 lg:border-[0.75px] lg:border-[#663399] rounded-[4px] lg:rounded-[3px] px-2 text-xs lg:text-[9px] text-black placeholder-[#A0A0A0] outline-none focus:ring-1 focus:ring-[#663399]" />
+            </div>
           </div>
         </div>
 
         {/* Submit Button */}
         <button type="submit" disabled={isSubmitting}
-          className="w-full h-[29px] bg-[#663399] border-[0.75px] border-white shadow-[0px_0px_4px_rgba(63,20,106,0.39)] rounded-[5px] text-[12px] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60 uppercase mt-[10px]">
-          {isSubmitting ? <Loader2 className="w-3 h-3 animate-spin" /> : "BOOK MY APPOINTMENT"}
+          className="w-full h-[42px] lg:h-[29px] bg-[#663399] border-[0.75px] border-white shadow-[0px_0px_4px_rgba(63,20,106,0.39)] rounded-[5px] text-xs lg:text-[12px] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60 uppercase mt-2 lg:mt-[10px]">
+          {isSubmitting ? <Loader2 className="w-4 h-4 lg:w-3 lg:h-3 animate-spin" /> : "BOOK MY APPOINTMENT"}
         </button>
         
       </form>
