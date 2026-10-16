@@ -18,6 +18,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // 4. Redirects
+  async redirects() {
+    return [
+      {
+        source: "/packages",
+        destination: "/health-packages",
+        permanent: true,
+      },
+    ];
+  },
+  // 5. Disable Next.js dev static route indicator toast
+  devIndicators: {
+    appIsrStatus: false,
+    buildActivity: false,
+  },
 };
 
 export default nextConfig;

@@ -11,7 +11,7 @@ import AppointmentPopup from "../../components/AppointmentPopup";
 const bottomNavItems = [
   { title: "Book an Appointment", link: "#", isPopup: true }, 
   { title: "Second Opinion", link: "/second-opinion" },
-  { title: "Book health Check", link: "/packages" },
+  { title: "Book health Check", link: "/health-packages" },
   { title: "Know Our Doctors", link: "/doctors" },
 ];
 

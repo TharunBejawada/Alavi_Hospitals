@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 const leftNavItems = [
   { id: 1, title: "Find A Doctor", iconSrc: "/find-doctor.png", link: "/doctors" },
-  { id: 2, title: "Health Packages", iconSrc: "/health-packages.png", link: "/packages" },
+  { id: 2, title: "Health Packages", iconSrc: "/health-packages.png", link: "/health-packages" },
   { id: 3, title: "Get Second Opinion", iconSrc: "/patients.png", link: "/second-opinion" },
 ];
 

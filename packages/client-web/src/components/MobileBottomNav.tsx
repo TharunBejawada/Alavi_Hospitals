@@ -31,7 +31,7 @@ export default function MobileBottomNav() {
         </Link>
 
       {/* 2. Health Packages */}
-      <Link href="/packages" className="flex flex-col items-center justify-end w-[20%] gap-1.5 pb-1">
+      <Link href="/health-packages" className="flex flex-col items-center justify-end w-[20%] gap-1.5 pb-1">
           <div 
             className="w-6 h-6 bg-[#5B328C]" 
             style={{ 
