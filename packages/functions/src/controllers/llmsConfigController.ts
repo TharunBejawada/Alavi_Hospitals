@@ -270,6 +270,8 @@ export const saveLlmsConfig = async (configData: any): Promise<any> => {
     };
 };
 
+export const BLOG_DISCLAIMER = "The information provided in this blog is for general health awareness and educational purposes only. It should not be considered a substitute for professional medical advice, diagnosis or treatment. The content may not apply to every individual's health condition. Always consult a qualified healthcare professional for any medical concerns or treatment decisions. Do not ignore or delay medical advice based on the information shared in this blog.";
+
 // Compile Live Markdown content for /llms.txt
 export const generateLlmsTxtContent = (config: any, dynamicData: any = {}): string => {
     const cfg = config || getDefaultLlmsConfig();
@@ -352,6 +354,7 @@ export const generateLlmsTxtContent = (config: any, dynamicData: any = {}): stri
     if (cfg.dynamicSections?.includeBlogs && Array.isArray(dynamicData.blogs) && dynamicData.blogs.length > 0) {
         output.push("## Health Articles & Medical Insights");
         output.push("> Verified medical articles, healthcare insights, and wellness education by Alavi Hospitals clinicians.");
+        output.push(`> Medical Disclaimer: ${BLOG_DISCLAIMER}`);
         output.push("");
 
         dynamicData.blogs.slice(0, 50).forEach((blog: any) => {
@@ -361,7 +364,7 @@ export const generateLlmsTxtContent = (config: any, dynamicData: any = {}): stri
                 url = blog.url;
             }
             const desc = (blog.metaDescription || blog.seoTitle || "Comprehensive medical guide from Alavi Hospitals").trim();
-            output.push(`- [${title}](${url})\t[${desc}]`);
+            output.push(`- [${title}](${url})\t[${desc} | Disclaimer: ${BLOG_DISCLAIMER}]`);
         });
         output.push("");
     }
@@ -466,12 +469,13 @@ export const generateLlmsFullTxtContent = (config: any, dynamicData: any = {}): 
     // Detailed Blogs Index
     if (Array.isArray(dynamicData.blogs) && dynamicData.blogs.length > 0) {
         fullOutput.push("### Articles & Medical Guides Detailed Index");
+        fullOutput.push(`> Medical Disclaimer: ${BLOG_DISCLAIMER}`);
         dynamicData.blogs.forEach((blog: any) => {
             const title = (blog.blogTitle || "Health Article").trim();
             const author = blog.author || "Alavi Medical Team";
             const cats = Array.isArray(blog.categories) ? blog.categories.join(", ") : (blog.categories || "General Health");
             const desc = blog.metaDescription || blog.seoTitle || "Comprehensive medical guide.";
-            fullOutput.push(`- **${title}** | Author: ${author} | Category: ${cats} | Summary: ${desc}`);
+            fullOutput.push(`- **${title}** | Author: ${author} | Category: ${cats} | Summary: ${desc} | Disclaimer: ${BLOG_DISCLAIMER}`);
         });
         fullOutput.push("");
     }

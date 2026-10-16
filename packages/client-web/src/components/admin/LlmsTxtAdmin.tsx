@@ -26,7 +26,19 @@ import {
     Bot,
     Globe,
     HelpCircle,
-    ArrowLeft
+    ArrowLeft,
+    Pencil,
+    X,
+    Link2,
+    Home,
+    Stethoscope,
+    Activity,
+    Syringe,
+    Package,
+    MessageSquare,
+    BookOpen,
+    Phone,
+    Shield
 } from "lucide-react";
 import { API_URL } from "../../config";
 import type { LlmsConfig, LlmsCustomSection, LlmsCustomSectionItem } from "@alavi-hospitals-app/core";
@@ -165,6 +177,72 @@ const DEFAULT_SECTIONS: LlmsCustomSection[] = [
     }
 ];
 
+const SUGGESTED_LINKS = [
+    {
+        label: "Homepage",
+        icon: Home,
+        title: "Alavi Hospitals Official Homepage",
+        url: "https://alavihospitals.in/",
+        description: "Leading multi-speciality tertiary healthcare hospital in Hyderabad, India"
+    },
+    {
+        label: "About Us",
+        icon: Info,
+        title: "About Alavi Hospitals",
+        url: "https://alavihospitals.in/about",
+        description: "Leadership, clinical excellence, modern infrastructure, and patient-first healthcare"
+    },
+    {
+        label: "Doctors",
+        icon: Stethoscope,
+        title: "Consultant Specialists & Doctors Directory",
+        url: "https://alavihospitals.in/doctors",
+        description: "Directory of senior surgeons, physicians, and medical consultants"
+    },
+    {
+        label: "Specialities",
+        icon: Activity,
+        title: "Centres of Excellence & Specialities",
+        url: "https://alavihospitals.in/specialities",
+        description: "Specialized clinical departments including Cardiology, Neurosciences, and Orthopaedics"
+    },
+    {
+        label: "Treatments",
+        icon: Syringe,
+        title: "Treatments & Surgical Procedures",
+        url: "https://alavihospitals.in/treatments",
+        description: "Comprehensive medical treatments, minimally invasive and robotic surgeries"
+    },
+    {
+        label: "Health Packages",
+        icon: Package,
+        title: "Preventive Health Checkup Packages",
+        url: "https://alavihospitals.in/health-packages",
+        description: "Comprehensive master health screenings and specialized wellness packages"
+    },
+    {
+        label: "Second Opinion",
+        icon: MessageSquare,
+        title: "Medical Second Opinion Services",
+        url: "https://alavihospitals.in/second-opinion",
+        description: "Confidential surgical second opinions and expert clinical case reviews"
+    },
+    {
+        label: "Blog",
+        icon: BookOpen,
+        title: "Health Articles & Patient Education Blog",
+        url: "https://alavihospitals.in/blog",
+        description: "Doctor-written medical guides, wellness insights, and disease prevention articles"
+    },
+    {
+        label: "Contact",
+        icon: Phone,
+        title: "Contact, Appointments & Emergency",
+        url: "https://alavihospitals.in/contact",
+        description: "24/7 emergency hotline, consultation bookings, and hospital address"
+    }
+];
+
 export default function LlmsTxtAdmin() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -174,6 +252,28 @@ export default function LlmsTxtAdmin() {
     const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [copied, setCopied] = useState(false);
+
+    // Link Modal State for Add & Edit Popup
+    const [linkModal, setLinkModal] = useState<{
+        isOpen: boolean;
+        mode: "add" | "edit";
+        secIndex: number;
+        itemIndex?: number;
+        title: string;
+        url: string;
+        description: string;
+    } | null>(null);
+
+    // Keyboard shortcut (Escape to close modal)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && linkModal?.isOpen) {
+                setLinkModal(null);
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [linkModal?.isOpen]);
 
     // Main Configuration State
     const [config, setConfig] = useState<LlmsConfig>({
@@ -324,6 +424,7 @@ export default function LlmsTxtAdmin() {
         if (config.dynamicSections?.includeBlogs) {
             lines.push("## Health Articles & Medical Insights");
             lines.push("> [Auto-Generated: Live Health Articles & Insights from Database]");
+            lines.push("> Medical Disclaimer: The information provided in this blog is for general health awareness and educational purposes only. It should not be considered a substitute for professional medical advice, diagnosis or treatment. The content may not apply to every individual's health condition. Always consult a qualified healthcare professional for any medical concerns or treatment decisions. Do not ignore or delay medical advice based on the information shared in this blog.");
             lines.push("");
         }
 
@@ -413,24 +514,81 @@ export default function LlmsTxtAdmin() {
         });
     };
 
-    // Link Items Helpers
-    const addItemToSection = (secIndex: number) => {
+    // Link Items Helpers (Modal Popup)
+    const openAddLinkModal = (secIndex: number) => {
+        setLinkModal({
+            isOpen: true,
+            mode: "add",
+            secIndex,
+            title: "",
+            url: "https://alavihospitals.in/",
+            description: "",
+        });
+    };
+
+    const openEditLinkModal = (secIndex: number, itemIndex: number) => {
+        const item = config.customSections[secIndex]?.items?.[itemIndex];
+        if (!item) return;
+        setLinkModal({
+            isOpen: true,
+            mode: "edit",
+            secIndex,
+            itemIndex,
+            title: item.title,
+            url: item.url,
+            description: item.description || "",
+        });
+    };
+
+    const closeLinkModal = () => {
+        setLinkModal(null);
+    };
+
+    const handleSaveLinkFromModal = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (!linkModal) return;
+
+        const { mode, secIndex, itemIndex, title, url, description } = linkModal;
+
+        if (!title.trim()) {
+            showToast("Please enter a link title", "error");
+            return;
+        }
+
+        if (!url.trim()) {
+            showToast("Please enter a valid URL", "error");
+            return;
+        }
+
         setConfig((prev) => {
             const updatedSecs = [...prev.customSections];
-            const currentItems = updatedSecs[secIndex].items || [];
+            const currentItems = [...(updatedSecs[secIndex].items || [])];
+
+            const newItem: LlmsCustomSectionItem = {
+                title: title.trim(),
+                url: url.trim(),
+                description: description.trim(),
+            };
+
+            if (mode === "add") {
+                currentItems.push(newItem);
+            } else if (mode === "edit" && typeof itemIndex === "number") {
+                currentItems[itemIndex] = newItem;
+            }
+
             updatedSecs[secIndex] = {
                 ...updatedSecs[secIndex],
-                items: [
-                    ...currentItems,
-                    {
-                        title: "New Link Title",
-                        url: "https://alavihospitals.in/",
-                        description: "",
-                    },
-                ],
+                items: currentItems,
             };
+
             return { ...prev, customSections: updatedSecs };
         });
+
+        showToast(
+            mode === "add" ? "Link added to section!" : "Link updated successfully!",
+            "success"
+        );
+        closeLinkModal();
     };
 
     const updateItem = (
@@ -547,8 +705,8 @@ export default function LlmsTxtAdmin() {
                             </h1>
                             <span
                                 className={`text-xs px-2.5 py-0.5 rounded-full font-bold border transition ${config.enabled
-                                        ? "bg-emerald-500 text-white border-emerald-400"
-                                        : "bg-red-500 text-white border-red-400"
+                                    ? "bg-emerald-500 text-white border-emerald-400"
+                                    : "bg-red-500 text-white border-red-400"
                                     }`}
                             >
                                 {config.enabled ? "Live Active" : "Disabled"}
@@ -589,10 +747,10 @@ export default function LlmsTxtAdmin() {
             {toast && (
                 <div
                     className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl border text-sm font-semibold transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 ${toast.type === "success"
-                            ? "bg-emerald-600 text-white border-emerald-700"
-                            : toast.type === "error"
-                                ? "bg-red-600 text-white border-red-700"
-                                : "bg-blue-600 text-white border-blue-700"
+                        ? "bg-emerald-600 text-white border-emerald-700"
+                        : toast.type === "error"
+                            ? "bg-red-600 text-white border-red-700"
+                            : "bg-blue-600 text-white border-blue-700"
                         }`}
                 >
                     {toast.type === "success" ? (
@@ -614,16 +772,16 @@ export default function LlmsTxtAdmin() {
                         <button
                             onClick={() => setActiveTab("builder")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition ${activeTab === "builder"
-                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Layers className="w-4 h-4" />
                             <span>Section Builder</span>
                             <span
                                 className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${activeTab === "builder"
-                                        ? "bg-blue-600 text-white"
-                                        : "bg-gray-200 text-gray-700"
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-gray-200 text-gray-700"
                                     }`}
                             >
                                 {config.customSections.length}
@@ -633,8 +791,8 @@ export default function LlmsTxtAdmin() {
                         <button
                             onClick={() => setActiveTab("settings")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition ${activeTab === "settings"
-                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Sliders className="w-4 h-4" />
@@ -644,8 +802,8 @@ export default function LlmsTxtAdmin() {
                         <button
                             onClick={() => setActiveTab("raw")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition ${activeTab === "raw"
-                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Code className="w-4 h-4" />
@@ -658,8 +816,8 @@ export default function LlmsTxtAdmin() {
                         <button
                             onClick={() => setActiveTab("preview")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition ${activeTab === "preview"
-                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Eye className="w-4 h-4" />
@@ -779,10 +937,11 @@ export default function LlmsTxtAdmin() {
                                                             </button>
 
                                                             <button
-                                                                onClick={() => addItemToSection(actualIdx)}
-                                                                className="flex items-center gap-1 px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-sm transition"
+                                                                onClick={() => openAddLinkModal(actualIdx)}
+                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-sm transition hover:shadow cursor-pointer"
+                                                                title="Add link via popup modal"
                                                             >
-                                                                <Plus className="w-3 h-3" />
+                                                                <Plus className="w-3.5 h-3.5" />
                                                                 <span>Add Link</span>
                                                             </button>
 
@@ -810,116 +969,120 @@ export default function LlmsTxtAdmin() {
 
                                                         {/* Bullet Link Items */}
                                                         <div className="flex flex-col gap-2.5">
-                                                            {(sec.items || []).map((item, itemIdx) => (
-                                                                <div
-                                                                    key={itemIdx}
-                                                                    className="bg-slate-50 p-3 rounded-lg border border-gray-200 flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between hover:border-blue-300 transition"
-                                                                >
-                                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 w-full flex-1">
-                                                                        <div>
-                                                                            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-0.5">
-                                                                                Link Title
-                                                                            </label>
-                                                                            <input
-                                                                                type="text"
-                                                                                value={item.title || ""}
-                                                                                onChange={(e) =>
-                                                                                    updateItem(
-                                                                                        actualIdx,
-                                                                                        itemIdx,
-                                                                                        "title",
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                                placeholder="Link Title (e.g. Cardiology Sciences)"
-                                                                                className="w-full bg-white border border-gray-300 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition"
-                                                                            />
-                                                                        </div>
+                                                            {(!sec.items || sec.items.length === 0) ? (
+                                                                <div className="bg-white border-2 border-dashed border-gray-200 rounded-xl p-6 text-center flex flex-col items-center justify-center gap-2">
+                                                                    <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                                                                        <Globe className="w-5 h-5" />
+                                                                    </div>
+                                                                    <p className="text-xs font-bold text-slate-700">No links in this section yet</p>
+                                                                    <p className="text-[11px] text-slate-400 max-w-sm">
+                                                                        Add official Alavi Hospital links, patient services, or clinical pages for AI engines to index.
+                                                                    </p>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => openAddLinkModal(actualIdx)}
+                                                                        className="mt-1 flex items-center gap-1.5 px-4 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-sm transition"
+                                                                    >
+                                                                        <Plus className="w-3.5 h-3.5" />
+                                                                        <span>Add First Link</span>
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    {sec.items.map((item, itemIdx) => (
+                                                                        <div
+                                                                            key={itemIdx}
+                                                                            className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-3 items-start md:items-center justify-between hover:border-blue-300 hover:shadow-md transition group"
+                                                                        >
+                                                                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                                                                                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 border border-blue-100">
+                                                                                    <Link2 className="w-3.5 h-3.5" />
+                                                                                </div>
+                                                                                <div className="flex flex-col gap-1 min-w-0 flex-1">
+                                                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                                                        <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition">
+                                                                                            {item.title || "Untitled Link"}
+                                                                                        </span>
+                                                                                        <a
+                                                                                            href={item.url}
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer"
+                                                                                            className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-800 bg-blue-50/80 hover:bg-blue-100 px-2 py-0.5 rounded font-mono truncate max-w-[260px] sm:max-w-[380px] transition"
+                                                                                            title="Open link in new tab"
+                                                                                        >
+                                                                                            <span className="truncate">{item.url}</span>
+                                                                                            <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                                                                                        </a>
+                                                                                    </div>
 
-                                                                        <div>
-                                                                            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-0.5">
-                                                                                Target URL
-                                                                            </label>
-                                                                            <div className="relative">
-                                                                                <input
-                                                                                    type="text"
-                                                                                    value={item.url || ""}
-                                                                                    onChange={(e) =>
-                                                                                        updateItem(
-                                                                                            actualIdx,
-                                                                                            itemIdx,
-                                                                                            "url",
-                                                                                            e.target.value
-                                                                                        )
-                                                                                    }
-                                                                                    placeholder="https://alavihospitals.in/..."
-                                                                                    className="w-full bg-white border border-gray-300 pl-2.5 pr-7 py-1 rounded-lg text-xs text-blue-600 font-mono focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition"
-                                                                                />
-                                                                                {item.url && (
-                                                                                    <a
-                                                                                        href={item.url}
-                                                                                        target="_blank"
-                                                                                        rel="noopener noreferrer"
-                                                                                        className="absolute right-2 top-1.5 text-gray-400 hover:text-blue-600"
-                                                                                        title="Test link"
-                                                                                    >
-                                                                                        <ExternalLink className="w-3 h-3" />
-                                                                                    </a>
-                                                                                )}
+                                                                                    {item.description ? (
+                                                                                        <p className="text-[11px] text-slate-600 line-clamp-2 flex items-center gap-1.5">
+                                                                                            <span className="text-[9px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded shrink-0">
+                                                                                                AI Note
+                                                                                            </span>
+                                                                                            <span className="truncate">{item.description}</span>
+                                                                                        </p>
+                                                                                    ) : (
+                                                                                        <span className="text-[11px] text-slate-400 italic">
+                                                                                            No description note provided
+                                                                                        </span>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+
+                                                                            {/* Item Actions */}
+                                                                            <div className="flex items-center gap-1.5 self-end md:self-center shrink-0">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() => openEditLinkModal(actualIdx, itemIdx)}
+                                                                                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-gray-200 hover:border-blue-200 rounded-lg transition"
+                                                                                    title="Edit Link in Popup"
+                                                                                >
+                                                                                    <Pencil className="w-3 h-3" />
+                                                                                    <span>Edit</span>
+                                                                                </button>
+
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() => moveItem(actualIdx, itemIdx, -1)}
+                                                                                    disabled={itemIdx === 0}
+                                                                                    className="p-1 bg-white hover:bg-slate-100 text-slate-600 border border-gray-200 rounded-lg disabled:opacity-30 transition"
+                                                                                    title="Move Up"
+                                                                                >
+                                                                                    <ArrowUp className="w-3 h-3" />
+                                                                                </button>
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() => moveItem(actualIdx, itemIdx, 1)}
+                                                                                    disabled={itemIdx === (sec.items || []).length - 1}
+                                                                                    className="p-1 bg-white hover:bg-slate-100 text-slate-600 border border-gray-200 rounded-lg disabled:opacity-30 transition"
+                                                                                    title="Move Down"
+                                                                                >
+                                                                                    <ArrowDown className="w-3 h-3" />
+                                                                                </button>
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() => deleteItem(actualIdx, itemIdx)}
+                                                                                    className="p-1 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 rounded-lg transition ml-0.5"
+                                                                                    title="Delete Item"
+                                                                                >
+                                                                                    <Trash2 className="w-3 h-3" />
+                                                                                </button>
                                                                             </div>
                                                                         </div>
+                                                                    ))}
 
-                                                                        <div>
-                                                                            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-0.5">
-                                                                                Description Note
-                                                                            </label>
-                                                                            <input
-                                                                                type="text"
-                                                                                value={item.description || ""}
-                                                                                onChange={(e) =>
-                                                                                    updateItem(
-                                                                                        actualIdx,
-                                                                                        itemIdx,
-                                                                                        "description",
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                                placeholder="Short description note"
-                                                                                className="w-full bg-white border border-gray-300 px-2.5 py-1 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {/* Item Actions */}
-                                                                    <div className="flex items-center gap-1 self-end lg:self-center">
-                                                                        <button
-                                                                            onClick={() => moveItem(actualIdx, itemIdx, -1)}
-                                                                            disabled={itemIdx === 0}
-                                                                            className="p-1 bg-white hover:bg-slate-100 text-slate-600 border border-gray-300 rounded disabled:opacity-30"
-                                                                            title="Move Up"
-                                                                        >
-                                                                            <ArrowUp className="w-3 h-3" />
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() => moveItem(actualIdx, itemIdx, 1)}
-                                                                            disabled={
-                                                                                itemIdx === (sec.items || []).length - 1
-                                                                            }
-                                                                            className="p-1 bg-white hover:bg-slate-100 text-slate-600 border border-gray-300 rounded disabled:opacity-30"
-                                                                            title="Move Down"
-                                                                        >
-                                                                            <ArrowDown className="w-3 h-3" />
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() => deleteItem(actualIdx, itemIdx)}
-                                                                            className="p-1 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 rounded transition ml-1"
-                                                                            title="Delete Item"
-                                                                        >
-                                                                            <Trash2 className="w-3 h-3" />
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
+                                                                    {/* Bottom Add Link Button */}
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => openAddLinkModal(actualIdx)}
+                                                                        className="w-full py-2.5 border border-dashed border-blue-300 hover:border-blue-500 bg-blue-50/40 hover:bg-blue-50 text-blue-600 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer"
+                                                                    >
+                                                                        <Plus className="w-3.5 h-3.5" />
+                                                                        <span>Add Another Link to this Section</span>
+                                                                    </button>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1179,8 +1342,8 @@ export default function LlmsTxtAdmin() {
                                         <button
                                             onClick={() => setPreviewType("llms.txt")}
                                             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${previewType === "llms.txt"
-                                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                                                 }`}
                                         >
                                             llms.txt Preview
@@ -1188,8 +1351,8 @@ export default function LlmsTxtAdmin() {
                                         <button
                                             onClick={() => setPreviewType("llms-full.txt")}
                                             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${previewType === "llms-full.txt"
-                                                    ? "bg-[#3B82F6] text-white shadow-sm"
-                                                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                                                ? "bg-[#3B82F6] text-white shadow-sm"
+                                                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                                                 }`}
                                         >
                                             llms-full.txt Preview
@@ -1244,6 +1407,185 @@ export default function LlmsTxtAdmin() {
                     </>
                 )}
             </div>
+
+            {/* ========================================================= */}
+            {/* ADD / EDIT LINK POPUP MODAL                               */}
+            {/* ========================================================= */}
+            {linkModal && linkModal.isOpen && (
+                <div
+                    className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) closeLinkModal();
+                    }}
+                >
+                    <div
+                        className="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[90vh]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="bg-[#3B82F6] px-6 py-4 text-white flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 bg-blue-600 rounded-lg">
+                                    <Link2 className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-bold">
+                                        {linkModal.mode === "add" ? "Add Link to Section" : "Edit Section Link"}
+                                    </h3>
+                                    <p className="text-[11px] text-blue-100 truncate max-w-xs sm:max-w-md">
+                                        {config.customSections[linkModal.secIndex]?.title || `Section #${linkModal.secIndex + 1}`}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={closeLinkModal}
+                                className="p-1.5 rounded-lg text-blue-100 hover:text-white hover:bg-blue-600 transition cursor-pointer"
+                                title="Close (Esc)"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <form onSubmit={handleSaveLinkFromModal} className="p-6 flex flex-col gap-4 overflow-y-auto flex-1">
+                            {/* Quick Presets / Suggestions */}
+                            <div>
+                                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+                                    <Sparkles className="w-3 h-3 text-[#3B82F6]" />
+                                    <span>Quick Presets (1-Click Fill)</span>
+                                </label>
+                                <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-1.5 bg-slate-50 rounded-xl border border-gray-200">
+                                    {SUGGESTED_LINKS.map((preset, pIdx) => {
+                                        const IconComponent = preset.icon;
+                                        return (
+                                            <button
+                                                key={pIdx}
+                                                type="button"
+                                                onClick={() => {
+                                                    setLinkModal((prev) =>
+                                                        prev
+                                                            ? {
+                                                                ...prev,
+                                                                title: preset.title,
+                                                                url: preset.url,
+                                                                description: preset.description,
+                                                            }
+                                                            : null
+                                                    );
+                                                }}
+                                                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-gray-200 hover:border-blue-300 transition shrink-0 shadow-2xs cursor-pointer"
+                                            >
+                                                <IconComponent className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                                <span>{preset.label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Link Title */}
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 block mb-1">
+                                    Link Title <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={linkModal.title}
+                                    onChange={(e) =>
+                                        setLinkModal((prev) => (prev ? { ...prev, title: e.target.value } : null))
+                                    }
+                                    placeholder="e.g. Cardiology & Cardiovascular Sciences"
+                                    className="w-full bg-white border border-gray-300 px-3 py-2 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition shadow-xs"
+                                    autoFocus
+                                />
+                                <p className="text-[11px] text-slate-400 mt-1">
+                                    Anchor text shown to AI models and web crawlers in the markdown index.
+                                </p>
+                            </div>
+
+                            {/* Target URL */}
+                            <div>
+                                <div className="flex items-center justify-between mb-1">
+                                    <label className="text-xs font-bold text-slate-700">
+                                        Target URL <span className="text-red-500">*</span>
+                                    </label>
+                                    {linkModal.url && (
+                                        <a
+                                            href={linkModal.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[11px] text-blue-600 hover:underline flex items-center gap-1 font-semibold"
+                                        >
+                                            <span>Test / Open Link</span>
+                                            <ExternalLink className="w-2.5 h-2.5" />
+                                        </a>
+                                    )}
+                                </div>
+                                <input
+                                    type="text"
+                                    required
+                                    value={linkModal.url}
+                                    onChange={(e) =>
+                                        setLinkModal((prev) => (prev ? { ...prev, url: e.target.value } : null))
+                                    }
+                                    placeholder="https://alavihospitals.in/specialities/cardiology"
+                                    className="w-full bg-white border border-gray-300 px-3 py-2 rounded-xl text-sm font-mono text-blue-600 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition shadow-xs"
+                                />
+                            </div>
+
+                            {/* Description Note (AI Context) */}
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 block mb-1">
+                                    Description Note (AI Context Summary)
+                                </label>
+                                <textarea
+                                    rows={2}
+                                    value={linkModal.description}
+                                    onChange={(e) =>
+                                        setLinkModal((prev) => (prev ? { ...prev, description: e.target.value } : null))
+                                    }
+                                    placeholder="Brief summary of clinical care, doctors, and treatments available at this link..."
+                                    className="w-full bg-white border border-gray-300 px-3 py-2 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition shadow-xs resize-none"
+                                />
+                                <p className="text-[11px] text-slate-400 mt-0.5">
+                                    Appended in tabbed format: <code className="text-[10px] bg-slate-100 px-1 py-0.5 rounded font-mono">[- [Title](URL)	[Description]]</code>.
+                                </p>
+                            </div>
+
+                            {/* Live Preview Box */}
+                            <div className="bg-slate-50 border border-gray-200 rounded-xl p-3">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                                    Live /llms.txt Markdown Preview:
+                                </span>
+                                <pre className="text-xs font-mono text-slate-800 bg-white p-2.5 rounded-lg border border-gray-200 overflow-x-auto whitespace-pre-wrap">
+                                    {`- [${linkModal.title || "Link Title"}](${linkModal.url || "https://alavihospitals.in/..."})${linkModal.description ? `\t[${linkModal.description}]` : ""}`}
+                                </pre>
+                            </div>
+
+                            {/* Modal Actions */}
+                            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-gray-200 mt-1">
+                                <button
+                                    type="button"
+                                    onClick={closeLinkModal}
+                                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-5 py-2 text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>{linkModal.mode === "add" ? "Add Link" : "Save Changes"}</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
