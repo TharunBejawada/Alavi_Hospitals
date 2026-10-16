@@ -49,10 +49,46 @@ const FAQItem = ({ question, answer, isOpen, onClick }: { question: string, answ
   );
 };
 
+// Helper to derive target blog categories corresponding to a given department/speciality name, matching the blog landing page
+function getSpecialityCategories(specName: string): string[] {
+  const s = ' ' + (specName || '').toLowerCase().replace(/[^a-z0-9&]/g, ' ') + ' ';
+  const cats: string[] = [];
+
+  if (s.includes('orthop')) cats.push('orthopaedics', 'orthopedics', 'orthopedic');
+  if (s.includes('gyn') || s.includes('obstet')) cats.push('gynaecology', 'gynecology', 'obstetrics');
+  if (s.includes('general medicine') || s.includes('diabet')) cats.push('general medicine', 'diabetology', 'diabetes');
+  if (s.includes('general') && (s.includes('surgery') || s.includes('laparoscopic'))) {
+    cats.push('general surgery', 'general & laparoscopic surgery', 'general & laparoscopic', 'laparoscopic surgery');
+  }
+  if (s.includes('pediatric') || s.includes('paediatric') || s.includes('neonat')) {
+    cats.push('pediatric', 'pediatrics', 'paediatric', 'paediatrics');
+  }
+  if (s.includes('pulmon') || s.includes('chest')) cats.push('pulmonology', 'chest');
+  if (s.includes('neurosurg')) cats.push('neurosurgery');
+  else if (s.includes('neurolog') && !s.includes('psychiatry')) cats.push('neurology');
+  
+  if (s.includes('psychiatry')) cats.push('neuropsychiatry', 'psychiatry');
+  if (s.includes('cardio') || s.includes('cardiac')) cats.push('cardiology', 'cardiac');
+  if (/\b(urology|andrology)\b/.test(s)) cats.push('urology', 'andrology');
+  if (s.includes('nephrolog') || s.includes('renal')) cats.push('nephrology');
+  if (/\bdental\b/.test(s)) cats.push('dental');
+  if (/\bent\b/.test(s)) cats.push('ent');
+  if (s.includes('gastro')) cats.push('gastroenterology', 'gastro');
+  if (s.includes('oncol') || s.includes('cancer')) cats.push('oncology');
+  if (s.includes('physio') || s.includes('rehab')) cats.push('physiotherapy');
+  if (s.includes('rheumatol') || s.includes('functional medicine')) cats.push('rheumatology', 'functional medicine');
+
+  const rawClean = (specName || '').toLowerCase().trim();
+  if (rawClean && !cats.includes(rawClean)) cats.push(rawClean);
+
+  return cats;
+}
+
 export default function SpecialityLandingClient({ slug }: { slug: string }) {
   const [pageData, setPageData] = useState<SpecialityLandingPage | null>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [matchedCategoryName, setMatchedCategoryName] = useState<string>("");
   const [treatmentUrlByItemId, setTreatmentUrlByItemId] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -169,10 +205,10 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
             const exactDepartmentName = actualSpeciality?.specialityName || matchedPage.title || "";
 
             if (exactDepartmentName) {
-              // 2. Fetch both Doctors and Blogs in parallel using the exact department string
+              // 2. Fetch Doctors by department and Blogs from central API (same data source as /blog landing page)
               const [docsRes, blogsRes] = await Promise.all([
                 fetch(`${API_URL}/api/doctors/getDoctorsByDepartment/${encodeURIComponent(exactDepartmentName)}`),
-                fetch(`${API_URL}/api/blogs/getBlogsByDepartmentKeywords/${encodeURIComponent(exactDepartmentName)}`)
+                fetch(`${API_URL}/api/blogs/getAllBlogs`)
               ]);
 
               const docsData = await docsRes.json();
@@ -180,16 +216,12 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
               setDoctors(docsData.Items || []);
 
-              // 3. Filter blogs strictly based on blog.categories matching this speciality
-              const rawBlogs = blogsData.Items || [];
-              const targetSpecialityNames = [
-                exactDepartmentName,
-                actualSpeciality?.specialityName,
-                matchedPage.title,
-                slug
-              ].filter(Boolean) as string[];
+              // 3. Filter blogs based on categories matching this speciality, exactly like the blog landing page
+              const allBlogs: any[] = (blogsData.Items || blogsData || []).filter((b: any) => b.enabled !== false);
+              const targetCats = getSpecialityCategories(exactDepartmentName);
+              let activeCategory = "";
 
-              const filteredBlogs = rawBlogs.filter((blog: any) => {
+              const filteredBlogs = allBlogs.filter((blog: any) => {
                 if (!blog.categories) return false;
 
                 let categories: string[] = [];
@@ -209,38 +241,22 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
                 if (categories.length === 0) return false;
 
-                // Match each category against the target speciality names and compound parts
-                return categories.some((catRaw: string) => {
-                  const cat = catRaw.toLowerCase().replace(/&amp;/g, "&").replace(/['’]/g, "").trim();
-                  if (!cat || cat.length < 2) return false;
-                  const catAlt = cat.replace(/ae/g, "e");
-
-                  return targetSpecialityNames.some((specName: string) => {
-                    const normalizedSpec = specName.toLowerCase().replace(/&amp;/g, "&").replace(/['’]/g, "").trim();
-                    const specAlt = normalizedSpec.replace(/ae/g, "e");
-
-                    // Exact match
-                    if (cat === normalizedSpec || catAlt === specAlt) return true;
-
-                    // Split parts by '&', 'and', ',', '/'
-                    const specParts = normalizedSpec
-                      .split(/\s*&\s*|\s+and\s+|\s*,\s*|\s*\/\s*/)
-                      .map((p) => p.trim())
-                      .filter((p) => p.length > 2);
-                    specParts.push(normalizedSpec);
-
-                    return specParts.some((part: string) => {
-                      const partAlt = part.replace(/ae/g, "e");
-                      if (cat === part || catAlt === partAlt) return true;
-                      if (part.length >= 4 && cat.length >= 4) {
-                        return part.includes(cat) || partAlt.includes(catAlt) || cat.includes(part) || catAlt.includes(partAlt);
-                      }
-                      return false;
-                    });
-                  });
+                return categories.some((c: string) => {
+                  const clean = c.toLowerCase().trim();
+                  if (targetCats.includes(clean)) {
+                    if (!activeCategory) activeCategory = c;
+                    return true;
+                  }
+                  return false;
                 });
               });
 
+              // Sort newest to oldest, matching the blog landing page
+              filteredBlogs.sort((a: any, b: any) =>
+                new Date(b.timeline || b.createdAt || 0).getTime() - new Date(a.timeline || a.createdAt || 0).getTime()
+              );
+
+              setMatchedCategoryName(activeCategory);
               setBlogs(filteredBlogs);
             }
           } catch (err) {
@@ -613,7 +629,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
                 {/* View All Button */}
                 <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-10">
-                  <Link href="/blog">
+                  <Link href={matchedCategoryName ? `/blog?category=${encodeURIComponent(matchedCategoryName)}` : "/blog"}>
                     <button className="bg-[#663399] text-white text-xs sm:text-[14px] font-semibold px-4 sm:px-6 py-1.5 sm:py-2 rounded-full shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
                       View All
                     </button>

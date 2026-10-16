@@ -175,16 +175,39 @@ export const uploadBlogImage = async (req: any, res: any) => {
   }
 };
 
-function normalizeString(str: string): string {
-  return str
-    .toLowerCase()
-    .replace(/&amp;/g, '&')
-    .replace(/['’]/g, '')
-    .trim();
-}
+// Helper to derive target blog categories corresponding to a given department/speciality name
+function getSpecialityCategories(deptName: string): string[] {
+  const s = ' ' + (deptName || '').toLowerCase().replace(/[^a-z0-9&]/g, ' ') + ' ';
+  const cats: string[] = [];
 
-function normalizeSpelling(str: string): string {
-  return str.replace(/ae/g, 'e');
+  if (s.includes('orthop')) cats.push('orthopaedics', 'orthopedics', 'orthopedic');
+  if (s.includes('gyn') || s.includes('obstet')) cats.push('gynaecology', 'gynecology', 'obstetrics');
+  if (s.includes('general medicine') || s.includes('diabet')) cats.push('general medicine', 'diabetology', 'diabetes');
+  if (s.includes('general') && (s.includes('surgery') || s.includes('laparoscopic'))) {
+    cats.push('general surgery', 'general & laparoscopic surgery', 'general & laparoscopic', 'laparoscopic surgery');
+  }
+  if (s.includes('pediatric') || s.includes('paediatric') || s.includes('neonat')) {
+    cats.push('pediatric', 'pediatrics', 'paediatric', 'paediatrics');
+  }
+  if (s.includes('pulmon') || s.includes('chest')) cats.push('pulmonology', 'chest');
+  if (s.includes('neurosurg')) cats.push('neurosurgery');
+  else if (s.includes('neurolog') && !s.includes('psychiatry')) cats.push('neurology');
+  
+  if (s.includes('psychiatry')) cats.push('neuropsychiatry', 'psychiatry');
+  if (s.includes('cardio') || s.includes('cardiac')) cats.push('cardiology', 'cardiac');
+  if (/\b(urology|andrology)\b/.test(s)) cats.push('urology', 'andrology');
+  if (s.includes('nephrolog') || s.includes('renal')) cats.push('nephrology');
+  if (/\bdental\b/.test(s)) cats.push('dental');
+  if (/\bent\b/.test(s)) cats.push('ent');
+  if (s.includes('gastro')) cats.push('gastroenterology', 'gastro');
+  if (s.includes('oncol') || s.includes('cancer')) cats.push('oncology');
+  if (s.includes('physio') || s.includes('rehab')) cats.push('physiotherapy');
+  if (s.includes('rheumatol') || s.includes('functional medicine')) cats.push('rheumatology', 'functional medicine');
+
+  const rawClean = (deptName || '').toLowerCase().trim();
+  if (rawClean && !cats.includes(rawClean)) cats.push(rawClean);
+
+  return cats;
 }
 
 export function matchBlogCategoriesWithDepartment(blogCategories: any, departmentName: string): boolean {
@@ -213,42 +236,10 @@ export function matchBlogCategoriesWithDepartment(blogCategories: any, departmen
 
   if (categories.length === 0) return false;
 
-  const normalizedDept = normalizeString(departmentName);
+  const targetCats = getSpecialityCategories(departmentName);
+  const normalizedCats = categories.map(c => c.toLowerCase().trim());
 
-  // Split department into parts by '&', 'and', ',', '/'
-  const deptParts = normalizedDept
-    .split(/\s*&\s*|\s+and\s+|\s*,\s*|\s*\/\s*/)
-    .map(p => p.trim())
-    .filter(p => p.length > 2);
-
-  deptParts.push(normalizedDept);
-
-  for (const catRaw of categories) {
-    const cat = normalizeString(catRaw);
-    if (!cat || cat.length < 2) continue;
-    const catAlt = normalizeSpelling(cat);
-
-    for (const part of deptParts) {
-      const partAlt = normalizeSpelling(part);
-
-      // 1. Exact match
-      if (cat === part || catAlt === partAlt) {
-        return true;
-      }
-
-      // 2. Part contains category or category contains part
-      if (part.length >= 4 && cat.length >= 4) {
-        if (part.includes(cat) || partAlt.includes(catAlt)) {
-          return true;
-        }
-        if (cat.includes(part) || catAlt.includes(partAlt)) {
-          return true;
-        }
-      }
-    }
-  }
-
-  return false;
+  return normalizedCats.some(c => targetCats.includes(c));
 }
 
 // --- 7. GET RELATED BLOGS BY DEPARTMENT KEYWORDS / CATEGORIES ---
