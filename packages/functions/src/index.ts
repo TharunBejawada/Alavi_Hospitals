@@ -20,6 +20,7 @@ import * as insurancePartnerController from "./controllers/insurancePartnerContr
 import * as insuranceProcessController from "./controllers/insuranceProcessController.js";
 import * as healthPackageController from "./controllers/healthPackageController.js";
 import * as llmsConfigController from "./controllers/llmsConfigController.js";
+import * as bioMedicalWasteController from "./controllers/bioMedicalWasteController.js";
 import serverless from "serverless-http";
 
 dotenv.config();
@@ -148,6 +149,14 @@ app.get("/llms.txt", llmsConfigController.getLlmsTxtHandler);
 app.get("/api/llms.txt", llmsConfigController.getLlmsTxtHandler);
 app.get("/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
 app.get("/api/llms-full.txt", llmsConfigController.getLlmsFullTxtHandler);
+
+// Bio Medical Waste Routes
+app.post("/api/biomedical-waste", bioMedicalWasteController.upsertWasteRecord);
+app.get("/api/biomedical-waste", bioMedicalWasteController.getWasteRecordsByPeriod);
+app.get("/api/biomedical-waste/record", bioMedicalWasteController.getWasteRecordByDate);
+app.get("/api/biomedical-waste/branches", bioMedicalWasteController.getBranches);
+app.put("/api/biomedical-waste/:id", bioMedicalWasteController.updateWasteRecordById);
+app.delete("/api/biomedical-waste/:id", bioMedicalWasteController.deleteWasteRecordById);
 
 // Multer and general error handling middleware
 app.use((err: any, req: any, res: any, next: any) => {

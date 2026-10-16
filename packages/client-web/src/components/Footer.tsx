@@ -177,6 +177,11 @@ const Footer = () => {
                         Insurance & TPA
                       </Link>
                     </li>
+                    <li className="hover:text-white transition-colors cursor-pointer flex items-center gap-3">
+                      <Link href="/biomedical-waste" className="w-full">
+                        Bio Medical Waste
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               </div>

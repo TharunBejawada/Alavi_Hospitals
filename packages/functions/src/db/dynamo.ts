@@ -24,6 +24,7 @@ export const TABLE_NAME_INSURANCE_PROCESS = "InsuranceProcessInfo";
 export const TABLE_NAME_HEALTH_PACKAGES = "HealthPackages";
 export const TABLE_NAME_FORM = "Forms";
 export const TABLE_NAME_LLMS_CONFIG = "LlmsConfig";
+export const TABLE_NAME_BIOMEDICAL_WASTE = "BioMedicalWaste";
 
 // S3 Configuration
 export const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || "alavi-hospitals-assets";

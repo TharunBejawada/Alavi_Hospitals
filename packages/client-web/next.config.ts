@@ -26,6 +26,21 @@ const nextConfig: NextConfig = {
         destination: "/health-packages",
         permanent: true,
       },
+      {
+        source: "/bio-medical-waste",
+        destination: "/biomedical-waste",
+        permanent: true,
+      },
+      {
+        source: "/bio-medical-wastage",
+        destination: "/biomedical-waste",
+        permanent: true,
+      },
+      {
+        source: "/biomedical-wastage",
+        destination: "/biomedical-waste",
+        permanent: true,
+      },
     ];
   },
   // 5. Disable Next.js dev static route indicator toast

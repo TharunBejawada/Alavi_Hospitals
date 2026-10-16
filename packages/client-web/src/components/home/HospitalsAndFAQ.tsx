@@ -9,12 +9,12 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 const hospitals = [
   {
     name: "IDPL",
-    image: "/hospital-idpl.jpg",
+    image: "/IDPL.jpeg",
     showLabel: true,
   },
   {
     name: "Chintal",
-    image: "/hospital-chintal.jpg",
+    image: "/CHINTAL.jpeg",
     showLabel: true,
   },
 ];

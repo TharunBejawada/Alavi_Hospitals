@@ -21,7 +21,8 @@ import {
   Syringe,
   Umbrella,
   PackageCheck,
-  Bot
+  Bot,
+  Trash2
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -78,6 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Vaccinations", href: "/admin/vaccinations", icon: Syringe },
     { name: "Insurance & TPA", href: "/admin/insurance", icon: Umbrella },
     { name: "Health Packages", href: "/admin/health-packages", icon: PackageCheck },
+    { name: "Bio Medical Waste", href: "/admin/biomedical-waste", icon: Trash2 },
     { name: "LLMs & AI Context", href: "/admin/llms-txt", icon: Bot },
     { name: "Users", href: "/admin/users", icon: Users }
     // { name: "Settings", href: "/admin/settings", icon: Settings },
