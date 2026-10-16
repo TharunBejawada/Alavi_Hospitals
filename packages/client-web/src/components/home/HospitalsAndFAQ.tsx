@@ -65,21 +65,26 @@ const HospitalsAndFAQ = () => {
               Our Hospitals
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-auto sm:h-[350px] lg:h-[450px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {hospitals.map((hospital, index) => (
-                <div key={index} className="relative w-full h-[220px] sm:h-full flex flex-col shadow-md rounded-xl overflow-hidden group">
-                  <div className="relative w-full h-full flex-grow">
+                <div
+                  key={index}
+                  className="flex flex-col bg-white shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden border border-purple-100/60 group"
+                >
+                  <div className="relative w-full aspect-[312/407] overflow-hidden bg-slate-50">
                     <Image
                       src={hospital.image}
                       alt={`${hospital.name} Branch`}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+                      className="object-contain group-hover:scale-105 transition-transform duration-700"
+                      priority
                     />
                   </div>
-                  {/* Purple Banner (Rendered only if showLabel is true) */}
+                  {/* Purple Banner below image so full photo is visible */}
                   {hospital.showLabel && (
-                    <div className="absolute bottom-0 w-full bg-[#5B328C] py-3 sm:py-4 text-center z-10">
-                      <h3 className="text-white text-lg sm:text-xl font-bold tracking-wider">
+                    <div className="w-full bg-[#5B328C] py-3 sm:py-3.5 text-center transition-colors duration-300 group-hover:bg-[#4a2673]">
+                      <h3 className="text-white text-base sm:text-lg font-bold tracking-wider">
                         {hospital.name}
                       </h3>
                     </div>
