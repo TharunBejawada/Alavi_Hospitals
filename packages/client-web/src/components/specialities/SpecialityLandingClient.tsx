@@ -423,14 +423,14 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
 
             <div className="relative w-full max-w-7xl mx-auto">
 
-              {/* Dynamic Container: Grid for <= 3, Slider for > 3 */}
+              {/* Dynamic Container: Single row (flex) for <= 3, Slider for > 3 */}
               <div
                 ref={doctorsScrollRef}
                 onScroll={handleDoctorScroll}
                 className={`flex ${doctors.length <= 3
-                  ? "flex-wrap justify-center"
+                  ? "overflow-x-auto lg:overflow-visible lg:flex-nowrap justify-start lg:justify-center items-stretch pb-4 lg:pb-0"
                   : "overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
-                  } gap-8`}
+                  } gap-6 lg:gap-8`}
               >
                 {doctors.map((doc, idx) => {
                   const designationText = doc.designations && doc.designations.length > 0
@@ -441,8 +441,8 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                     <div
                       key={doc.doctorId || idx}
                       className={`${doctors.length <= 3
-                        ? "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-[420px]"
-                        : "w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
+                        ? "w-[85vw] sm:w-[340px] lg:w-0 lg:flex-1 max-w-[400px] shrink-0 lg:shrink snap-center"
+                        : "w-[85vw] sm:w-[340px] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center"
                         } bg-[#F4FAFF] border-2 border-[#663399] rounded-[27px] flex flex-col p-5 pb-6 shadow-sm hover:shadow-lg transition-all duration-300`}
                     >
 
@@ -471,21 +471,23 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                       </div>
 
                       <div className="flex-grow flex flex-col items-center text-center">
-                        <h3 className="font-bold text-[26px] leading-[160%] text-[#2A255B]">{doc.name}</h3>
-                        <div className="w-[151px] border-t-2 border-[#2A255B] my-1"></div>
-                        <p className="font-medium text-[14px] leading-[180%] text-[#0C0200] mt-1 line-clamp-2">{designationText}</p>
-                        <p className="font-medium text-[16px] leading-[180%] text-[#0C0200] mb-8">{doc.qualification}</p>
+                        <h3 className="font-bold text-[22px] sm:text-[24px] lg:text-[26px] leading-[140%] text-[#2A255B]">{doc.name}</h3>
+                        <div className="w-[151px] border-t-2 border-[#2A255B] my-2"></div>
+                        <p className="font-medium text-[14px] leading-[160%] text-[#0C0200] mt-1 line-clamp-2">{designationText}</p>
+                        <p className="font-medium text-[15px] sm:text-[16px] leading-[160%] text-[#0C0200] mb-6">{doc.qualification}</p>
 
                         {/* Buttons Group */}
-                        <div className="flex gap-3 mt-auto w-full px-1">
-                          <Link href={`/doctors/${doc.url || doc.doctorId}`} className="flex-[3]">
-                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
-                              <Calendar className="w-4 h-4" /> Book an Appointment
+                        <div className="flex gap-2.5 mt-auto w-full px-0.5">
+                          <Link href={`/doctors/${doc.url || doc.doctorId}`} className="flex-[3] min-w-0">
+                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[11px] sm:text-[12px] leading-[160%] py-3 px-2 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm whitespace-nowrap">
+                              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                              <span className="truncate">Book an Appointment</span>
                             </button>
                           </Link>
-                          <a href="tel:+919603911911" className="flex-[2]">
-                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[12px] leading-[160%] py-3 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm">
-                              <Phone className="w-4 h-4" /> Call Now
+                          <a href="tel:+919603911911" className="flex-[2] min-w-0">
+                            <button className="w-full bg-[linear-gradient(302.64deg,#0066A9_-26.31%,#663399_118.83%)] text-white font-medium text-[11px] sm:text-[12px] leading-[160%] py-3 px-2 rounded-[20px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity shadow-sm whitespace-nowrap">
+                              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                              <span className="truncate">Call Now</span>
                             </button>
                           </a>
                         </div>
@@ -496,9 +498,9 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
                 })}
               </div>
 
-              {/* Slider Dots (Only shows if > 3 doctors) */}
-              {doctors.length > 3 && (
-                <div className="flex justify-center items-center gap-3 mt-10">
+              {/* Slider Dots (Shows if > 3 doctors on all screens, or if > 1 doctor on mobile) */}
+              {doctors.length > 1 && (
+                <div className={`flex justify-center items-center gap-3 mt-8 sm:mt-10 ${doctors.length <= 3 ? "lg:hidden" : ""}`}>
                   {doctors.map((_, idx) => (
                     <button
                       key={idx}
