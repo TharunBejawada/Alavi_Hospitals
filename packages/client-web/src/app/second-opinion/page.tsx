@@ -50,31 +50,31 @@ const PROCESS_STEPS = [
   {
     title: "Submit Your Medical Records",
     desc: "Share your reports, prescriptions, scans, discharge summaries, and treatment recommendations.",
-    img: "/assets/process-1.png",
-    iconImg: "/assets/submit-records-icon.png", // Replace with your white icon asset
+    img: "/assets/SECOND OPINION/MEDICAL RECORDS.png",
+    iconImg: "/assets/submit-records-icon.png",
   },
   {
     title: "Specialist Review",
     desc: "Our expert doctors carefully evaluate your medical history and diagnostic findings.",
-    img: "/assets/process-2.png",
+    img: "/assets/SECOND OPINION/SPECIALIST REVIEW.png",
     iconImg: "/assets/specialist-review-icon.png",
   },
   {
     title: "Detailed Consultation",
     desc: "Discuss your condition, concerns, and available treatment options with the specialist.",
-    img: "/assets/process-3.png",
+    img: "/assets/SECOND OPINION/DETAILED CONSULTATION.png",
     iconImg: "/assets/detailed-consultation-icon.png",
   },
   {
     title: "Receive Expert Recommendations",
     desc: "Get clear medical guidance on the best possible path forward.",
-    img: "/assets/process-4.png",
+    img: "/assets/SECOND OPINION/EXPERT RECOMMENDATION.png",
     iconImg: "/assets/expert-recommendations-icon.png",
   },
   {
     title: "Make an Informed Decision",
     desc: "Choose your treatment plan with confidence and complete understanding.",
-    img: "/assets/process-5.png",
+    img: "/assets/SECOND OPINION/INFORMED DECISION.png",
     iconImg: "/assets/informed-decision-icon.png",
   }
 ];
@@ -275,9 +275,9 @@ export default function SecondOpinionHubPage() {
             </svg>
 
             {/* Main Image */}
-            <div className="relative w-full h-full rounded-full overflow-hidden bg-gray-200 z-10 border-4 sm:border-[6px] border-[#F5FBFF]">
+            <div className="relative w-full h-full rounded-full overflow-hidden z-10 border-4 sm:border-[6px] border-[#F5FBFF]">
               <img
-                src="/assets/doctor-patient.png"
+                src="/assets/SECOND OPINION/BANNER IMAGE.png"
                 alt="Doctor showing x-ray to patient"
                 className="w-full h-full object-cover"
               />
@@ -286,7 +286,7 @@ export default function SecondOpinionHubPage() {
             {/* Knee Icon (Top Right) */}
             <div className="absolute -top-[3%] sm:-top-[5%] right-[2%] sm:right-[5%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
-                src="/assets/knee-icon.png"
+                src="/assets/SECOND OPINION/BANNER ICON 1.png"
                 alt="Orthopedics"
                 className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
@@ -295,7 +295,7 @@ export default function SecondOpinionHubPage() {
             {/* Spine Icon (Bottom Left) */}
             <div className="absolute bottom-[3%] sm:bottom-[5%] -left-[3%] sm:-left-[6%] lg:-left-[8%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
-                src="/assets/spine-icon.png"
+                src="/assets/SECOND OPINION/BANNER ICON 3.png"
                 alt="Spine"
                 className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
@@ -304,7 +304,7 @@ export default function SecondOpinionHubPage() {
             {/* Brain Icon (Bottom Right) */}
             <div className="absolute bottom-[6%] sm:bottom-[8%] -right-[3%] sm:-right-[5%] lg:-right-[5%] w-14 h-14 sm:w-20 sm:h-20 lg:w-[100px] lg:h-[100px] bg-[#0066A9] rounded-full border-2 sm:border-4 lg:border-[6px] border-[#F5FBFF] flex items-center justify-center z-20">
               <img
-                src="/assets/brain-icon.png"
+                src="/assets/SECOND OPINION/BANNER ICON 2.png"
                 alt="Neurology"
                 className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
               />
@@ -460,7 +460,7 @@ export default function SecondOpinionHubPage() {
               >
 
                 {/* Top Image Box */}
-                <div className="w-full h-[194.16px] bg-[#7E57A8] rounded-t-[15px] overflow-hidden">
+                <div className="w-full h-[194.16px] bg-transparent rounded-t-[15px] overflow-hidden">
                   <img
                     src={step.img}
                     alt={step.title}
