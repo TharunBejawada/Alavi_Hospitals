@@ -24,6 +24,7 @@ interface BlogPost {
   categories: string[];
   url: string;
   extraFields: ExtraField[];
+  enabled?: boolean | string;
 }
 
 function BlogsContent() {
@@ -55,7 +56,10 @@ function BlogsContent() {
       try {
         const res = await fetch(`${API_URL}/api/blogs/getAllBlogs`);
         const data = await res.json();
-        const items: BlogPost[] = data.Items || data || [];
+        const rawItems: BlogPost[] = data.Items || data || [];
+
+        // Exclude disabled blogs
+        const items = rawItems.filter((b: any) => b.enabled !== false && b.enabled !== "false");
 
         // Sort Newest to Oldest
         const sorted = items.sort((a, b) => 

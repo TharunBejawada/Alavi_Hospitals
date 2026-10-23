@@ -11,8 +11,8 @@ import {
   FaCircle,
   FaPhoneVolume
 } from "react-icons/fa6";
-import DoctorTalks from "./DoctorTalks";
-import PatientSuccessStories from "./PatientSuccessStories";
+// import DoctorTalks from "./DoctorTalks";
+// import PatientSuccessStories from "./PatientSuccessStories";
 import AppointmentPopup from "../../components/AppointmentPopup"; // Ensure this path is correct for your structure
 
 function formatExperience(exp: string | undefined | null): string {
@@ -302,8 +302,9 @@ export default function DoctorProfileClient({ doctor }: { doctor: any }) {
           </div>
         </section>
 
-        <DoctorTalks />
-        <PatientSuccessStories />
+        {/* Hidden Doctor Talks and Patient Success Stories sections */}
+        {/* <DoctorTalks /> */}
+        {/* <PatientSuccessStories /> */}
 
         {/* FAQs */}
         {doctor?.faqs?.length > 0 && (

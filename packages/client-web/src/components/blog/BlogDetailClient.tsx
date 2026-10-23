@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
 import {
@@ -34,6 +35,7 @@ interface BlogPost {
 }
 
 export default function BlogDetailClient({ slug }: { slug: string }) {
+  const router = useRouter();
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -89,15 +91,19 @@ export default function BlogDetailClient({ slug }: { slug: string }) {
         const data = await res.json();
         const item = data.Item || data;
 
+        if (!item || item.enabled === false || item.enabled === "false") {
+          throw new Error("Blog not found or disabled");
+        }
+
         setBlog(item);
 
         // 2. Fetch All Blogs for Sidebar (Dynamic Categories & Recent Blogs)
         try {
-          // Adjust endpoint if needed based on your backend routes (e.g., /getAllBlogs)
           const allRes = await fetch(`${API_URL}/api/blogs/getAllBlogs`);
           if (allRes.ok) {
             const allData = await allRes.json();
-            const allBlogs: BlogPost[] = allData.Items || allData || [];
+            const rawBlogs: BlogPost[] = allData.Items || allData || [];
+            const allBlogs = rawBlogs.filter((b: any) => b.enabled !== false && b.enabled !== "false");
 
             // Extract unique categories
             const uniqueCategories = Array.from(
@@ -125,15 +131,19 @@ export default function BlogDetailClient({ slug }: { slug: string }) {
     if (slug) fetchBlogData();
   }, [slug]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading && !blog) {
+      router.replace("/");
+    }
+  }, [loading, blog, router]);
+
+  if (loading || !blog) {
     return (
       <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center">
         <div className="w-16 h-16 border-4 border-[#5B328C]/20 border-t-[#5B328C] rounded-full animate-spin"></div>
       </div>
     );
   }
-
-  if (!blog) return null;
 
   return (
     <article className="w-full max-w-[100vw] overflow-x-hidden bg-[#FAFAFA] font-sans text-gray-800 pb-24">

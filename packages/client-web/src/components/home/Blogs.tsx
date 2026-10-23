@@ -22,7 +22,7 @@ const Blogs = () => {
 
         // Filter enabled, Sort Newest to Oldest (using timeline or createdAt), Take top 3
         const sorted = allBlogs
-          .filter((b: any) => b.enabled)
+          .filter((b: any) => b.enabled && b.enabled !== false && b.enabled !== "false")
           .sort((a: any, b: any) => {
             const dateA = a.timeline || a.createdAt;
             const dateB = b.timeline || b.createdAt;

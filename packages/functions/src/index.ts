@@ -5,7 +5,7 @@ import multer from "multer";
 import { createUser, getAllUsers } from "./controllers/userController.js";
 import { login } from "./controllers/authController.js";
 import {
-  addBlog, getAllBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage, getBlogsByDepartmentKeywords
+  addBlog, getAllBlogs, getAllEnabledBlogs, getBlogById, getBlogByURL, updateBlog, toggleBlogStatus, uploadBlogImage, getBlogsByDepartmentKeywords
 } from "./controllers/blogController.js";
 import {
   addDoctor, getAllDoctors, getDoctorById, getDoctorByURL, updateDoctor, toggleDoctorStatus, uploadDoctorImage, getAllEnabledDoctors, getDoctorsByDepartment
@@ -49,6 +49,8 @@ app.get("/api/users", getAllUsers);
 app.post("/api/auth/login", login);
 
 app.get("/api/blogs/getAllBlogs", getAllBlogs);
+app.get("/api/blogs/getAllEnabled", getAllEnabledBlogs);
+app.get("/api/blogs/getAllEnabledBlogs", getAllEnabledBlogs);
 app.post("/api/blogs/addBlog", addBlog);
 app.get("/api/blogs/getBlogbyId/:id", getBlogById);
 app.get("/api/blogs/getBlogByUrl/:url", getBlogByURL);

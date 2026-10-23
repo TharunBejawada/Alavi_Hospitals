@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import axios from "axios";
 import { API_URL } from "../../../config";
 import TreatmentDetailClient from "../../../components/treatments/TreatmentDetailClient";
@@ -10,7 +11,9 @@ import type { Treatment } from "../../../../../core/src/types";
 const fetchTreatment = cache(async (slug: string): Promise<Treatment | null> => {
   try {
     const res = await axios.get(`${API_URL}/api/treatments/getByUrl/${slug}`);
-    return res.data.Item;
+    const item = res.data.Item;
+    if (!item || !item.enabled || item.enabled === "false") return null;
+    return item;
   } catch (error) {
     console.error("Failed to fetch treatment details.");
     return null;
@@ -19,7 +22,7 @@ const fetchTreatment = cache(async (slug: string): Promise<Treatment | null> => 
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const treatment = await fetchTreatment(params.slug);
-  if (!treatment || !treatment.enabled) return {};
+  if (!treatment) return {};
 
   const title = treatment.seoConfig?.title || treatment.title;
   const description = treatment.seoConfig?.metaDescription || undefined;
@@ -36,12 +39,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function TreatmentDetailPage({ params }: { params: { slug: string } }) {
   const treatment = await fetchTreatment(params.slug);
 
-  if (!treatment || !treatment.enabled) {
-    return (
-      <div className="min-h-screen flex items-center justify-center font-bold text-2xl text-[#5B328C]">
-        Page Not Found
-      </div>
-    );
+  if (!treatment) {
+    redirect("/");
   }
 
   return <TreatmentDetailClient treatment={treatment} />;

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { API_URL } from "../../../config";
 import SpecialityLandingClient from "../../../components/specialities/SpecialityLandingClient";
 import type { SpecialityLandingPage } from "../../../../../core/src/types";
@@ -42,6 +43,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function SpecialityLandingPageRoute({ params }: { params: { slug: string } }) {
+export default async function SpecialityLandingPageRoute({ params }: { params: { slug: string } }) {
+  const pageData = await fetchSpecialityPage(params.slug);
+  if (!pageData) {
+    redirect("/");
+  }
+
   return <SpecialityLandingClient slug={params.slug} />;
 }

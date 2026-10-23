@@ -60,14 +60,14 @@ const ContactInfo = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
 
                   {/* Number 1 */}
-                  <div className="flex flex-col">
+                  {/* <div className="flex flex-col">
                     <span className="text-gray-500 text-[14px] font-medium mb-1.5">
                       General Enquiries
                     </span>
                     <a href="tel:9533121257" className="text-[#5B328C] text-[17px] font-bold hover:opacity-80 transition-opacity">
                       95331 21257
                     </a>
-                  </div>
+                  </div> */}
 
                   {/* Number 2 */}
                   <div className="flex flex-col">

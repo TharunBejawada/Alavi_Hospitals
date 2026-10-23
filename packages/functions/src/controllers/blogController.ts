@@ -38,7 +38,7 @@ export const addBlog = async (req: any, res: any) => {
   }
 };
 
-// --- 2. GET ALL BLOGS ---
+// --- 2. GET ALL BLOGS (Admin: returns all including disabled) ---
 export const getAllBlogs = async (req: any, res: any) => {
   try {
     const result = await db.send(new ScanCommand({ TableName: TABLE_NAME_BLOGS }));
@@ -46,6 +46,22 @@ export const getAllBlogs = async (req: any, res: any) => {
   } catch (error) {
     console.error("Fetch Blogs Error:", error);
     res.status(500).json({ error: "Failed to fetch blogs" });
+  }
+};
+
+// --- 2b. GET ALL ENABLED BLOGS (Public Frontend) ---
+export const getAllEnabledBlogs = async (req: any, res: any) => {
+  try {
+    const result = await db.send(new ScanCommand({
+      TableName: TABLE_NAME_BLOGS,
+      FilterExpression: "attribute_not_exists(#enabled) OR #enabled = :enabledVal",
+      ExpressionAttributeNames: { "#enabled": "enabled" },
+      ExpressionAttributeValues: { ":enabledVal": true }
+    }));
+    res.status(200).json({ Items: result.Items || [] });
+  } catch (error) {
+    console.error("Fetch Enabled Blogs Error:", error);
+    res.status(500).json({ error: "Failed to fetch enabled blogs" });
   }
 };
 
@@ -84,7 +100,12 @@ export const getBlogByURL = async (req: any, res: any) => {
       return res.status(404).json({ error: "Blog not found" });
     }
 
-    res.status(200).json({ Item: result.Items[0] });
+    const blog = result.Items[0];
+    if (blog.enabled === false || blog.enabled === "false") {
+      return res.status(404).json({ error: "Blog is not available" });
+    }
+
+    res.status(200).json({ Item: blog });
   } catch (error) {
     console.error("Error fetching blog by URL:", error);
     res.status(500).json({ error: "Failed to fetch blog" });

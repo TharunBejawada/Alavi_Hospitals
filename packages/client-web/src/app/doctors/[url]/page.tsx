@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import DoctorProfileClient from "../../../components/doctors/DoctorProfileClient";
 import axios from "axios";
 import { API_URL } from "../../../config";
@@ -9,7 +10,9 @@ import { API_URL } from "../../../config";
 const fetchDoctor = cache(async (url: string) => {
   try {
     const res = await axios.get(`${API_URL}/api/doctors/getDoctorByUrl/${url}`);
-    return res.data.Item;
+    const item = res.data.Item;
+    if (!item || item.enabled === false || item.enabled === "false") return null;
+    return item;
   } catch (error) {
     console.error("Failed to fetch doctor details.");
     return null;
@@ -36,9 +39,9 @@ export default async function DoctorProfilePage({ params }: { params: { url: str
   // 1. Fetch Doctor Data Server-Side (Great for SEO)
   const doctorData = await fetchDoctor(params.url);
 
-  // 2. Handle 404
+  // 2. Redirect to homepage if not found or disabled
   if (!doctorData) {
-    return <div className="min-h-screen flex items-center justify-center font-bold text-2xl">Doctor Not Found</div>;
+    redirect("/");
   }
 
   // 3. Pass data to the Client Component

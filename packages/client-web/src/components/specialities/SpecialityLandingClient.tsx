@@ -217,7 +217,7 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
               setDoctors(docsData.Items || []);
 
               // 3. Filter blogs based on categories matching this speciality, exactly like the blog landing page
-              const allBlogs: any[] = (blogsData.Items || blogsData || []).filter((b: any) => b.enabled !== false);
+              const allBlogs: any[] = (blogsData.Items || blogsData || []).filter((b: any) => b.enabled !== false && b.enabled !== "false");
               const targetCats = getSpecialityCategories(exactDepartmentName);
               let activeCategory = "";
 
@@ -288,8 +288,14 @@ export default function SpecialityLandingClient({ slug }: { slug: string }) {
     if (slug) fetchData();
   }, [slug]);
 
+  useEffect(() => {
+    if (!loading && !pageData) {
+      router.replace("/");
+    }
+  }, [loading, pageData, router]);
+
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-12 h-12 animate-spin text-[#5B328C]" /></div>;
-  if (!pageData) return <div className="min-h-screen flex items-center justify-center font-bold text-2xl text-[#5B328C]">Page Not Found</div>;
+  if (!pageData) return null;
 
   return (
     <div className="font-['Poppins'] min-h-screen bg-[#FAFAFA] pb-20">

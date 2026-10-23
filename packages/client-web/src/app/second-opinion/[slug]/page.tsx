@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import axios from "axios";
 import { API_URL } from "../../../config";
 import SecondOpinionDetailClient from "../../../components/second-opinion/SecondOpinionDetailClient";
@@ -10,7 +11,9 @@ import type { SecondOpinionTopic } from "../../../../../core/src/types";
 const fetchTopic = cache(async (slug: string): Promise<SecondOpinionTopic | null> => {
   try {
     const res = await axios.get(`${API_URL}/api/second-opinions/getByUrl/${slug}`);
-    return res.data.Item;
+    const item = res.data.Item;
+    if (!item || !item.enabled || item.enabled === "false") return null;
+    return item;
   } catch (error) {
     console.error("Failed to fetch Second Opinion topic.");
     return null;
@@ -19,7 +22,7 @@ const fetchTopic = cache(async (slug: string): Promise<SecondOpinionTopic | null
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const topic = await fetchTopic(params.slug);
-  if (!topic || !topic.enabled) return {};
+  if (!topic) return {};
 
   const title = topic.seoConfig?.title || topic.title;
   const description = topic.seoConfig?.metaDescription || undefined;
@@ -36,12 +39,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function SecondOpinionDetailPage({ params }: { params: { slug: string } }) {
   const topic = await fetchTopic(params.slug);
 
-  if (!topic || !topic.enabled) {
-    return (
-      <div className="min-h-screen flex items-center justify-center font-bold text-2xl text-[#5B328C]">
-        Page Not Found
-      </div>
-    );
+  if (!topic) {
+    redirect("/");
   }
 
   return <SecondOpinionDetailClient topic={topic} />;
