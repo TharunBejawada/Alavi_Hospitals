@@ -80,13 +80,6 @@ const locations = [
         isPurple: true,
       },
       {
-        id: 202,
-        patient: "shrinivas shreev",
-        text: "Respected Sir,\nDr.M.Chandra Shekar garu,\nAlavi hospital\nchintal branch.\n\nSubject: Complaint Regarding Staff Behavior at Hospital Reception\n\nI would like to bring to your kind attention an issue regarding the behavior of the hospital reception staff and nursing staff.\n\nFirst of all,\nI sincerely appreciate your excellent service and dedication. You treat patients with great care, patience, and professionalism, which is truly commendable.\nHowever, I regret to inform you that the reception staff and one of the nursing staff member(sister) are behaving irresponsibly and rudely towards patients and their attendants. They often use sarcastic and disrespectful language, which creates discomfort and dissatisfaction among visitors.\nThis is not an isolated incident; many patients and their attendants are facing similar issues during their visits to the hospital.\nI kindly request you to take this matter seriously and take appropriate action to ensure that all patients are treated with respect and dignity.\nThank you for your attention to this matter.\n\nThank you sir.",
-        rating: 5,
-        isPurple: false,
-      },
-      {
         id: 203,
         patient: "Ramu K",
         text: "Dr pradeep reddy sir is very supportive and kind he answered all my questions patiently and gave useful advice.tha treatment was effective and l started feeling better soon. I am thankful for his care.i am very happy with the service thank you so mach sir.",
@@ -169,8 +162,8 @@ const LocationTestimonials = ({ testimonials }: { testimonials: any[] }) => {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
             className={`p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col justify-between h-full min-h-[320px] sm:min-h-[350px] shadow-sm transition-shadow hover:shadow-md ${currentItem1.isPurple
-                ? "bg-gradient-to-b from-[#4A419D] to-[#663399] text-white"
-                : "bg-white text-gray-800 border border-gray-100"
+              ? "bg-gradient-to-b from-[#4A419D] to-[#663399] text-white"
+              : "bg-white text-gray-800 border border-gray-100"
               }`}
           >
             <div className="flex-1 flex flex-col justify-start">
@@ -203,8 +196,8 @@ const LocationTestimonials = ({ testimonials }: { testimonials: any[] }) => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
               className={`hidden md:flex p-5 sm:p-6 md:p-8 rounded-2xl flex-col justify-between h-full min-h-[320px] sm:min-h-[350px] shadow-sm transition-shadow hover:shadow-md ${currentItem2.isPurple
-                  ? "bg-gradient-to-b from-[#4A419D] to-[#663399] text-white"
-                  : "bg-white text-gray-800 border border-gray-100"
+                ? "bg-gradient-to-b from-[#4A419D] to-[#663399] text-white"
+                : "bg-white text-gray-800 border border-gray-100"
                 }`}
             >
               <div className="flex-1 flex flex-col justify-start">
