@@ -6,10 +6,10 @@ import { motion } from "framer-motion";
 // Enhanced animation variants for smooth staggering and entry
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: "easeOut" as const, staggerChildren: 0.15 } 
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const, staggerChildren: 0.15 }
   }
 };
 
@@ -32,11 +32,11 @@ const ADMISSION_STEPS = [
 ];
 
 const DOCUMENTS = [
-  { icon: "/assets/icons/doc-id.png", label: "Government-issued ID proof" },
-  { icon: "/assets/icons/doc-advice.png", label: "Doctor's admission advice" },
-  { icon: "/assets/icons/doc-reports.png", label: "Previous medical reports" },
-  { icon: "/assets/icons/doc-prescription.png", label: "Current prescriptions" },
-  { icon: "/assets/icons/doc-insurance.png", label: "Insurance/TPA documents, if applicable AA" },
+  { icon: "/assets/admission-guidelines/Government-issued ID proof.png", label: "Government-issued ID proof" },
+  { icon: "/assets/admission-guidelines/Doctor's admission advice.png", label: "Doctor's admission advice" },
+  { icon: "/assets/admission-guidelines/Previous medical reports.png", label: "Previous medical reports" },
+  { icon: "/assets/admission-guidelines/Current prescriptions.png", label: "Current prescriptions" },
+  { icon: "/assets/admission-guidelines/Insurance.png", label: "Insurance/TPA documents, if applicable AA" },
 ];
 
 export default function AdmissionGuidelinesPage() {
@@ -52,7 +52,7 @@ export default function AdmissionGuidelinesPage() {
             initial={{ scale: 1.1, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            src="/assets/images/admission-hero.png"
+            src="/assets/admission-guidelines/Banner Image.jpg"
             alt="Hospital admission desk"
             className="w-full h-full object-contain object-right-top"
           />
@@ -69,13 +69,13 @@ export default function AdmissionGuidelinesPage() {
             }}
             className="max-w-[540px] flex flex-col"
           >
-            <motion.div 
+            <motion.div
               variants={slideInLeft}
               className="inline-block bg-white text-[#663399] font-medium text-[16px] px-[22px] py-[8px] rounded-[30px] w-fit mb-5 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
             >
               Your Admission, Made Simple
             </motion.div>
-            <motion.h1 
+            <motion.h1
               variants={slideInLeft}
               className="text-[20px] md:text-[24px] font-semibold text-white leading-[1.4]"
             >
@@ -109,8 +109,8 @@ export default function AdmissionGuidelinesPage() {
               const isLast = idx === ADMISSION_STEPS.length - 1;
 
               return (
-                <motion.div 
-                  key={idx} 
+                <motion.div
+                  key={idx}
                   variants={childFadeUp}
                   className="flex gap-2.5 sm:gap-4 lg:gap-8 group cursor-default"
                   onMouseEnter={() => setHoveredStep(idx)}
@@ -125,18 +125,18 @@ export default function AdmissionGuidelinesPage() {
 
                   {/* Timeline Visual */}
                   <div className="flex flex-col items-center shrink-0 w-[32px] sm:w-[40px] relative">
-                    <motion.div 
+                    <motion.div
                       whileHover={{ scale: 1.15 }}
                       whileTap={{ scale: 0.95 }}
                       className={`w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-full flex items-center justify-center shrink-0 z-10 transition-colors duration-300 bg-[#F6FBFF] ${isDotActive ? 'border-[2px] border-[#663399]' : 'border-[2px] border-transparent'}`}
                     >
                       <div className={`w-[18px] h-[18px] sm:w-[24px] sm:h-[24px] rounded-full transition-colors duration-300 ${isDotActive ? 'bg-[#663399]' : 'bg-[#D8CBE5]'}`} />
                     </motion.div>
-                    
+
                     {/* The Connecting Line */}
                     {!isLast && (
                       <div className="absolute top-[32px] sm:top-[40px] bottom-0 w-[2px] bg-[#D8CBE5] overflow-hidden">
-                        <div 
+                        <div
                           className="absolute top-0 left-0 w-full bg-[#663399] transition-all duration-500 ease-in-out origin-top"
                           style={{ height: isLineActive ? '100%' : '0%' }}
                         />
@@ -145,7 +145,7 @@ export default function AdmissionGuidelinesPage() {
                   </div>
 
                   {/* Step Content */}
-                  <motion.div 
+                  <motion.div
                     whileHover={{ x: 4 }}
                     transition={{ duration: 0.2 }}
                     className={`pb-8 sm:pb-12 ${isLast ? 'pb-0' : ''} flex-1 min-w-0`}
@@ -178,8 +178,8 @@ export default function AdmissionGuidelinesPage() {
           </motion.h2>
           <div className="flex flex-wrap justify-center gap-10 lg:gap-[60px]">
             {DOCUMENTS.map((doc, idx) => (
-              <motion.div 
-                key={idx} 
+              <motion.div
+                key={idx}
                 variants={childFadeUp}
                 whileHover={{ y: -8 }}
                 whileTap={{ scale: 0.95 }}
@@ -207,7 +207,7 @@ export default function AdmissionGuidelinesPage() {
         className="w-full relative py-[60px]"
       >
         {/* Full-bleed absolute image on desktop */}
-        <motion.div 
+        <motion.div
           initial={{ x: "-10%", opacity: 0 }}
           whileInView={{ x: "0%", opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -215,37 +215,37 @@ export default function AdmissionGuidelinesPage() {
           className="hidden lg:block absolute top-0 left-0 h-full overflow-hidden shadow-[4px_0_20px_rgba(0,0,0,0.06)] z-0"
           style={{ width: 'calc(max(0px, 50vw - 720px) + 154px + 320px)' }}
         >
-          <motion.img 
+          <motion.img
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            src="/assets/images/emergency-admission.png" 
-            alt="Emergency admission team" 
-            className="w-full h-full object-cover object-right" 
+            src="/assets/admission-guidelines/Emergency Admission.jpg"
+            alt="Emergency admission team"
+            className="w-full h-full object-cover object-right"
           />
         </motion.div>
 
         {/* Main Content Container */}
         <div className="max-w-[1440px] w-full mx-auto px-6 lg:px-[154px] relative z-10">
           <div className="flex flex-col lg:flex-row items-stretch justify-between gap-12 lg:gap-8">
-            
+
             {/* Left side: Emergency Admission Text */}
             <div className="flex flex-col sm:flex-row items-stretch gap-8 lg:gap-12 flex-1">
-              
+
               {/* Spacer on Desktop (to make room for the absolute image), Image on Mobile */}
               <div className="w-full sm:w-[280px] lg:w-[320px] shrink-0">
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="lg:hidden w-full h-[220px] rounded-xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.06)]"
                 >
-                  <img 
-                    src="/assets/images/emergency-admission.png" 
-                    alt="Emergency admission team" 
-                    className="w-full h-full object-contain" 
+                  <img
+                    src="/assets/admission-guidelines/Emergency Admission.jpg"
+                    alt="Emergency admission team"
+                    className="w-full h-full object-contain"
                   />
                 </motion.div>
               </div>
-              
-              <motion.div 
+
+              <motion.div
                 variants={childFadeUp}
                 className="flex flex-col justify-center max-w-[440px] py-2 lg:py-0"
               >
@@ -260,25 +260,25 @@ export default function AdmissionGuidelinesPage() {
             </div>
 
             {/* Vertical Divider (Hidden on mobile) */}
-            <motion.div 
+            <motion.div
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               transition={{ duration: 0.8, ease: "easeInOut", delay: 0.3 }}
               viewport={{ once: true }}
-              className="hidden lg:block w-[2px] my-2 bg-[#663399] origin-top" 
+              className="hidden lg:block w-[2px] my-2 bg-[#663399] origin-top"
             />
 
             {/* Right side: Need Help */}
-            <motion.div 
+            <motion.div
               variants={childFadeUp}
               className="flex flex-col items-center sm:items-start justify-center gap-5 w-full lg:w-auto shrink-0 pl-0 lg:pl-4 group cursor-pointer"
             >
               <div className="flex items-center gap-[18px]">
-                <motion.div 
+                <motion.div
                   whileHover={{ rotate: 10 }}
                   className="w-[60px] h-[60px] rounded-full bg-[#F3E8FF] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-[0_4px_15px_rgba(102,51,153,0.15)] group-hover:bg-[#ebdcff]"
                 >
-                  <img src="/assets/icons/headphones.png" alt="Headphones" className="w-[28px] h-[28px] object-contain" />
+                  <img src="/assets/admission-guidelines/Need Help.png" alt="Headphones" className="w-[28px] h-[28px] object-contain" />
                 </motion.div>
                 <div>
                   <h3 className="text-[#663399] font-bold text-[22px] leading-tight">Need Help?</h3>
@@ -287,23 +287,23 @@ export default function AdmissionGuidelinesPage() {
                   </p>
                 </div>
               </div>
-              
+
               <motion.a
                 whileTap={{ scale: 0.95 }}
                 href="tel:+919603911911"
                 className="inline-flex items-center gap-[14px] bg-white border-[1.5px] border-[#663399] rounded-[30px] px-8 py-[10px] ml-0 sm:ml-[78px] transition-all duration-300 hover:bg-[#663399] hover:shadow-[0_8px_20px_rgba(102,51,153,0.25)] group/btn"
               >
-                <img 
-                  src="/assets/icons/phone-purple.png" 
-                  alt="Phone" 
-                  className="w-5 h-5 object-contain transition-transform duration-300 group-hover/btn:brightness-0 group-hover/btn:invert" 
+                <img
+                  src="/assets/admission-guidelines/Phone icon.png"
+                  alt="Phone"
+                  className="w-5 h-5 object-contain transition-transform duration-300 group-hover/btn:brightness-0 group-hover/btn:invert"
                 />
                 <span className="text-[#663399] font-semibold text-[18px] transition-colors duration-300 group-hover/btn:text-white">
                   9603 911 911
                 </span>
               </motion.a>
             </motion.div>
-            
+
           </div>
         </div>
       </motion.section>

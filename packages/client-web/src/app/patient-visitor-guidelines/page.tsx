@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 // Enhanced animation variants for smooth staggering and entry
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: "easeOut" as const, staggerChildren: 0.15 } 
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const, staggerChildren: 0.15 }
   }
 };
 
@@ -18,9 +18,9 @@ const childFadeUp = {
 };
 
 const VISITING_HOURS = [
-  { icon: "/assets/icons/visiting-hours.png", label: "Visiting Hours", time: null },
-  { icon: "/assets/icons/general-wards.png", label: "General Wards", time: "4:00 PM – 6:00 PM" },
-  { icon: "/assets/icons/icu-critical-care.png", label: "ICU / Critical Care", time: "11:00 AM – 12:00 PM\n7:00 PM – 8:00 PM" },
+  { icon: "/assets/patient-visitors-guidelines/Visiting Hours.png", label: "Visiting Hours", time: null },
+  { icon: "/assets/patient-visitors-guidelines/General Wards.png", label: "General Wards", time: "4:00 PM – 6:00 PM" },
+  { icon: "/assets/patient-visitors-guidelines/Critical Care.png", label: "ICU / Critical Care", time: "11:00 AM – 12:00 PM\n7:00 PM – 8:00 PM" },
 ];
 
 const GUIDELINES = [
@@ -72,7 +72,7 @@ export default function VisitorGuidelinesPage() {
             initial={{ scale: 1.05 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            src="/assets/images/hero-patient.png"
+            src="/assets/patient-visitors-guidelines/Banner Image.jpg"
             alt="Family visiting a patient"
             className="w-full h-full object-cover object-left"
           />
@@ -111,8 +111,8 @@ export default function VisitorGuidelinesPage() {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {VISITING_HOURS.map((item, idx) => (
-            <motion.div 
-              key={idx} 
+            <motion.div
+              key={idx}
               variants={childFadeUp}
               whileHover={{ y: -6 }}
               className="bg-[#FCF9FF] rounded-[8px] px-[30px] py-[30px] flex items-center gap-5 min-h-[120px] shadow-[0_2px_15px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_25px_rgba(102,51,153,0.12)] transition-shadow duration-300 cursor-default"
@@ -150,8 +150,8 @@ export default function VisitorGuidelinesPage() {
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px]">
           {GUIDELINES.map((item, idx) => (
-            <motion.div 
-              key={idx} 
+            <motion.div
+              key={idx}
               variants={childFadeUp}
               whileHover={{ y: -8 }}
               className="bg-[#EEF8FF] rounded-[6px] p-[26px] pt-8 relative min-h-[220px] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all duration-300 cursor-default group"
@@ -182,12 +182,12 @@ export default function VisitorGuidelinesPage() {
               <p className="text-[#000000] text-[18px] font-normal leading-[1.42] mb-10">
                 Visiting may also depend on the patient&rsquo;s medical condition and the treating team&rsquo;s advice.
               </p>
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="bg-[#FFFFFF] rounded-[12px] p-6 flex items-center gap-4 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] transition-all duration-300 cursor-pointer"
               >
                 <div className="w-[52px] h-[52px] shrink-0">
-                  <img src="/assets/icons/chat-purple.png" alt="Chat" className="w-full h-full object-contain" />
+                  <img src="/assets/patient-visitors-guidelines/Chat Icon.png" alt="Chat" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <p className="text-[#663399] font-bold text-[14px] mb-1">Need an update outside visiting hours?</p>
@@ -202,8 +202,8 @@ export default function VisitorGuidelinesPage() {
               <h3 className="text-[#663399] font-bold text-[26px] leading-[1.39] mb-6 lg:mt-1">During critical-care visits:</h3>
               <ul className="space-y-[18px]">
                 {CRITICAL_CARE_RULES.map((rule, idx) => (
-                  <motion.li 
-                    key={idx} 
+                  <motion.li
+                    key={idx}
                     variants={childFadeUp}
                     className="flex items-start gap-4 group"
                   >
@@ -229,7 +229,7 @@ export default function VisitorGuidelinesPage() {
           During Your Visit
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[75px]">
-          <motion.div 
+          <motion.div
             variants={childFadeUp}
             whileHover={{ y: -6 }}
             className="bg-[#663399] rounded-[20px] p-[46px] min-h-[378px] hover:shadow-[0_15px_30px_rgba(102,51,153,0.25)] transition-all duration-300"
@@ -244,7 +244,7 @@ export default function VisitorGuidelinesPage() {
               ))}
             </ul>
           </motion.div>
-          <motion.div 
+          <motion.div
             variants={childFadeUp}
             whileHover={{ y: -6 }}
             className="bg-[#EEF8FF] rounded-[20px] p-[46px] min-h-[378px] hover:shadow-[0_15px_30px_rgba(0,0,0,0.08)] transition-all duration-300"
@@ -271,11 +271,11 @@ export default function VisitorGuidelinesPage() {
         className="py-14 max-w-[1440px] w-full mx-auto px-6 lg:px-[154px]"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[75px]">
-          
+
           {/* Left Column */}
           <motion.div variants={childFadeUp} className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left group cursor-pointer">
             <div className="w-[100px] h-[100px] rounded-full bg-[#F7EFFF] flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#f0e1ff] group-hover:shadow-[0_8px_20px_rgba(102,51,153,0.15)]">
-              <img src="/assets/icons/headphones.png" alt="Support" className="w-[46px] h-[46px] object-contain transition-transform duration-300 group-hover:scale-105" />
+              <img src="/assets/patient-visitors-guidelines/Need Help.png" alt="Support" className="w-[46px] h-[46px] object-contain transition-transform duration-300 group-hover:scale-105" />
             </div>
             <div className="flex flex-col gap-2 pt-1 transition-transform duration-300 group-hover:-translate-y-1">
               <h2 className="text-[#663399] font-bold text-[28px] leading-[1.39] mb-1">Need Help?</h2>
@@ -291,7 +291,7 @@ export default function VisitorGuidelinesPage() {
           {/* Right Column */}
           <motion.div variants={childFadeUp} className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left group">
             <div className="w-[100px] h-[100px] rounded-full bg-[#F7EFFF] flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#f0e1ff] group-hover:shadow-[0_8px_20px_rgba(102,51,153,0.15)]">
-              <img src="/assets/icons/team.png" alt="Team" className="w-[52px] h-[52px] object-contain transition-transform duration-300 group-hover:scale-105" />
+              <img src="/assets/patient-visitors-guidelines/People.png" alt="Team" className="w-[52px] h-[52px] object-contain transition-transform duration-300 group-hover:scale-105" />
             </div>
             <div className="flex flex-col justify-center h-[100px] transition-transform duration-300 group-hover:-translate-y-1">
               <p className="text-[#000000] font-semibold text-[15px] leading-[1.45]">
