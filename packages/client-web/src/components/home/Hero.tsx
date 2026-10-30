@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowRightCircle } from "react-icons/fi";
@@ -17,26 +16,41 @@ const bottomNavItems = [
 
 const Hero = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {
+        // Autoplay may be restricted by some browser policies
+      });
+    }
+  }, []);
   
   return (
     <section className="relative w-full min-h-[80vh] lg:min-h-[750px] overflow-hidden bg-gray-900 flex items-end font-[Poppins]">
       
-      {/* 1. Background Image & Custom PNG Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image 
-          src="/hero-banner.png" 
-          alt="Advanced Operating Room" 
-          fill 
-          className="object-cover" 
-          priority 
-        />
-        <Image 
-          src="/hero-gradient.png"
-          alt="Gradient Overlay"
-          fill
-          className="object-cover mix-blend-multiply opacity-90"
-          priority
-        />
+      {/* 1. Background Video */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+        <video 
+          ref={videoRef}
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          disablePictureInPicture
+          disableRemotePlayback
+          controlsList="nodownload nofullscreen noremoteplayback"
+          onContextMenu={(e) => e.preventDefault()}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="w-full h-full object-cover pointer-events-none select-none"
+        >
+          <source src="/assets/homepage_video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       {/* 2. Bottom Action Bar */}
