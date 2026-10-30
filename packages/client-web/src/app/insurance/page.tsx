@@ -108,7 +108,7 @@ export default function InsurancePage() {
       ) : (
         <>
           {/* --- 2. OUR INSURANCE & TPA PARTNERS --- */}
-          <section className="py-16 sm:py-20 w-full mx-auto px-6 sm:px-10 md:px-20">
+          <section className="py-16 sm:py-20 w-full max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 lg:px-20">
             <motion.div
               initial="hidden"
               whileInView="show"
@@ -147,14 +147,14 @@ export default function InsurancePage() {
                       {/* Decorative ambient background glow */}
                       <div className="absolute -right-12 -top-12 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
 
-                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-white shrink-0 p-3 shadow-md flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                      <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-white shrink-0 p-3 shadow-md flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
                         {p.image ? (
                           <div className="relative w-full h-full">
                             <Image
                               src={p.image}
                               alt={p.title}
                               fill
-                              sizes="(max-width: 640px) 112px, 128px"
+                              sizes="(max-width: 640px) 128px, 144px"
                               className="object-contain p-1"
                             />
                           </div>
@@ -206,7 +206,7 @@ export default function InsurancePage() {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.05 }}
                 variants={containerVariants}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 items-stretch"
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 items-stretch"
               >
                 {privatePartners.map((p) => {
                   const CardContent = (
@@ -214,7 +214,7 @@ export default function InsurancePage() {
                       variants={cardVariants}
                       whileHover={{ y: -6, scale: 1.025 }}
                       transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                      className="group relative flex flex-col items-center justify-between bg-white border border-gray-200/80 hover:border-[#663399]/40 rounded-2xl p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_32px_rgba(102,51,153,0.12)] transition-all duration-300 cursor-pointer overflow-hidden min-h-[190px] sm:min-h-[205px] h-full"
+                      className="group relative flex flex-col items-center justify-between bg-white border border-gray-200/80 hover:border-[#663399]/40 rounded-2xl p-4 sm:p-5 lg:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_32px_rgba(102,51,153,0.12)] transition-all duration-300 cursor-pointer overflow-hidden min-h-[220px] sm:min-h-[245px] lg:min-h-[265px] h-full"
                     >
                       {/* Top accent bar on hover */}
                       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#663399] via-[#9F65D6] to-[#663399] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -230,14 +230,14 @@ export default function InsurancePage() {
                       )}
 
                       {/* Logo Container - Generous size so logos are large, clear and sharp */}
-                      <div className="relative w-full flex-1 flex items-center justify-center p-2 z-10 min-h-[80px]">
+                      <div className="relative w-full flex-1 flex items-center justify-center p-3 sm:p-4 z-10 min-h-[110px] sm:min-h-[130px] lg:min-h-[150px]">
                         {p.image ? (
-                          <div className="relative w-full h-[75px] sm:h-[85px] transition-transform duration-300 group-hover:scale-110">
+                          <div className="relative w-full h-[95px] sm:h-[120px] lg:h-[140px] transition-transform duration-300 group-hover:scale-105">
                             <Image
                               src={p.image}
                               alt={p.title}
                               fill
-                              sizes="(max-width: 640px) 150px, (max-width: 1024px) 200px, 240px"
+                              sizes="(max-width: 640px) 180px, (max-width: 1024px) 280px, 340px"
                               className="object-contain p-1 drop-shadow-sm"
                             />
                           </div>
@@ -249,8 +249,8 @@ export default function InsurancePage() {
                       </div>
 
                       {/* Partner Title - Full name with no truncation */}
-                      <div className="w-full pt-2.5 border-t border-gray-100 group-hover:border-[#663399]/20 transition-colors duration-300 z-10 mt-auto">
-                        <p className="text-xs sm:text-[13px] font-semibold text-gray-700 group-hover:text-[#663399] text-center leading-snug transition-colors duration-300">
+                      <div className="w-full pt-3 sm:pt-3.5 border-t border-gray-100 group-hover:border-[#663399]/20 transition-colors duration-300 z-10 mt-auto">
+                        <p className="text-xs sm:text-sm lg:text-[15px] font-semibold text-gray-700 group-hover:text-[#663399] text-center leading-snug transition-colors duration-300">
                           {p.title}
                         </p>
                       </div>
