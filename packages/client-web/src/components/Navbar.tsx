@@ -53,19 +53,35 @@ declare global {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
   const pathname = usePathname();
   const isAdminRoute = pathname?.toLowerCase().startsWith("/admin");
+  const isHomePage = pathname === "/";
+
+  // Transparent primary header only on Homepage when not scrolled, not hovered, and mobile drawer closed.
+  // Everywhere else, or upon scroll/hover, secondary (current white) header is shown.
+  const showSecondary = !isHomePage || isScrolled || isHovered || isOpen;
 
   useEffect(() => {
     if (isAdminRoute) return;
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isAdminRoute]);
+
+  useEffect(() => {
+    setIsHovered(false);
+    setIsOpen(false);
+    setOpenDropdown(null);
+    if (!isAdminRoute && typeof window !== "undefined") {
+      setIsScrolled(window.scrollY > 20);
+    }
+  }, [pathname, isAdminRoute]);
 
   // --- Google Translate Setup ---
   useEffect(() => {
@@ -113,25 +129,56 @@ const Header = () => {
   }
 
   return (
-    <header className={`w-full z-50 sticky top-0 bg-white transition-shadow duration-300 ${isScrolled ? "shadow-md" : ""}`}>
+    <header
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setOpenDropdown(null);
+      }}
+      className={`w-full z-50 transition-all duration-300 ${
+        isHomePage ? "fixed top-0 left-0 right-0" : "sticky top-0"
+      } ${
+        showSecondary
+          ? "bg-white shadow-md"
+          : "bg-gradient-to-b from-black/75 via-black/35 to-transparent"
+      }`}
+    >
 
-      {/* --- TOP BAR (Same White Background as Navbar) --- */}
-      <div className="w-full bg-white border-b border-gray-100">
+      {/* --- TOP BAR --- */}
+      <div
+        className={`w-full transition-colors duration-300 ${
+          showSecondary
+            ? "bg-white border-b border-gray-100"
+            : "bg-transparent border-b border-white/10"
+        }`}
+      >
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16 py-3 flex justify-between items-center">
 
-          {/* Alavi Logo */}
-          <Link href="/" className="flex-shrink-0 min-w-[150px] sm:min-w-[180px] md:min-w-[200px]">
+          {/* Alavi Logo (Cross-fade between white logo for transparent header and colored logo for secondary header) */}
+          <Link href="/" className="relative flex-shrink-0 min-w-[150px] sm:min-w-[180px] md:min-w-[200px] flex items-center">
+            <Image
+              src="/alavi-logo-white.png"
+              alt="Alavi Hospitals"
+              width={220}
+              height={62}
+              className={`w-[160px] sm:w-[190px] md:w-[220px] h-auto object-contain transition-opacity duration-300 ${
+                showSecondary ? "opacity-0 pointer-events-none absolute inset-0" : "opacity-100"
+              }`}
+              priority
+            />
             <Image
               src="/logo-alavi.png"
               alt="Alavi Hospitals"
               width={220}
               height={62}
-              className="w-[160px] sm:w-[190px] md:w-[220px] h-auto object-contain"
+              className={`w-[160px] sm:w-[190px] md:w-[220px] h-auto object-contain transition-opacity duration-300 ${
+                showSecondary ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0"
+              }`}
               priority
             />
           </Link>
 
-          {/* Right Action Area (Enlarged Emergency Siren Call Pill & Language Selector) */}
+          {/* Right Action Area (Emergency Siren Call Pill & Language Selector) */}
           <div className="hidden lg:flex items-center gap-5 xl:gap-7">
 
             {/* Siren + Mobile Number Badge Pill */}
@@ -151,7 +198,7 @@ const Header = () => {
                 />
               </div>
 
-              {/* Connected Purple Pill (Normal Weight Text matching reference image) */}
+              {/* Connected Purple Pill */}
               <div
                 className="bg-[#663399] text-white rounded-r-full rounded-l-full pl-8 pr-7 py-2.5 sm:py-3 -ml-6 flex items-center gap-3 text-base xl:text-lg group-hover:bg-[#542982] transition-colors shadow-md"
               >
@@ -209,14 +256,25 @@ const Header = () => {
           {!isAdminRoute && <div id="google_translate_element" className="hidden" />}
 
           {/* Mobile Menu Toggle Button */}
-          <button className="lg:hidden text-[#5B328C] p-2" onClick={() => setIsOpen(!isOpen)}>
+          <button
+            className={`lg:hidden p-2 transition-colors ${showSecondary ? "text-[#5B328C]" : "text-white"}`}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
+          >
             {isOpen ? <HiX size={30} /> : <HiMenuAlt3 size={30} />}
           </button>
         </div>
       </div>
 
       {/* --- MAIN DESKTOP NAVIGATION BAR (Bold Font Weight) --- */}
-      <nav className="hidden lg:block bg-white py-3.5 border-b border-gray-100">
+      <nav
+        onMouseEnter={() => setIsHovered(true)}
+        className={`hidden lg:block py-3.5 transition-colors duration-300 ${
+          showSecondary
+            ? "bg-white border-b border-gray-100"
+            : "bg-transparent border-b border-white/10"
+        }`}
+      >
         <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 xl:px-16">
           <ul className="flex justify-center items-center gap-5 lg:gap-7 xl:gap-9">
             {navLinks.map((link) => {
@@ -228,20 +286,36 @@ const Header = () => {
                   <li
                     key={link.name}
                     className="relative"
-                    onMouseEnter={() => setOpenDropdown(link.name)}
+                    onMouseEnter={() => {
+                      setIsHovered(true);
+                      setOpenDropdown(link.name);
+                    }}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
                     <button
                       type="button"
-                      className={`flex items-center gap-1 text-[13px] xl:text-[14px] font-bold transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
-                        }`}
+                      className={`flex items-center gap-1 text-[13px] xl:text-[14px] font-bold transition-all duration-200 relative group whitespace-nowrap ${
+                        showSecondary
+                          ? isActive
+                            ? "text-[#663399]"
+                            : "text-gray-700 hover:text-[#663399]"
+                          : isActive
+                            ? "text-white"
+                            : "text-white/95 hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                      }`}
                     >
                       {link.name}
                       <HiChevronDown
                         size={14}
                         className={`transition-transform duration-200 ${openDropdown === link.name ? "rotate-180" : ""}`}
                       />
-                      <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#663399] transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : ""}`} />
+                      <span
+                        className={`absolute -bottom-1 left-0 transition-all duration-300 ${
+                          showSecondary ? "bg-[#663399]" : "bg-white"
+                        } ${
+                          isActive ? "w-full h-0.5" : "w-0 h-0.5 group-hover:w-full"
+                        }`}
+                      />
                     </button>
 
                     <AnimatePresence>
@@ -277,11 +351,24 @@ const Header = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className={`text-[13px] xl:text-[14px] font-bold transition-all duration-200 hover:text-[#663399] relative group whitespace-nowrap ${isActive ? "text-[#663399]" : "text-gray-700"
-                      }`}
+                    className={`text-[13px] xl:text-[14px] font-bold transition-all duration-200 relative group whitespace-nowrap ${
+                      showSecondary
+                        ? isActive
+                          ? "text-[#663399]"
+                          : "text-gray-700 hover:text-[#663399]"
+                        : isActive
+                          ? "text-white"
+                          : "text-white/95 hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                    }`}
                   >
                     {link.name}
-                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#663399] transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : ""}`} />
+                    <span
+                      className={`absolute -bottom-1 left-0 transition-all duration-300 ${
+                        showSecondary ? "bg-[#663399]" : "bg-white"
+                      } ${
+                        isActive ? "w-full h-0.5" : "w-0 h-0.5 group-hover:w-full"
+                      }`}
+                    />
                   </Link>
                 </li>
               );
