@@ -10,7 +10,7 @@ import AppointmentPopup from "../../components/AppointmentPopup";
 const bottomNavItems = [
   { title: "Book an Appointment", link: "#", isPopup: true }, 
   { title: "Second Opinion", link: "/second-opinion" },
-  { title: "Book health Check", link: "/health-packages" },
+  { title: "Book Health Check", link: "/health-packages" },
   { title: "Know Our Doctors", link: "/doctors" },
 ];
 
@@ -29,7 +29,7 @@ const Hero = () => {
   }, []);
   
   return (
-    <section className="relative w-full min-h-[80vh] lg:min-h-[750px] overflow-hidden bg-gray-900 flex items-end font-[Poppins]">
+    <section className="relative w-full h-[70vh] min-h-[460px] md:h-auto md:min-h-[80vh] lg:min-h-[750px] overflow-hidden bg-gray-900 flex items-end font-[Poppins]">
       
       {/* 1. Background Video */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
@@ -53,16 +53,15 @@ const Hero = () => {
         </video>
       </div>
 
-      {/* 2. Bottom Action Bar */}
+      {/* 2. Bottom Action Bar (Hidden on Mobile, Visible on Desktop) */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        className="relative z-30 w-[95%] lg:w-[90%] max-w-7xl mx-auto mb-10 lg:mb-16"
+        className="hidden md:block relative z-30 w-[95%] lg:w-[90%] max-w-7xl mx-auto mb-10 lg:mb-16"
       >
-        <div className="flex flex-col md:flex-row bg-[#0066A9] backdrop-blur-md rounded-[24px] md:rounded-[40px] shadow-2xl overflow-hidden divide-y md:divide-y-0 md:divide-x divide-white/20 border border-white/10">
+        <div className="flex flex-row bg-[#0066A9] backdrop-blur-md rounded-[24px] md:rounded-[40px] shadow-2xl overflow-hidden divide-x divide-white/20 border border-white/10">
           {bottomNavItems.map((item, index) => {
-            // Extracted the inner content to avoid duplicating code
             const itemContent = (
               <>
                 <span className="text-white font-semibold text-base sm:text-lg text-left pr-3 leading-snug">
@@ -72,12 +71,11 @@ const Hero = () => {
               </>
             );
 
-            // If it's the popup item, render a button. Otherwise, render a Next.js Link.
             return item.isPopup ? (
               <button
                 key={index}
                 onClick={() => setIsPopupOpen(true)}
-                className="w-full flex-1 group flex items-center justify-between px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300 cursor-pointer"
+                className="flex-1 group flex items-center justify-between px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 hover:bg-white/10 transition-colors duration-300 cursor-pointer"
               >
                 {itemContent}
               </button>
